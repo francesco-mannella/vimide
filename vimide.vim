@@ -1,36 +1,119 @@
-" ============================================================================
+" =================================================================================================
+ 
 " File:        vimide.vim
-" Description: Setting and functions for vimide
+" Description: Converts vim in a lightweight C++ IDE
 " Author:      Francesco Mannella <francesco.mannella@gmail.com> 
 " Licence:     Vim licence
 " Website:     
 " Version:     0.0.1
 " Note:        Depends on tagbar.vim 
-" ============================================================================
+"
+" Description:
+"              RunIDE() finds all sources in the working dir 
+"              and opens four windows:
+"
+"               ______________________________________________________
+"              |                |                      |              |
+"              |                |                      |   header     |
+"              |                |                      |   list       |
+"              |                |                      |              |
+"              |  tagbar        |       edit           |______________|
+"              |                |                      |              |
+"              |                |                      |              |
+"              |                |                      |    cpp       |
+"              |                |                      |    list      |
+"              |________________|______________________|______________|
+"              
+"
+"              tagbar:
+"                      
+"                      - mouse double click    -> move to
+"                      - keyboard <return>        function/class/method 
+"                                                 definition 
+"                    
+"              header/cpp:
+"                      
+"                      - keyboard '+'          -> Open file in the edit
+"                         (normal mode)           window
+"                             
+"
+"              keyboard shortcuts 
+"                   (normal mode):
+"                      
+"                                ,ci           -> Open or reset IDE
+"
+"                                ,cc           -> Create a new Class (making
+"                                                 <classname>.h and 
+"                                                 <classname>.cpp)
+"                      
+"                                ,cC           -> Clone a Class (making
+"                                                 <newclassname>.h and 
+"                                                 <newclassname>.cpp)
+"                      
+"                                ,cf           -> Finds the occurrences of the
+"                                                 word under cursor and
+"                                                 display a list in the edit
+"                                                 window. Each row contains a
+"                                                 grep-style visualization of
+"                                                 the line where an occurrence is
+"                                                 found. 
+"
+"                               ,cR            -> If a find list is currently
+"                                                 displayed in the edit window
+"                                                 each line that has been
+"                                                 eventually modified is
+"                                                 replaced in the
+"                                                 corresponding file.
+"
+" =================================================================================================
 
 scriptencoding utf-8
-set tags=./.tags
 
-let g:main_window = -1
+" loaction of tags file
+set tags=./.tags
+" case-sensitive search 
+set noci 
+" avoid 'object::object' tokens
+set iskeyword-=: 
+
+" working dir when vim is opened
 let g:cwd = ""
 
+" ResetCtags: reset the ctags database 
+" Description: remotely executes ctags over all subdirs
 function! ResetCtags()
-    silent !ctags -R --c-types=+l --sort=yes --c++-kinds=+cmdefgpstuv --fields=+imatS --extra=+q -f ".tags" ..
+    
+    silent !ctags -R --c-types=+l --langdef=C++ --sort=yes --c++-kinds=+cdefglmnpstuvx --fields=+imatS --extra=+q -f '.tags' ..
+
 endfunction
 
+" GotoMainWindow: go to source window
+" Description: position the pointer on the central window 
+function! GotoMainWindow()
+
+    wincmd t
+    wincmd l
+
+endfunction
+
+" FormatIDE: reset the width of the windows
+" Description: TODO 
 function! FormatIDE()
 
-    execute ":".g:main_window
-    vertical res 150 
-    wincmd h
-    vertical res 50 
-    execute ":".g:main_window
+    wincmd t
+    vertical res 50
+    wincmd l
+    vertical res 100 
     wincmd l
     vertical res 50 
-    execute ":".g:main_window
+    wincmd j
+    wincmd t
+    wincmd l
 
 endfunction
 
+" CreateCppView: TODO
+" Description: TODO 
 function! CreateCppView()
 
     silent :e .cpp_sources 
@@ -39,10 +122,13 @@ function! CreateCppView()
     silent r ! find ..| grep -v build | grep "\.cpp$"
     write
     set nonumber
+    :1
     view!
 
 endfunction
 
+" CreateHView: TODO
+" Description: TODO 
 function! CreateHView()
 
     silent :e .h_sources 
@@ -51,45 +137,126 @@ function! CreateHView()
     silent r ! find ..| grep -v build | grep "\.h$"
     write
     set nonumber
+    :1
     view!
 
 endfunction
 
-function! InitIDE()
+" CreateMainTemplate: TODO
+" Description: TODO 
+function! CreateMainTemplate(path)
+    
+    call GotoMainWindow()
+    let main_cpp = a:path."main.cpp"
+    
+    let hlist = []
+    call add(hlist,'#include <iostream>' )
+    call add(hlist,''                    )
+    call add(hlist,'int main()'          )
+    call add(hlist,'{'                   )
+    call add(hlist,'    return 0;'       )
+    call add(hlist,'}'                   )
 
+    call writefile(hlist,main_cpp)
+    
+endfunction
+
+" CreateClassTemplate: TODO
+" Description: TODO 
+function! CreateClassTemplate()
+    
+    call GotoMainWindow()
+    let path = getcwd() 
+    
+    call inputsave() 
+    let identifier = input("Class to create: ","")
+    call inputrestore()
+
+    let identifier = substitute(identifier,'^\(.\)','\U\1\E',"")
+    let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
+    let Uidentifier = substitute(identifier,'\(.*\)','\U\1\E',"")  
+
+    let filename_root = path.'/'.Lidentifier
+    let filename_cpp = filename_root.".cpp"
+    let filename_h = filename_root.".h"  
+  
+    
+    let hlist = []
+    call add(hlist,'#include "'.Lidentifier.'.h"')
+    call add(hlist,'')
+    call add(hlist,identifier.'::'.identifier.'()')
+    call add(hlist,'{')
+    call add(hlist,'}')
+    call add(hlist,'')
+    call add(hlist,'~'.identifier.'::'.identifier.'()')
+    call add(hlist,'{')
+    call add(hlist,'}')
+    call add(hlist,'')
+    call writefile(hlist,filename_cpp)
+   
+    let hlist = []
+    call add(hlist,'#ifndef '.Uidentifier.'_H')
+    call add(hlist,'#define '.Uidentifier.'_H')
+    call add(hlist,'')
+    call add(hlist,'class '.identifier)
+    call add(hlist,'{')
+    call add(hlist,'    public:')
+    call add(hlist,'        '.identifier.'::'.identifier.'();')
+    call add(hlist,'        ~'.identifier.'::'.identifier.'();')
+    call add(hlist,'}')
+    call add(hlist,'')
+    call add(hlist,'#endif //'.Uidentifier.'_H')
+    call add(hlist,'')
+    call writefile(hlist,filename_h)
+
+    call RunIDE()
+ 
+endfunction
+
+" RunIDE: TODO
+" Description: TODO 
+function! RunIDE()
 
     if g:cwd == ""
-        let g:cwd = system("pwd")
-        echo g:cwd
+        let g:cwd = getcwd()
+        
+        if isdirectory("./src") == 0
+            :!mkdir "src"
+        endif
     else
         bwipeout
         execute ":cd ".g:cwd 
     endif
+    
+    let cpps = split(glob('`find $(pwd)| grep -v build | grep "\.cpp$"`'),'\n')    
+    
+    echo cpps
+    if len(cpps) == 0
 
+        call CreateMainTemplate(getcwd().'/src/')
+        let cpps = split(glob('`find $(pwd)| grep -v build | grep "\.cpp$"`'),'\n')    
 
-    let cpps = split(glob('`find ..| grep -v build | grep "\.cpp$"`'),'\n')    
+    endif
 
     wincmd o
     bwipeout
-
-    silent execute ":e ".cpps[0]
-    let g:main_window = winnr()
-
+    
+    silent execute ":e ".cpps[0] 
     call LeftTagbarToggle()
+    wincmd t
+    wincmd l
     vsplit 
-
-    call CreateCppView()
-    execute ":".g:main_window
-
-
-    split 
+    
+    call CreateCppView() 
+    wincmd t
+    wincmd l    
+    wincmd l    
+    split
     call CreateHView()
-    execute ":".g:main_window
-
-
+      
     call FormatIDE()
     call ResetCtags()
-
+ 
 endfunction
 
 
@@ -130,197 +297,81 @@ function! OpenFileUnderCursor(nr)
 
 endfunction
 
-" ****************************************************************** 
-" ****************************************************************** 
-" ****************************************************************** 
+" =================================================================================================
+" =================================================================================================
+" =================================================================================================
+ 
 
-function! GetPreviousWord(curpos,curline) 
+let g:separator = '§'
+let g:replacebuffer = -1
 
-    let prev_w = substitute(a:curline[0:a:curpos],'\(\(\.\)\|\(::\)\|\(->\)\|\(\*\)\|\(&\)\)',' ','')
-    let prev_w = substitute(prev_w,'^\(.*\)\s\+\(\S\+\)$','\1','')
-    let prev_w = substitute(prev_w,'^\(\S\+\)\s\+\(\S\+\)$','\2','')
-    let prev_w = substitute(prev_w,'^\s\+','','')
-    let prev_w = substitute(prev_w,'\s\+$','','')
+" FindOccurrence: TODO
+" Description: TODO 
+function! FindOccurrence(atom)
+    
+    call GotoMainWindow()
+    let g:replacebuffer = bufnr(bufname('%'))
 
-    if prev_w == a:curline
-        let prev_w = "<EOR>"
-    endif
+    :e! /tmp/replace 
+    :1,$d
 
-    return prev_w
+    let findstring = 'silent r! find '.g:cwd.'| grep "\.\(cpp\|h\)$"'
+    let findstring = findstring.'| xargs grep -n "\<'.a:atom.'\>" | '
+    let findstring = findstring.'sed -e"s/^\([^:]\+\):\([^:]\+\):/\1'.g:separator.'\2'.g:separator.'/"' 
 
-endfunction
-
-
-function! GetPreviousWordUnderCursor() 
-
-    let curpos = getpos('.')[2]
-    let curline = getline('.')
-
-    return GetPreviousWord(curpos,curline)
+    execute findstring
 
 endfunction
 
-
-
-function! GetTagClass(atom)
-    if a:atom == ''
-        let atom = GetPreviousWordUnderCursor()
-    else
-        let atom = GetPreviousWord(len(a:atom),a:atom)
-    endif
-    echo "atom:".atom
-    let curtaglist = taglist('\<'.atom.'\>') 
-    echo curtaglist
-
-
-    let res_class = 'NOCLASS'
-
-    if len(curtaglist) >0 
-
-        for tagl in curtaglist
-
-            if has_key(tagl,'class') 
-                echo ":".tagl.class
-                let res_class = tagl['class']
-                break
-            else
-                let next_atom = substitute(tagl.cmd,'\/\^\([^\^]\+'.atom.'\).*$','\1','')
-                res_class = GetTagClass(next_atom)
-                if res_class !=  'NOCLASS'
-                    break
-                endif
+" Replace: TODO
+" Description: TODO 
+function! Replace()
+    
+    call GotoMainWindow()
+    if bufname("%") == 'replace'
+        wa
+        let lines = readfile('/tmp/replace')
+        for line in lines 
+            if match(line,'^\s*$') == -1
+                let replist = split(line,g:separator)
+                let remotelines = readfile(replist[0])
+                let remotelines[replist[1]-1] = replist[2]
+                echo remotelines[replist[1]-1]
+                call writefile(remotelines, replist[0] )
             endif
-
-        endfor 
+        endfor
+        :bufdo e
+        execute ":b".g:replacebuffer
     endif
-    return res_class
+    
+endfunction
+
+" FindUnderCursor: TODO
+" Description: TODO 
+function! FindUnderCursor()
+
+    let atom = expand('<cword>')
+    call FindOccurrence(atom)
 
 endfunction
 
-
-" ****************************************************************** 
-" ****************************************************************** 
-" ****************************************************************** 
-
-let g:unsaved_bufs = []
-let g:curr_buffer = 1
-
-function! RenameIdentifier(idnt)   
-
-    se noic
-    setlocal iskeyword-=:
-    let g:curr_buffer = bufnr('%')
-
-    let identifier = idnt
-
-    let idlist = taglist(identifier)
-    let isclass = 0
-    for id in idlist
-        if id['kind'] == 'c' 
-            let isclass = 1
-            break
-        endif
-    endfor
-
-    " identifier is a class
-    if isclass == 1 
-
-        let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
-        let Uidentifier = substitute(identifier,'\(.*\)','\U\1\E',"")  
-
-        let filename_root = substitute(bufname('%'),'[\.]\(.*\)',"","g")
-        let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".h"  
-        let filename_h = filename_root.".h"  
-
-        if empty(g:unsaved_bufs)
-
-            call inputsave() 
-            let new_identifier = input("Rename: ",identifier)
-            call inputrestore()
-
-            for filebuf in [filename_cpp, filename_h]
-                if bufexists(filebuf)
-                    silent execute ":b".bufnr(filebuf) 
-                    let l = line('.')
-                    try
-                        silent execute ':%s/\<'.identifier.'\>/'.new_identifier.'/g'
-                    catch
-                    endtry
-                    try
-                        silent execute ':%s/\<'.Lidentifier.'\.h/\L'.new_identifier.'\E.h/g'
-                    catch
-                    endtry
-                    try
-                        silent execute ':%s/\<'.Uidentifier.'_H/\U'.new_identifier.'\E_H/g'
-                    catch
-                    endtry
-                    silent execute ":".l
-                    call add(g:unsaved_bufs,bufnr(filebuf))
-                    silent execute ":b".g:curr_buffer 
-                endif
-            endfor
-
-            for bnr in g:unsaved_bufs
-                if bnr != g:curr_buffer
-                    silent execute ":split " 
-                    silent execute ":b".bnr 
-                endif
-            endfor
-
-        else
-
-            call inputsave() 
-            let save_req = input("Save?[Yes/No]: ","No")
-            call inputrestore()
-
-            let unsaved_wins = map(copy(g:unsaved_bufs),'bufwinnr(v:val)')
-            call remove(unsaved_wins,index(g:unsaved_bufs,g:curr_buffer))
-
-
-            if save_req == "Yes"
-
-                for bnr in g:unsaved_bufs
-                    silent execute ":b".bnr 
-                    silent write
-                endfor
-                for wnr in unsaved_wins
-                    silent execute ":".wnr 
-                    silent execute ":q" 
-                endfor
-
-                let g:unsaved_bufs = []
-
-            elseif save_req == "No"
-
-                for bnr in g:unsaved_bufs
-                    silent execute ":b".bnr 
-                    silent undo
-                endfor
-                for wnr in unsaved_wins
-                    silent execute ":".wnr 
-                    silent execute ":q" 
-                endfor
-
-                let g:unsaved_bufs = []
-
-            endif
-
-            echo " ...Done"
-
-        
-        endif
-    else
-        echo identifier." is not a class identifier!" 
-    endif
-
-endfunction
-
-
+" =================================================================================================
+" =================================================================================================
+" =================================================================================================
+ 
+" RenameClassIdentifier: TODO
+" Description: TODO 
 function! RenameClassIdentifier(idnt,new_idnt)   
 
-    let identifier = idnt
-    let new_identifier = new_idnt
+    call GotoMainWindow()
+    let path = getcwd() 
+
+    let identifier = a:idnt
+    let L_identifier = substitute(identifier,'\(.*\)','\L\1\E',"")
+    let U_identifier = substitute(identifier,'\(.*\)','\U\1\E',"")
+    let new_identifier = a:new_idnt
+    let L_new_identifier = substitute(new_identifier,'\(.*\)','\L\1\E',"")
+    let U_new_identifier = substitute(new_identifier,'\(.*\)','\U\1\E',"")
 
     let idlist = taglist(identifier)
     let isclass = 0
@@ -334,96 +385,114 @@ function! RenameClassIdentifier(idnt,new_idnt)
     " identifier is a class
     if isclass == 1 
 
-        let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
-        let Uidentifier = substitute(identifier,'\(.*\)','\U\1\E',"")  
 
-        let filename_root = expand("%:p:t:r")
+        let filename_root = path.'/'.L_new_identifier
         let filename_cpp = filename_root.".cpp"
         let filename_h = filename_root.".h"  
-        let filename_h = filename_root.".h"  
 
+        for fname in [filename_cpp, filename_h]
+            echo findfile(fname,"/") 
+            if findfile(fname,"/") == fname
 
-
-        for filebuf in [filename_cpp, filename_h]
-            if bufexists(filebuf)
-                silent execute ":b".bufnr(filebuf) 
-                let l = line('.')
+                silent execute ":e ".fname 
                 try
                     silent execute ':%s/\<'.identifier.'\>/'.new_identifier.'/g'
                 catch
                 endtry
                 try
-                    silent execute ':%s/\<'.Lidentifier.'\.h/\L'.new_identifier.'\E.h/g'
+                    silent execute ':%s/\<'.L_identifier.'\.h/'.L_new_identifier.'.h/g'
                 catch
                 endtry
                 try
-                    silent execute ':%s/\<'.Uidentifier.'_H/\U'.new_identifier.'\E_H/g'
+                    silent execute ':%s/\<'.U_identifier.'_H/'.U_new_identifier.'_H/g'
                 catch
                 endtry
+
+                write
+
             endif
         endfor
 
+        "echo " ...Done"
 
-
-        for filebuf in [filename_cpp, filename_h]
-            silent execute ":b".bufnr(filebuf) 
-            silent write
-        endfor
-
-        silent execute ":b".g:curr_buffer 
-
-        echo " ...Done"
-
-        endif
     else
         echo identifier." is not a class identifier!" 
     endif
 
 endfunction
 
+ 
+" CopyClass: TODO
+" Description: TODO 
+function! CopyClass()
 
-function! CopyClassUnderCursor()
+    let path = getcwd() 
 
-    se noic
-    setlocal iskeyword-=:
-
-    let path = expand("%:p:h")."/"
-    let g:curr_buffer = bufnr('%')
-    let identifier = expand('<cword>')
-    
     call inputsave() 
-    let new_identifier = input("Rename: ",identifier)
+    let identifier = input("Class to copy: ","")
     call inputrestore()
+
     
-    let class_buf = bufnr('%')
-    let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
-    let Lnewidentifier = substitute(new_identifier,'\(.*\)','\L\1\E',"")
-   
-    if findfile(path.Lidentifier.".h","/") == path.Lidentifier.".h" 
-
-        execute ":e ".path.Lidentifier.".h"
-        execute ":sav ".path.Lnewidentifier.".h"
-
-        if findfile(path.Lidentifier.".cpp","/") == path.Lidentifier.".cpp" 
-            execute ":e ".path.Lidentifier.".cpp"
-            execute ":sav ".path.Lnewidentifier.".cpp"
+    let idlist = taglist(identifier)
+    let isclass = 0
+    for id in idlist
+        if id['kind'] == 'c' 
+            let isclass = 1
+            break
         endif
+    endfor
 
-        call InitIDE()
-        call InitIDE()
+    " identifier is a class
+    if isclass == 1 
 
-        "RenameClassIdentifier(identifier,new_identifier)
+        call inputsave() 
+        let new_identifier = input("Rename: ",identifier)
+        call inputrestore()
+
+        let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
+        let Lnewidentifier = substitute(new_identifier,'\(.*\)','\L\1\E',"")
+
+
+        let filename_root = path.'/'.Lidentifier
+        let filename_cpp = filename_root.".cpp"
+        let filename_h = filename_root.".h"  
+
+        let filename_new_root = path.'/'.Lnewidentifier
+        let filename_new_cpp = filename_new_root.".cpp"
+        let filename_new_h = filename_new_root.".h"  
+
+        if findfile(filename_h,"/") == filename_h 
+
+            call GotoMainWindow()
+            execute ":e ".filename_h
+            execute ":sav ".filename_new_h
+
+            if findfile(filename_cpp,"/") == filename_cpp 
+
+                execute ":e ".filename_cpp
+                execute ":sav ".filename_new_cpp
+
+            endif
+
+            call RunIDE()
+
+            call RenameClassIdentifier(identifier,new_identifier)
+
+        endif
 
     endif
 
 endfunction
 
+" =================================================================================================
+" =================================================================================================
+" =================================================================================================
+ 
 
-nmap <C-F2> :silent call InitIDE()<CR>
-nmap <C-F3> :call FormatIDE()<CR>
-nmap r :call RenameClassIdentifierUnderCursor()<CR>
+nmap ,ci :silent call RunIDE()<CR>
+nmap ,cc :call CreateClassTemplate()<CR>
+nmap ,cC :call CopyClass()<CR>
+nmap ,cf :call FindUnderCursor()<CR>
+nmap ,cr :call Replace()<CR>
 nmap + :call OpenFileUnderCursor(2)<CR>
-nmap R ;call ResetCtags()<CR>
-nmap <F5> :echo GetTagClass('')<CR>
-nmap <C-F8> :call CopyClassUnderCursor()<CR>
 
