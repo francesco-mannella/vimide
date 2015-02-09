@@ -79,6 +79,12 @@ set iskeyword-=:
 " working dir when vim is opened
 let g:cwd = ""
 
+
+function! GetCurrDir()
+    return system('echo -n $(pwd)')
+endfunction
+
+
 " ResetCtags: reset the ctags database 
 " Description: remotely executes ctags over all subdirs
 function! ResetCtags()
@@ -115,11 +121,14 @@ endfunction
 " CreateCppView: TODO
 " Description: TODO 
 function! CreateCppView()
+        
+    execute ":cd ".g:cwd 
 
     silent :e .cpp_sources 
     silent :se noro
     silent :1,$d
-    silent r ! find ..| grep -v build | grep "\.cpp$"
+    silent r ! find | grep -v build | grep "\.cpp$"
+    sort
     write
     set nonumber
     :1
@@ -131,10 +140,13 @@ endfunction
 " Description: TODO 
 function! CreateHView()
 
+    execute ":cd ".g:cwd 
+
     silent :e .h_sources 
     silent :se noro
     silent :1,$d
-    silent r ! find ..| grep -v build | grep "\.h$"
+    silent r ! find | grep -v build | grep "\.h$"
+    sort
     write
     set nonumber
     :1
@@ -166,7 +178,7 @@ endfunction
 function! CreateClassTemplate()
     
     call GotoMainWindow()
-    let path = getcwd() 
+    let path = GetCurrDir() 
     
     call inputsave() 
     let identifier = input("Class to create: ","")
@@ -201,9 +213,9 @@ function! CreateClassTemplate()
     call add(hlist,'class '.identifier)
     call add(hlist,'{')
     call add(hlist,'    public:')
-    call add(hlist,'        '.identifier.'::'.identifier.'();')
-    call add(hlist,'        ~'.identifier.'::'.identifier.'();')
-    call add(hlist,'}')
+    call add(hlist,'        '.identifier.'();')
+    call add(hlist,'        ~'.identifier.'();')
+    call add(hlist,'};')
     call add(hlist,'')
     call add(hlist,'#endif //'.Uidentifier.'_H')
     call add(hlist,'')
@@ -218,26 +230,25 @@ endfunction
 function! RunIDE()
 
     if g:cwd == ""
-        let g:cwd = getcwd()
+        let g:cwd = GetCurrDir()
         
-        if isdirectory("./src") == 0
-            :!mkdir "src"
+        if isdirectory(g:cwd.'/src') == 0
+            execute ':!mkdir '.g:cwd.'/src'
         endif
     else
         bwipeout
         execute ":cd ".g:cwd 
     endif
     
-    let cpps = split(glob('`find $(pwd)| grep -v build | grep "\.cpp$"`'),'\n')    
-    
-    echo cpps
+    let cpps = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.cpp$"`'),'\n')    
+
     if len(cpps) == 0
-
-        call CreateMainTemplate(getcwd().'/src/')
-        let cpps = split(glob('`find $(pwd)| grep -v build | grep "\.cpp$"`'),'\n')    
-
-    endif
-
+        
+        call CreateMainTemplate(GetCurrDir().'/src/')
+        let cpps = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.cpp$"`'),'\n')    
+        
+        endif
+        
     wincmd o
     bwipeout
     
@@ -256,7 +267,7 @@ function! RunIDE()
       
     call FormatIDE()
     call ResetCtags()
- 
+  
 endfunction
 
 
@@ -286,14 +297,17 @@ endfunction
 " Description: calls TagbarToggle and then rotate the two windows
 function! OpenFileUnderCursor(nr) 
 
+    execute ':cd '.g:cwd 
     let mycurf=expand("<cfile>")
+     
     for window in range(1, winnr('$'))
         execute window . 'wincmd w'
         if window == a:nr
             break
         endif
-    endfor  
-    :execute("e ".mycurf)
+    endfor
+    execute ':cd '.g:cwd 
+    execute ':e '.mycurf
 
 endfunction
 
@@ -312,10 +326,11 @@ function! FindOccurrence(atom)
     call GotoMainWindow()
     let g:replacebuffer = bufnr(bufname('%'))
 
+    :silent !rm -fr /tmp/replace
     :e! /tmp/replace 
     :1,$d
 
-    let findstring = 'silent r! find '.g:cwd.'| grep "\.\(cpp\|h\)$"'
+    let findstring = 'silent r! find '.g:cwd.'/| grep "\.\(cpp\|h\)$"'
     let findstring = findstring.'| xargs grep -n "\<'.a:atom.'\>" | '
     let findstring = findstring.'sed -e"s/^\([^:]\+\):\([^:]\+\):/\1'.g:separator.'\2'.g:separator.'/"' 
 
@@ -326,7 +341,7 @@ endfunction
 " Replace: TODO
 " Description: TODO 
 function! Replace()
-    
+
     call GotoMainWindow()
     if bufname("%") == 'replace'
         wa
@@ -342,6 +357,7 @@ function! Replace()
         endfor
         :bufdo e
         execute ":b".g:replacebuffer
+        :silent !rm -fr /tmp/replace    
     endif
     
 endfunction
@@ -364,7 +380,7 @@ endfunction
 function! RenameClassIdentifier(idnt,new_idnt)   
 
     call GotoMainWindow()
-    let path = getcwd() 
+    let path = GetCurrDir() 
 
     let identifier = a:idnt
     let L_identifier = substitute(identifier,'\(.*\)','\L\1\E',"")
@@ -426,7 +442,7 @@ endfunction
 " Description: TODO 
 function! CopyClass()
 
-    let path = getcwd() 
+    let path = GetCurrDir() 
 
     call inputsave() 
     let identifier = input("Class to copy: ","")
