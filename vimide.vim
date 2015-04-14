@@ -89,9 +89,10 @@ endfunction
 " Description: remotely executes ctags over all subdirs
 function! ResetCtags()
     
-    silent !ctags -R --c-types=+l --langdef=C++ --sort=yes --c++-kinds=+cdefglmnpstuvx --fields=+imatS --extra=+q -f '.tags' ..
+    silent !ctags -R --c-types=+l --python-kinds=-i --langdef=C++ --sort=yes --c++-kinds=+cdefglmnpstuvx --fields=+imatS --extra=+q -f '.tags' ..
 
 endfunction
+
 
 " GotoMainWindow: go to source window
 " Description: position the pointer on the central window 
@@ -118,6 +119,7 @@ function! FormatIDE()
 
 endfunction
 
+
 " CreateCppView: TODO
 " Description: TODO 
 function! CreateCppView()
@@ -135,6 +137,7 @@ function! CreateCppView()
     view!
 
 endfunction
+
 
 " CreateHView: TODO
 " Description: TODO 
@@ -503,9 +506,92 @@ endfunction
 " =================================================================================================
 " =================================================================================================
 " =================================================================================================
+
+" FormatIDE: reset the width of the windows
+" Description: TODO 
+function! FormatPyIDE()
+
+    wincmd t
+    vertical res 50
+    wincmd l
+    vertical res 100 
+    wincmd l
+    vertical res 50 
+    wincmd t
+    wincmd l
+
+endfunction
+
+
+" CreateCppView: TODO
+" Description: TODO 
+function! CreatePyView()
+        
+    execute ":cd ".g:cwd 
+
+    silent :e .py_sources 
+    silent :se noro
+    silent :1,$d
+    silent r ! find | grep -v build | grep "\.py$"
+    sort
+    write
+    set nonumber
+    :1
+    view!
+
+endfunction
+
+
+
+" RunIDE: TODO
+" Description: TODO 
+function! RunPyIDE()
+
+    if g:cwd == ""
+        let g:cwd = GetCurrDir()
+    else
+        bwipeout
+        execute ":cd ".g:cwd 
+    endif
+    
+    let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
+
+    if len(pys) == 0
+        
+        call CreateMainTemplate(GetCurrDir())
+        let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
+        
+        endif
+        
+    wincmd o
+    bwipeout
+    
+    silent execute ":e ".pys[0] 
+    call LeftTagbarToggle()
+    wincmd t
+    wincmd l
+    vsplit 
+    
+    call CreatePyView() 
+    wincmd t
+    wincmd l    
+    wincmd l    
+      
+    call FormatPyIDE()
+    call ResetCtags()
+  
+endfunction
+
+
+
+" =================================================================================================
+" =================================================================================================
+" =================================================================================================
+ 
  
 
 nmap ,ci :silent call RunIDE()<CR>
+nmap ,cp : call RunPyIDE()<CR>
 nmap ,cc :call CreateClassTemplate()<CR>
 nmap ,cC :call CopyClass()<CR>
 nmap ,cf :call FindUnderCursor()<CR>
