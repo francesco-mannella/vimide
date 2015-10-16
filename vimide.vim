@@ -108,9 +108,9 @@ endfunction
 function! FormatIDE()
 
     wincmd t
-    vertical res 50
+    vertical res 25
     wincmd l
-    vertical res 100 
+    vertical res 125 
     wincmd l
     vertical res 50 
     wincmd j
