@@ -41,6 +41,8 @@
 "                   (normal mode):
 "                      
 "                                ,ci           -> Open or reset IDE
+"                                ,cp           -> Open or reset IDE for python
+"                                                 visualization
 "
 "                                ,cc           -> Create a new Class (making
 "                                                 <classname>.h and 
@@ -58,7 +60,7 @@
 "                                                 the line where an occurrence is
 "                                                 found. 
 "
-"                               ,cR            -> If a find list is currently
+"                               ,cr            -> If a find list is currently
 "                                                 displayed in the edit window
 "                                                 each line that has been
 "                                                 eventually modified is
