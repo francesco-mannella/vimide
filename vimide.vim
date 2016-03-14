@@ -60,7 +60,13 @@
 "                                                 the line where an occurrence is
 "                                                 found. 
 "
-"                               ,cr            -> If a find list is currently
+"                                ,cg           -> move to the file to which
+"                                                 the line under the cursor
+"                                                 belongs.
+"                                                 You must be within the find
+"                                                 list window (see .cf).
+"
+"                                ,cr            -> If a find list is currently
 "                                                 displayed in the edit window
 "                                                 each line that has been
 "                                                 eventually modified is
@@ -150,7 +156,7 @@ function! CreateHView()
     silent :e .h_sources 
     silent :se noro
     silent :1,$d
-    silent r ! find | grep -v build | grep "\.h\(pp\)*$"
+    silent r ! find | grep -v build | grep "\.\(h\|hpp\)$"
     sort
     write
     set nonumber
@@ -195,7 +201,7 @@ function! CreateClassTemplate()
 
     let filename_root = path.'/'.Lidentifier
     let filename_cpp = filename_root.".cpp"
-    let filename_h = filename_root.".h\(pp\)*"  
+    let filename_h = filename_root.".h"  
   
     
     let hlist = []
@@ -321,7 +327,7 @@ endfunction
 " =================================================================================================
  
 
-let g:separator = '§'
+let g:separator = '°'
 let g:replacebuffer = -1
 
 " FindOccurrence: TODO
@@ -337,11 +343,12 @@ function! FindOccurrence(atom)
 
     let findstring = 'silent r! find '.g:cwd.'/| grep "\.\(cpp\|h\|hpp\)$"'
     let findstring = findstring.'| xargs grep -n "\<'.a:atom.'\>" | '
-    let findstring = findstring.'sed -e"s/^\([^:]\+\):\([^:]\+\):/\1'.g:separator.'\2'.g:separator.'/"' 
+    let findstring = findstring.'sed -e"s/^\([^:]\+\/\([^\/^:]\+\)\):\([^:]\+\):\(.*\)/\2'.g:separator.'\3'.g:separator.'\4'.g:separator.'\1/"' 
 
     execute findstring
 
 endfunction
+
 
 " Replace: TODO
 " Description: TODO 
@@ -354,13 +361,15 @@ function! Replace()
         for line in lines 
             if match(line,'^\s*$') == -1
                 let replist = split(line,g:separator)
-                let remotelines = readfile(replist[0])
+                let remotelines = readfile(replist[3])
                 let remotelines[replist[1]-1] = replist[2]
                 echo remotelines[replist[1]-1]
-                call writefile(remotelines, replist[0] )
+                set autoread
+                call writefile(remotelines, replist[3] )
             endif
         endfor
-        :bufdo e
+        :e %
+        :bufdo e 
         execute ":b".g:replacebuffer
         :silent !rm -fr /tmp/replace    
     endif
@@ -373,6 +382,21 @@ function! FindUnderCursor()
 
     let atom = expand('<cword>')
     call FindOccurrence(atom)
+
+endfunction
+
+function! GotoUnderCursor()
+
+    let line = getline('.') 
+    echo line
+    if line =~ g:separator."[0-9]".g:separator
+        let replist = split(line,g:separator)
+        let path =  replist[3]
+        let num =  replist[1]
+        execute ':cd '.g:cwd 
+        execute ':e '.path
+        execute ':'.num
+    endif 
 
 endfunction
 
@@ -409,7 +433,7 @@ function! RenameClassIdentifier(idnt,new_idnt)
 
         let filename_root = path.'/'.L_new_identifier
         let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".h\(pp\)*"  
+        let filename_h = filename_root.".\(h\|hpp\)"  
 
         for fname in [filename_cpp, filename_h]
             echo findfile(fname,"/") 
@@ -422,6 +446,10 @@ function! RenameClassIdentifier(idnt,new_idnt)
                 endtry
                 try
                     silent execute ':%s/\<'.L_identifier.'\.h/'.L_new_identifier.'.h/g'
+                catch
+                endtry
+                try
+                    silent execute ':%s/\<'.L_identifier.'\.hpp/'.L_new_identifier.'.hpp/g'
                 catch
                 endtry
                 try
@@ -476,11 +504,11 @@ function! CopyClass()
 
         let filename_root = path.'/'.Lidentifier
         let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".h\(pp\)*"  
+        let filename_h = filename_root.".\(h\|hpp\)"  
 
         let filename_new_root = path.'/'.Lnewidentifier
         let filename_new_cpp = filename_new_root.".cpp"
-        let filename_new_h = filename_new_root.".h\(pp\)*"  
+        let filename_new_h = filename_new_root.".\(h\|hpp\)"  
 
         if findfile(filename_h,"/") == filename_h 
 
@@ -597,6 +625,7 @@ nmap ,cp : call RunPyIDE()<CR>
 nmap ,cc :call CreateClassTemplate()<CR>
 nmap ,cC :call CopyClass()<CR>
 nmap ,cf :call FindUnderCursor()<CR>
+nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
 nmap + :call OpenFileUnderCursor(2)<CR>
 
