@@ -150,7 +150,7 @@ function! CreateHView()
     silent :e .h_sources 
     silent :se noro
     silent :1,$d
-    silent r ! find | grep -v build | grep "\.h$"
+    silent r ! find | grep -v build | grep "\.h\(pp\)*$"
     sort
     write
     set nonumber
@@ -195,7 +195,7 @@ function! CreateClassTemplate()
 
     let filename_root = path.'/'.Lidentifier
     let filename_cpp = filename_root.".cpp"
-    let filename_h = filename_root.".h"  
+    let filename_h = filename_root.".h\(pp\)*"  
   
     
     let hlist = []
@@ -335,7 +335,7 @@ function! FindOccurrence(atom)
     :e! /tmp/replace 
     :1,$d
 
-    let findstring = 'silent r! find '.g:cwd.'/| grep "\.\(cpp\|h\)$"'
+    let findstring = 'silent r! find '.g:cwd.'/| grep "\.\(cpp\|h\|hpp\)$"'
     let findstring = findstring.'| xargs grep -n "\<'.a:atom.'\>" | '
     let findstring = findstring.'sed -e"s/^\([^:]\+\):\([^:]\+\):/\1'.g:separator.'\2'.g:separator.'/"' 
 
@@ -409,7 +409,7 @@ function! RenameClassIdentifier(idnt,new_idnt)
 
         let filename_root = path.'/'.L_new_identifier
         let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".h"  
+        let filename_h = filename_root.".h\(pp\)*"  
 
         for fname in [filename_cpp, filename_h]
             echo findfile(fname,"/") 
@@ -476,11 +476,11 @@ function! CopyClass()
 
         let filename_root = path.'/'.Lidentifier
         let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".h"  
+        let filename_h = filename_root.".h\(pp\)*"  
 
         let filename_new_root = path.'/'.Lnewidentifier
         let filename_new_cpp = filename_new_root.".cpp"
-        let filename_new_h = filename_new_root.".h"  
+        let filename_new_h = filename_new_root.".h\(pp\)*"  
 
         if findfile(filename_h,"/") == filename_h 
 
