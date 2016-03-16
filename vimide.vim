@@ -341,7 +341,7 @@ function! FindOccurrence(atom)
     :e! /tmp/replace 
     :1,$d
 
-    let findstring = 'silent r! find '.g:cwd.'/| grep "\.\(cpp\|h\|hpp\)$"'
+    let findstring = 'silent r! find '.g:cwd.'/| grep "\.\(cpp\|h\|hpp\|py\)$"'
     let findstring = findstring.'| xargs grep -n "\<'.a:atom.'\>" | '
     let findstring = findstring.'sed -e"s/^\([^:]\+\/\([^\/^:]\+\)\):\([^:]\+\):\(.*\)/\2'.g:separator.'\3'.g:separator.'\4'.g:separator.'\1/"' 
 
@@ -387,9 +387,12 @@ endfunction
 
 function! GotoUnderCursor()
 
-    let line = getline('.') 
-    echo line
-    if line =~ g:separator."[0-9]".g:separator
+    let line = getline('.')
+    let test_string = g:separator.'\([0-9]\+\)'.g:separator
+   
+    echo test_string 
+
+    if line =~ test_string
         let replist = split(line,g:separator)
         let path =  replist[3]
         let num =  replist[1]
