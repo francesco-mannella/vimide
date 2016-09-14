@@ -630,5 +630,5 @@ nmap ,cC :call CopyClass()<CR>
 nmap ,cf :call FindUnderCursor()<CR>
 nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
-nmap + :call OpenFileUnderCursor(2)<CR>
+nmap <enter> :call OpenFileUnderCursor(2)<CR>
 
