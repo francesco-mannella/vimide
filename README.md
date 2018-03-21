@@ -1,6 +1,6 @@
 ### VimIDE
 
-Converts vim in a lightweight C++ IDE
+Converts vim in a lightweight C++/Python IDE
 
 #### Description
 RunIDE() finds all sources in the working dir and opens four windows:
