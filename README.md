@@ -1,8 +1,8 @@
-###VimIDE
+### VimIDE
 
 Converts vim in a lightweight C++ IDE
 
-####Description
+#### Description
 RunIDE() finds all sources in the working dir and opens four windows:
 
                ______________________________________________________
@@ -67,26 +67,23 @@ RunIDE() finds all sources in the working dir and opens four windows:
                                                  corresponding file.
 
 
-###INSTALL
+### INSTALL
 
 cp vimide.vim ~/.vim/plugin/
 
-###REQUIRES
+### REQUIRES
 
-####exuberant-ctags: 
-
+#### exuberant-ctags: 
 
             sudo apt-get install ctags
-
-
-####tagbar:
-
+            
+#### tagbar:
 
             git clone https://github.com/majutsushi/tagbar.git tagbar
             cd tagbar && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
 
-###RECOMMENDED
-####YouCompleteMe
+### RECOMMENDED
+#### YouCompleteMe
             git clone git@github.com:Valloric/YouCompleteMe.git YouCompleteMe
             cd YouCompleteMe && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
 
