@@ -87,6 +87,7 @@ cp vimide.vim ~/.vim/plugin/
 
 ###RECOMMENDED
 ####YouCompleteMe
-            git clone git@github.com:Valloric/YouCompleteMe.git YouCompleteMe
-            cd YouCompleteMe && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
-
+            git clone git@github.com:Valloric/YouCompleteMe.git ~/.vim/plugin/YouCompleteMe
+            cd ~/.vim/plugin && ./install.py --clang-completer && cd ..
+            cp utils/YoucpmpleteMeConfigs/ycm_extra_conf.py ~/.vim/
+            cat utils/YoucpmpleteMeConfigs/vimrc >> ~/.vimrc   
