@@ -34,6 +34,7 @@ RunIDE() finds all sources in the working dir and opens four windows:
                    (normal mode):
                       
                                 ,ci           -> Open or reset IDE
+
                                 ,cp           -> Open or reset IDE for python
                                                  visualization
 
@@ -65,6 +66,9 @@ RunIDE() finds all sources in the working dir and opens four windows:
                                                  eventually modified is
                                                  replaced in the
                                                  corresponding file.
+
+                                ,cu            -> Update the file lists
+
 
 
 ### INSTALL

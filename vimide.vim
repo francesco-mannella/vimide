@@ -41,6 +41,7 @@
 "                   (normal mode):
 "                      
 "                                ,ci           -> Open or reset IDE
+"
 "                                ,cp           -> Open or reset IDE for python
 "                                                 visualization
 "
@@ -72,6 +73,7 @@
 "                                                 eventually modified is
 "                                                 replaced in the
 "                                                 corresponding file.
+"
 "                                ,cu            -> Update the file lists
 "                           
 " =================================================================================================
