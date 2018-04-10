@@ -72,7 +72,8 @@
 "                                                 eventually modified is
 "                                                 replaced in the
 "                                                 corresponding file.
-"
+"                                ,cu            -> Update the file lists
+"                           
 " =================================================================================================
 
 scriptencoding utf-8
@@ -239,6 +240,8 @@ endfunction
 " RunIDE: TODO
 " Description: TODO 
 function! RunIDE()
+    
+    let g:IDE = "CppIDE"
 
     if g:cwd == ""
         let g:cwd = GetCurrDir()
@@ -556,7 +559,7 @@ function! FormatPyIDE()
 endfunction
 
 
-" CreateCppView: TODO
+" CreatePyView: TODO
 " Description: TODO 
 function! CreatePyView()
         
@@ -574,11 +577,20 @@ function! CreatePyView()
 
 endfunction
 
+" UpdatePyView: TODO
+" Description: TODO 
+function! UpdatePyView()
+    wincmd l        
+    wincmd l        
+    CreatePyView()
+endfunction
 
 
 " RunIDE: TODO
 " Description: TODO 
 function! RunPyIDE()
+
+    let g:IDE = "PyIDE"
 
     if g:cwd == ""
         let g:cwd = GetCurrDir()
@@ -594,7 +606,7 @@ function! RunPyIDE()
         call CreateMainTemplate(GetCurrDir())
         let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
         
-        endif
+    endif
         
     wincmd o
     bwipeout
@@ -614,7 +626,29 @@ function! RunPyIDE()
     call ResetCtags()
   
 endfunction
+" =================================================================================================
 
+" UpdateView: TODO
+" Description: TODO 
+function! UpdateView()
+    
+    if g:IDE == "PyIDE"
+
+        wincmd l        
+        wincmd l        
+        call CreatePyView()
+
+    elseif g:IDE == "CppIDE"
+
+        wincmd t        
+        wincmd t
+        call CreateHView()
+        wincmd j
+        call CreateCppView()
+
+    endif
+
+endfunction
 
 
 " =================================================================================================
@@ -630,5 +664,6 @@ nmap ,cC :call CopyClass()<CR>
 nmap ,cf :call FindUnderCursor()<CR>
 nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
+nmap ,cu :call UpdateView()<CR>
 nmap <enter> :call OpenFileUnderCursor(2)<CR>
 
