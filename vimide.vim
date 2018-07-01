@@ -6,7 +6,7 @@
 " Licence:     Vim licence
 " Website:     
 " Version:     0.0.1
-" Note:        Depends on tagbar.vim 
+" Note:        Depends on tagbar.vim youcompleteme ctags 
 "
 " Description:
 "              RunIDE() finds all sources in the working dir 
@@ -41,7 +41,6 @@
 "                   (normal mode):
 "                      
 "                                ,ci           -> Open or reset IDE
-"
 "                                ,cp           -> Open or reset IDE for python
 "                                                 visualization
 "
@@ -73,7 +72,6 @@
 "                                                 eventually modified is
 "                                                 replaced in the
 "                                                 corresponding file.
-"
 "                                ,cu            -> Update the file lists
 "                           
 " =================================================================================================
@@ -119,14 +117,12 @@ endfunction
 function! FormatIDE()
 
     wincmd t
-    vertical res 25
+    vertical res 35
     wincmd l
-    vertical res 125 
     wincmd l
-    vertical res 50 
-    wincmd j
-    wincmd t
-    wincmd l
+    vertical res 35 
+    wincmd h
+    vertical res 85 
 
 endfunction
 
@@ -550,13 +546,12 @@ endfunction
 function! FormatPyIDE()
 
     wincmd t
-    vertical res 50
+    vertical res 35
     wincmd l
-    vertical res 100 
     wincmd l
-    vertical res 50 
-    wincmd t
-    wincmd l
+    vertical res 35 
+    wincmd h
+    vertical res 85 
 
 endfunction
 
@@ -656,7 +651,6 @@ endfunction
 " =================================================================================================
 " =================================================================================================
 " =================================================================================================
- 
  
 
 nmap ,ci :silent call RunIDE()<CR>
