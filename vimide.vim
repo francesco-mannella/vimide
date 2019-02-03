@@ -247,11 +247,7 @@ function! RunIDE()
     let g:IDE = "CppIDE"
 
     if g:cwd == ""
-        let g:cwd = GetCurrDir()
-        
-        if isdirectory(g:cwd.'/src') == 0
-            execute ':!mkdir '.g:cwd.'/src'
-        endif
+        let g:cwd = GetCurrDir()    
     else
         bwipeout
         execute ":cd ".g:cwd 
@@ -261,7 +257,6 @@ function! RunIDE()
 
     if len(cpps) == 0
         
-        call CreateMainTemplate(GetCurrDir().'/src/')
         let cpps = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.cpp$"`'),'\n')    
         
         endif
