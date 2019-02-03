@@ -1,5 +1,5 @@
 " =================================================================================================
- 
+" 
 " File:        vimide.vim
 " Description: Converts vim in a lightweight C++ IDE
 " Author:      Francesco Mannella <francesco.mannella@gmail.com> 
@@ -102,6 +102,11 @@ function! ResetCtags()
 
 endfunction
 
+function! ResetPytags()
+
+    silent !ctags -R --fields=+l --languages=python --python-kinds=-iv -f .tags .. 
+
+endfunction
 
 " GotoMainWindow: go to source window
 " Description: position the pointer on the central window 
@@ -620,7 +625,7 @@ function! RunPyIDE()
     wincmd l    
       
     call FormatPyIDE()
-    call ResetCtags()
+    call ResetPytags()
   
 endfunction
 " =================================================================================================
