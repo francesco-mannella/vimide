@@ -88,10 +88,19 @@ cp vimide.vim ~/.vim/plugin/
 
             git clone https://github.com/majutsushi/tagbar.git tagbar
             cd tagbar && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
+            
+#### .vimrc
+            echo ":set spr" >> ~/.vimrc
 
 ### RECOMMENDED
+
+#### .vimrc
+Use the vimide [vimrc]() template 
+
 #### YouCompleteMe
             git clone git@github.com:Valloric/YouCompleteMe.git ~/.vim/plugin/YouCompleteMe
             cd ~/.vim/plugin && ./install.py --clang-completer && cd ..
             cp utils/YoucpmpleteMeConfigs/ycm_extra_conf.py ~/.vim/
             cat utils/YoucpmpleteMeConfigs/vimrc >> ~/.vimrc   
+            
+          
