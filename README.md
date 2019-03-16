@@ -95,7 +95,7 @@ cp vimide.vim ~/.vim/plugin/
 ### RECOMMENDED
 
 #### .vimrc
-Use the vimide [vimrc]() template 
+Use the vimide [vimrc](vimrc) template 
 
 #### YouCompleteMe
             git clone git@github.com:Valloric/YouCompleteMe.git ~/.vim/plugin/YouCompleteMe
