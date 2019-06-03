@@ -98,7 +98,7 @@ curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.v
 Use the vimide [vimrc](vimrc) template 
 
 #### YouCompleteMe
-            git clone git@github.com:Valloric/YouCompleteMe.git ~/.vim/plugin/YouCompleteMe
+            git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/plugin/YouCompleteMe
             cd ~/.vim/plugin && ./install.py --clang-completer && cd ..
             cp utils/YoucpmpleteMeConfigs/ycm_extra_conf.py ~/.vim/
             cat utils/YoucpmpleteMeConfigs/vimrc >> ~/.vimrc   
