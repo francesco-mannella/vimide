@@ -99,7 +99,7 @@ Use the vimide [vimrc](vimrc) template
 
 #### YouCompleteMe
             git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
-            cd ~/.vim/bundle && ./install.py --clang-completer && cd ..
+            cd ~/.vim/bundle/YouCompleteMe && ./install.py --clang-completer && cd ..
             
             curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/ycm_extra_conf.py > ~/.vim/ycm_extra_conf.py 
             curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/ >> ~/.vimrc   
