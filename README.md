@@ -101,7 +101,11 @@ Use the vimide [vimrc](vimrc) template
             git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
             cd ~/.vim/bundle/YouCompleteMe
             git submodule update --init --recursive
-            ./install.py --clang-completer && cd ..
+            ./install.py --clang-completer 
+            cd ~/.vim
+            ln -fs $(pwd)/bundle/YouCompleteMe/ $(pwd)/plugin/
+            
+            
             
             curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/ycm_extra_conf.py > ~/.vim/ycm_extra_conf.py 
             curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/vimrc >> ~/.vimrc   
