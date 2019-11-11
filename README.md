@@ -80,17 +80,17 @@ curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.v
 #### exuberant-ctags: 
 
 
-            sudo apt-get install ctags
+    sudo apt-get install ctags
 
 
 #### tagbar:
 
 
-            git clone https://github.com/majutsushi/tagbar.git tagbar
-            cd tagbar && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
+    git clone https://github.com/majutsushi/tagbar.git tagbar
+    cd tagbar && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
             
 #### .vimrc
-            echo ":set spr" >> ~/.vimrc
+    echo ":set spr" >> ~/.vimrc
 
 ### RECOMMENDED
 
@@ -98,16 +98,16 @@ curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.v
 Use the vimide [vimrc](vimrc) template 
 
 #### YouCompleteMe
-            git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
-            cd ~/.vim/bundle/YouCompleteMe
-            git submodule update --init --recursive
-            ./install.py --clang-completer 
-            cd ~/.vim
-            ln -fs $(pwd)/bundle/YouCompleteMe/ $(pwd)/plugin/
+    git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
+    cd ~/.vim/bundle/YouCompleteMe
+    git submodule update --init --recursive
+    ./install.py --clang-completer 
+    cd ~/.vim
+    ln -fs $(pwd)/bundle/YouCompleteMe/ $(pwd)/plugin/
             
             
             
-            curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/ycm_extra_conf.py > ~/.vim/ycm_extra_conf.py 
-            curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/vimrc >> ~/.vimrc   
+    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/ycm_extra_conf.py > ~/.vim/ycm_extra_conf.py 
+    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/vimrc >> ~/.vimrc   
             
           
