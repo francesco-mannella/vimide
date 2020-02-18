@@ -117,13 +117,17 @@ endfunction
 function! FormatIDE()
 
     wincmd t
-    vertical res 35
+    vertical res 5
     wincmd l
     wincmd l
-    vertical res 35 
+    vertical res 5 
     wincmd h
-    vertical res 85 
+    vertical res 200 
 
+    au BufLeave *_sources :vertical res 2 
+    au BufEnter *_sources :vertical res 60 
+    au WinLeave *Tagbar* :vertical res 2 
+    au WinEnter *Tagbar* :vertical res 60 
 endfunction
 
 
@@ -541,13 +545,17 @@ endfunction
 function! FormatPyIDE()
 
     wincmd t
-    vertical res 35
+    vertical res 20
     wincmd l
     wincmd l
-    vertical res 35 
+    vertical res 5 
     wincmd h
-    vertical res 85 
+    vertical res 200 
 
+    au BufLeave *_sources :vertical res 2 
+    au BufEnter *_sources :vertical res 60 
+    au WinLeave *Tagbar* :vertical res 2 
+    au WinEnter *Tagbar* :vertical res 60 
 endfunction
 
 
@@ -657,4 +665,3 @@ nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
 nmap ,cu :call UpdateView()<CR>
 nmap <enter> :call OpenFileUnderCursor(2)<CR>
-
