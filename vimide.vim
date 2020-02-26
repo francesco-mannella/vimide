@@ -368,9 +368,8 @@ function! Replace()
                 call writefile(remotelines, replist[3] )
             endif
         endfor
-        :e %
-        :bufdo e 
         execute ":b".g:replacebuffer
+        :e! 
         :silent !rm -fr /tmp/replace    
     endif
     
