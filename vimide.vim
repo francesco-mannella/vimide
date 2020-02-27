@@ -368,6 +368,7 @@ function! Replace()
                 call writefile(remotelines, replist[3] )
             endif
         endfor
+        call input("Press to return to buffer")
         execute ":b".g:replacebuffer
         :e! 
         :silent !rm -fr /tmp/replace    
