@@ -96,5 +96,31 @@ curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.v
 ### RECOMMENDED
  
 #### .vimrc
-Use the vimide [vimrc](vimrc) template 
+Install vundle:
+    
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+and set ~/.vimrc with the vimide [vimrc](vimrc) template:
+
+    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimrc >> ~/.vimrc
+
+#### jedi +clang
+
+Install jedi:
+
+    python -m pip install jedi
+
+Install libclang:
+
+    sudo apt install libclang8-dev
+
+Install vim plugins:
+
+    vim +PluginInstall +qall
+
+
+    
+    
+    
+
           
