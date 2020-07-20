@@ -90,12 +90,12 @@ curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.v
   
 ### SETTINGS
  
-#### .vimrc
+#### vim
     echo ":set spr" >> ~/.vimrc
 
 ### RECOMMENDED
  
-#### .vimrc
+#### vim
 Install vundle:
     
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
