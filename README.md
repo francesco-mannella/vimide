@@ -75,8 +75,7 @@ RunIDE() finds all sources in the working dir and opens four windows:
 mkdir -p ~/.vim/plugin/
 curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.vim > ~/.vim/plugin/vimide.vim
 
-### REQUIRES
-
+ 
 #### exuberant-ctags: 
 
 
@@ -88,26 +87,14 @@ curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.v
 
     git clone https://github.com/majutsushi/tagbar.git tagbar
     cd tagbar && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
-            
+  
+### SETTINGS
+ 
 #### .vimrc
     echo ":set spr" >> ~/.vimrc
 
 ### RECOMMENDED
-
+ 
 #### .vimrc
 Use the vimide [vimrc](vimrc) template 
-
-#### YouCompleteMe
-    git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
-    cd ~/.vim/bundle/YouCompleteMe
-    git submodule update --init --recursive
-    ./install.py --clang-completer 
-    cd ~/.vim
-    ln -fs $(pwd)/bundle/YouCompleteMe/ $(pwd)/plugin/
-            
-            
-            
-    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/ycm_extra_conf.py > ~/.vim/ycm_extra_conf.py 
-    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/utils/YouCompleteMeConfigs/vimrc >> ~/.vimrc   
-            
           
