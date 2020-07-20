@@ -104,7 +104,7 @@ and set ~/.vimrc with the vimide [vimrc](vimrc) template:
 
     curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimrc >> ~/.vimrc
 
-#### jedi +clang
+#### autocomplection in python through jedi and cpp through clang
 
 Install jedi:
 
@@ -117,10 +117,3 @@ Install libclang:
 Install vim plugins:
 
     vim +PluginInstall +qall
-
-
-    
-    
-    
-
-          
