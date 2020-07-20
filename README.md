@@ -72,8 +72,8 @@ RunIDE() finds all sources in the working dir and opens four windows:
 
 
 ### INSTALL
-mkdir -p ~/.vim/plugin/
-curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.vim > ~/.vim/plugin/vimide.vim
+    mkdir -p ~/.vim/plugin/
+    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.vim > ~/.vim/plugin/vimide.vim
 
  
 #### exuberant-ctags: 
