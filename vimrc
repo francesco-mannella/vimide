@@ -8,7 +8,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'davidhalter/jedi-vim'
-Plugin 'xavierd/clanag_complete'
+Plugin 'xavierd/clang_complete'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
