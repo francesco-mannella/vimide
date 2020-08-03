@@ -16,43 +16,43 @@ RunIDE() finds all sources in the working dir and opens four windows:
               |                |                      |    cpp       |
               |                |                      |    list      |
               |________________|______________________|______________|
-              
+
 
               tagbar:
-                      
+
                       - mouse double click    -> move to
-                      - keyboard <return>        function/class/method 
-                                                 definition 
-                    
+                      - keyboard <return>        function/class/method
+                                                 definition
+
               header/cpp:
-                      
+
                       - keyboard '+'          -> Open file in the edit
                          (normal mode)           window
-                             
 
-              keyboard shortcuts 
+
+              keyboard shortcuts
                    (normal mode):
-                      
+
                                 ,ci           -> Open or reset IDE
 
                                 ,cp           -> Open or reset IDE for python
                                                  visualization
 
                                 ,cc           -> Create a new Class (making
-                                                 <classname>.h and 
+                                                 <classname>.h and
                                                  <classname>.cpp)
-                      
+
                                 ,cC           -> Clone a Class (making
-                                                 <newclassname>.h and 
+                                                 <newclassname>.h and
                                                  <newclassname>.cpp)
-                      
+
                                 ,cf           -> Finds the occurrences of the
                                                  word under cursor and
                                                  display a list in the edit
                                                  window. Each row contains a
                                                  grep-style visualization of
                                                  the line where an occurrence is
-                                                 found. 
+                                                 found.
 
                                 ,cg           -> move to the file to which
                                                  the line under the cursor
@@ -71,49 +71,71 @@ RunIDE() finds all sources in the working dir and opens four windows:
 
 
 
-### INSTALL
-    mkdir -p ~/.vim/plugin/
-    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimide.vim > ~/.vim/plugin/vimide.vim
-
- 
-#### exuberant-ctags: 
 
 
-    sudo apt-get install ctags
 
 
-#### tagbar:
+### Install with Vundle
 
-
-    git clone https://github.com/majutsushi/tagbar.git tagbar
-    cd tagbar && git archive --format=tar HEAD | (cd ~/.vim/ && tar xf -) && cd ..
-  
-### SETTINGS
- 
 #### vim
-    echo ":set spr" >> ~/.vimrc
+* Install vundle:
 
-### RECOMMENDED
- 
-#### vim
-Install vundle:
-    
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+        git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-and set ~/.vimrc with the vimide [vimrc](vimrc) template:
+* add this vundle snippet at the begin of your ~/vimrc:
 
-    curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimrc >> ~/.vimrc
+
+      set nocompatible              " be iMproved, required
+      filetype off                  " required
+
+      " set the runtime path to include Vundle and initialize
+      set rtp+=~/.vim/bundle/Vundle.vim
+      call vundle#begin()
+
+      " let Vundle manage Vundle, required
+      Plugin 'VundleVim/Vundle.vim'
+
+      Plugin 'vim-latex/vim-latex'
+      Plugin 'davidhalter/jedi-vim'
+      Plugin 'xavierd/clang_complete'
+      Plugin 'majutsushi/tagbar'
+      Plugin 'francesco-mannella/vimide'
+
+      " All of your Plugins must be added before the following line
+      call vundle#end()            " required
+      filetype plugin indent on    " required
+
+      "jedi-vim
+      let g:jedi#popup_select_first = 0
+      autocmd FileType python setlocal completeopt-=preview
+      let g:pymode_rope = 0
+
+
+
+
+
+* OR (recommended): set ~/.vimrc with the vimide [vimrc](vimrc) template:
+
+        curl https://raw.githubusercontent.com/francesco-mannella/vimide/master/vimrc > ~/.vimrc
+* install vim plugins:
+
+      vim +PluginInstall +qall
+
+### Install dependencies
 
 #### autocomplection in python through jedi and cpp through clang
 
-Install jedi:
+* jedi:
 
-    python -m pip install jedi
 
-Install libclang:
+      python -m pip install jedi
 
-    sudo apt install libclang8-dev
+* Install libclang:
 
-Install vim plugins:
+      sudo apt install libclang8-dev
 
-    vim +PluginInstall +qall
+#### exuberant-ctags:
+
+* Install clangs
+
+      sudo apt-get install ctags
