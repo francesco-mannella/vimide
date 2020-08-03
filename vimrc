@@ -9,6 +9,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'xavierd/clang_complete'
+Plugin 'majutsushi/tagbar'
+Plugin 'francesco-mannella/vimide'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
