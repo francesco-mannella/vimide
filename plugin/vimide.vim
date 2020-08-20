@@ -610,8 +610,16 @@ function! RunPyIDE()
         
     wincmd o
     bwipeout
-    
-    silent execute ":e ".pys[0] 
+    let has_main = 0
+    for py in pys 
+        if py =~ "main"
+            silent execute ":e ".py 
+            let has_main = 1
+        endif
+    endfor
+    if has_main == 0  
+        silent execute ":e ".pys[0] 
+    endif
     call LeftTagbarToggle()
     wincmd t
     wincmd l
