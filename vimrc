@@ -7,14 +7,21 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'vim-latex/vim-latex'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'xavierd/clang_complete'
 Plugin 'majutsushi/tagbar'
 Plugin 'francesco-mannella/vimide'
+Plugin 'python-rope/ropevim'
+Plugin 'goerz/ipynb_notedown.vim'
+
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
+filetype plugin on
+let g:tex_flavor='latex'
 
 "jedi-vim
 let g:jedi#popup_select_first = 0
@@ -33,8 +40,6 @@ imap <silent> <End> <C-o>g<End>
 vnoremap <C-X> "+d
 vnoremap <C-C> "+y
 nnoremap <C-V> "+gPl
-vnoremap <C-V> :<C-U>call Paste("v")<CR>
-inoremap <C-V> <C-O>:call Paste("i")<CR>
 se nospell
 
 setlocal linebreak
@@ -70,6 +75,7 @@ au FocusLost * silent! wa
 :set switchbuf=usetab,split
 :set spr
 :let g:netrw_preview = 1
+:let g:netrw_hide = 0
 :let g:netrw_list_hide='^\..*'
 :let g:netrw_bufsettings = 'nonu noma nomod nobl nowrap ro'
 :let g:netrw_menu = 0
@@ -86,6 +92,11 @@ autocmd FileType tex,matlab       let b:comment_leader = '% '
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 
+
+" vim-latex
+let g:Tex_DefaultTargetFormat = 'pdf'
+let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
+set iskeyword+=:
 
 " Comment text
 function! Comment() range "Step through each line in the range...
@@ -157,8 +168,39 @@ endfunction
 " mapping '§' to reformat selected code in latex
 :map <silent> § :call IndentComments("%") <CR>
 set background=dark
-
+" put the path of your clang library
 let g:clang_library_path='/usr/lib/llvm-8/lib/libclang-8.so.1'
 
-highlight Comment ctermfg=lightblue
-highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#000000
+
+let g:jupytext_command = 'notedown'
+" python
+let g:jupytext_fmt = 'markdown'
+let g:jupytext_to_ipynb_opts = '--to=notebook'
+" put the path of your python interpreter
+let g:python3_host_prog=expand('~/venv3/bin/python')
+
+" spell
+set spelllang=en_gb spell
+set spellfile=$HOME/Dropbox/vim/spell/en.utf-8.add
+
+" highlight
+hi clear DiffAdd
+hi clear DiffChange   
+hi clear DiffDelete   
+hi clear DiffText     
+hi clear SpellBad                                                
+hi clear SpellRare                                               
+hi clear SpellCap                                                
+hi clear SpellLocal
+hi SpellBad     cterm=underline                                      
+hi SpellRare    cterm=underline                                     
+hi SpellCap     cterm=underline                                      
+hi SpellLocal   cterm=underline
+hi Comment                      ctermfg=lightblue
+hi Pmenu                        ctermfg=15          ctermbg=0 
+hi Visual       cterm=bold      ctermfg=Black       ctermbg=DarkBlue 
+hi DiffAdd                      ctermfg=Black       ctermbg=DarkGreen
+hi DiffChange                   ctermfg=Black       ctermbg=Yellow
+hi DiffDelete                   ctermfg=LightBlue   ctermbg=NONE
+hi DiffText                     ctermfg=Yellow      ctermbg=DarkRed
+
