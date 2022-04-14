@@ -16,7 +16,7 @@ Plugin 'francesco-mannella/vimide'
 Plugin 'python-rope/ropevim'
 Plugin 'goerz/ipynb_notedown.vim'
 Plugin 'tpope/vim-fugitive'
-
+Plugin 'anosillus/vim-ipynb'                                                                                             
 
 
 " All of your Plugins must be added before the following line

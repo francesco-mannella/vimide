@@ -139,3 +139,13 @@ RunIDE() finds all sources in the working dir and opens four windows:
 * Install clangs
 
       sudo apt-get install ctags
+
+#### vim-ipynb
+
+* Install ipynb-py-convert
+    
+      pip install ipynb-py-convert
+
+* Install notedown
+
+      pip install notedown
