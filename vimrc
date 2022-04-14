@@ -16,7 +16,8 @@ Plugin 'francesco-mannella/vimide'
 Plugin 'python-rope/ropevim'
 Plugin 'goerz/ipynb_notedown.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'anosillus/vim-ipynb'                                                                                             
+Plugin 'will133/vim-dirdiff'
+Plugin 'anosillus/vim-ipynb'
 
 
 " All of your Plugins must be added before the following line
@@ -73,6 +74,7 @@ au FocusLost * silent! wa
 :filetype plugin indent on
 :autocmd filetype python set expandtab
 :autocmd BufEnter * cd %:p:h
+colorscheme blackdust "https://raw.githubusercontent.com/vim-scripts/blackdust.vim/master/colors/blackdust.vim
 
 :set switchbuf=usetab,split
 :set spr
@@ -169,7 +171,6 @@ endfunction
 
 " mapping '§' to reformat selected code in latex
 :map <silent> § :call IndentComments("%") <CR>
-set background=dark
 " put the path of your clang library
 let g:clang_library_path='/usr/lib/llvm-8/lib/libclang-8.so.1'
 
@@ -182,27 +183,8 @@ let g:jupytext_to_ipynb_opts = '--to=notebook'
 let g:python3_host_prog=expand('~/venv3/bin/python')
 
 " spell
-set spelllang=en_gb spell
-set spellfile=$HOME/Dropbox/vim/spell/en.utf-8.add
+" set spelllang=en_gb spell
+" set spellfile=$HOME/.vim/spell/en.utf-8.add
 
-" highlight
-hi clear DiffAdd
-hi clear DiffChange   
-hi clear DiffDelete   
-hi clear DiffText     
-hi clear SpellBad                                                
-hi clear SpellRare                                               
-hi clear SpellCap                                                
-hi clear SpellLocal
-hi SpellBad     cterm=underline                                      
-hi SpellRare    cterm=underline                                     
-hi SpellCap     cterm=underline                                      
-hi SpellLocal   cterm=underline
-hi Comment                      ctermfg=lightblue
-hi Pmenu                        ctermfg=15          ctermbg=0 
-hi Visual       cterm=bold      ctermfg=Black       ctermbg=DarkBlue 
-hi DiffAdd                      ctermfg=Black       ctermbg=DarkGreen
-hi DiffChange                   ctermfg=Black       ctermbg=Yellow
-hi DiffDelete                   ctermfg=LightBlue   ctermbg=NONE
-hi DiffText                     ctermfg=Yellow      ctermbg=DarkRed
-
+" DirDff
+let g:DirDiffExcludes = "CVS,*.class,*.o,*.pyc,.py_sources,.tags,*.jpg,*.png,.avi,*.npy,*.gif"                                                                                
