@@ -568,7 +568,11 @@ function! CreatePyView()
     silent :e .py_sources 
     silent :se noro
     silent :1,$d
-    silent r ! find | grep -v build | grep -v "ropeproject" | grep "\.\(py\|sh\|ipynb\|rd\|txt\)$"
+    silent r ! find | 
+                \ grep -v build | 
+                \ grep -v "ropeproject" | 
+                \ grep -v "\(\/\s*\)\\." |
+                \ grep "\.\(py\|sh\|ipynb\|rd\|txt\)$"
     sort
     write
     set nonumber
