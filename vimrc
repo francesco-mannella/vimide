@@ -18,7 +18,8 @@ Plugin 'goerz/ipynb_notedown.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'will133/vim-dirdiff'
 Plugin 'anosillus/vim-ipynb'
-
+Plugin 'jpalardy/vim-slime'
+Plugin 'hanschen/vim-ipython-cell'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -188,3 +189,80 @@ let g:python3_host_prog=expand('~/venv3/bin/python')
 
 " DirDff
 let g:DirDiffExcludes = "CVS,*.class,*.o,*.pyc,.py_sources,.tags,*.jpg,*.png,.avi,*.npy,*.gif"                                                                                
+
+
+" Highlights
+hi Error NONE
+hi ErrorMsg NONE
+
+"------------------------------------------------------------------------------
+" slime configuration 
+"------------------------------------------------------------------------------
+" " always use tmux
+" let g:slime_target = 'tmux'
+" 
+" " fix paste issues in ipython
+let g:slime_python_ipython = 1
+" 
+" " always send text to the top-right pane in the current tmux tab without asking
+" let g:slime_default_config = {
+"             \ 'socket_name': get(split($TMUX, ','), 0),
+"             \ 'target_pane': '{top-right}' }
+" let g:slime_dont_ask_default = 1
+
+"------------------------------------------------------------------------------
+" ipython-cell configuration
+"------------------------------------------------------------------------------
+" Keyboard mappings. <Leader> is \ (backslash) by default
+
+" map <Leader>s to start IPython
+nnoremap <Leader>1s :SlimeSend1 ipython --matplotlib<CR>
+
+" map <Leader>1r to run script
+nnoremap <Leader>1r :IPythonCellRun<CR>
+
+" map <Leader>1R to run script and time the execution
+nnoremap <Leader>1R :IPythonCellRunTime<CR>
+
+" map <Leader>1c to execute the current cell
+nnoremap <Leader>1c :IPythonCellExecuteCell<CR>
+
+" map <Leader>1C to execute the current cell and jump to the next cell
+nnoremap <Leader>1C :IPythonCellExecuteCellJump<CR>
+
+" map <Leader>1l to clear IPython screen
+nnoremap <Leader>1l :IPythonCellClear<CR>
+
+" map <Leader>1x to close all Matplotlib figure windows
+nnoremap <Leader>1x :IPythonCellClose<CR>
+
+" map [c and ]c to jump to the previous and next cell header
+nnoremap [c :IPythonCellPrevCell<CR>
+nnoremap ]c :IPythonCellNextCell<CR>
+
+" map <Leader>1h to send the current line or current selection to IPython
+nmap <Leader>1h <Plug>SlimeLineSend
+xmap <Leader>1h <Plug>SlimeRegionSend
+
+" map <Leader>1p to run the previous command
+nnoremap <Leader>1p :IPythonCellPrevCommand<CR>
+
+" map <Leader>1Q to restart ipython
+nnoremap <Leader>1Q :IPythonCellRestart<CR>
+
+" map <Leader>1d to start debug mode
+nnoremap <Leader>1d :SlimeSend1 %debug<CR>
+
+" map <Leader>1q to exit debug mode or IPython
+nnoremap <Leader>1q :SlimeSend1 exit<CR>
+
+" map <F9> and <F10> to insert a cell header tag above/below and enter insert mode
+nmap <F9> :IPythonCellInsertAbove<CR>a
+nmap <F10> :IPythonCellInsertBelow<CR>a
+
+" also make <F9> and <F10> work in insert mode
+imap <F9> <C-o>:IPythonCellInsertAbove<CR>
+imap <F10> <C-o>:IPythonCellInsertBelow<CR>
+
+let g:ipython_cell_cell_command = '%paste'
+let g:ipython_cell_tag = ['# %%', '#%%']
