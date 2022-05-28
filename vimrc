@@ -194,7 +194,8 @@ let g:DirDiffExcludes = "CVS,*.class,*.o,*.pyc,.py_sources,.tags,*.jpg,*.png,.av
 " Highlights
 hi Error NONE
 hi ErrorMsg NONE
-hi IPythonCell ctermbg=6 ctermfg=0 guifg=#000 guibg=#99f 
+hi IPythonCell ctermbg=6 ctermfg=0
+
 "------------------------------------------------------------------------------
 " slime configuration 
 "------------------------------------------------------------------------------
