@@ -79,7 +79,7 @@
 scriptencoding utf-8
 
 " loaction of tags file
-set tags=./.tags
+let g:tags=trim(system("mktemp"))
 " case-sensitive search 
 set noci 
 " avoid 'object::object' tokens
@@ -99,7 +99,7 @@ endfunction
 " Description: remotely executes ctags over all subdirs
 function! ResetCtags()
     
-    silent !ctags -R --c-types=+l --python-kinds=-i --langdef=C++ --sort=yes --c++-kinds=+cdefglmnpstuvx --fields=+imatS --extra=+q -f '.tags' ..
+    execute "silent ! ctags -R --c-types=+l --python-kinds=-i --langdef=C++ --sort=yes --c++-kinds=+cdefglmnpstuvx --fields=+imatS --extra=+q -f ".g:tags." ."
 
 endfunction
 
@@ -125,8 +125,8 @@ function! FormatIDE()
     wincmd h
     vertical res 200 
 
-    au BufLeave *_sources :vertical res 2 
-    au BufEnter *_sources :vertical res 60 
+    au BufLeave *Netrw* :vertical res 2 
+    au BufEnter *Netrw* :vertical res 60 
     au WinLeave *Tagbar* :vertical res 2 
     au WinEnter *Tagbar* :vertical res 60 
 endfunction
@@ -138,7 +138,6 @@ function! CreateCppView()
         
     execute ":cd ".g:cwd 
 
-    silent :se noro
     silent :Ex
 
 endfunction
@@ -150,7 +149,6 @@ function! CreateHView()
 
     execute ":cd ".g:cwd 
 
-    silent :se noro
     silent :Ex
 
 endfunction
@@ -539,8 +537,8 @@ function! FormatPyIDE()
     wincmd h
     vertical res 200 
 
-    au BufLeave *_sources :vertical res 2 
-    au BufEnter *_sources :vertical res 60 
+    au BufLeave *Netrw* :vertical res 2 
+    au BufEnter *Netrw* :vertical res 60 
     au WinLeave *Tagbar* :vertical res 2 
     au WinEnter *Tagbar* :vertical res 60 
 endfunction
@@ -553,7 +551,6 @@ function! CreatePyView()
     execute ":cd ".g:cwd 
 
     silent :Ex
-    silent :se noro
 
 endfunction
 
