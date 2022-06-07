@@ -14,12 +14,13 @@ Plugin 'xavierd/clang_complete'
 Plugin 'majutsushi/tagbar'
 Plugin 'francesco-mannella/vimide'
 Plugin 'python-rope/ropevim'
-Plugin 'goerz/ipynb_notedown.vim'
+Plugin 'goerz/jupytext.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'will133/vim-dirdiff'
 Plugin 'anosillus/vim-ipynb'
 Plugin 'jpalardy/vim-slime'
 Plugin 'hanschen/vim-ipython-cell'
+
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -75,8 +76,7 @@ au FocusLost * silent! wa
 :filetype plugin indent on
 :autocmd filetype python set expandtab
 :autocmd BufEnter * cd %:p:h
-colorscheme blackdust "https://raw.githubusercontent.com/vim-scripts/blackdust.vim/master/colors/blackdust.vim
-
+colorscheme late_evening "https://raw.githubusercontent.com/h3xx/vim-late_evening/main/colors/late_evening.vim
 :set switchbuf=usetab,split
 :set spr
 :let g:netrw_preview = 1
@@ -176,10 +176,11 @@ endfunction
 let g:clang_library_path='/usr/lib/llvm-8/lib/libclang-8.so.1'
 
 
-let g:jupytext_command = 'notedown'
-" python
-let g:jupytext_fmt = 'markdown'
-let g:jupytext_to_ipynb_opts = '--to=notebook'
+let g:jupytext_enable = 1
+let g:jupytext_command = 'jupytext'
+let g:jupytext_fmt = 'py:percent'
+let g:jupytext_to_ipynb_opts = '--to=ipynb --update' 
+
 " put the path of your python interpreter
 let g:python3_host_prog=expand('~/venv3/bin/python')
 
@@ -227,6 +228,9 @@ nnoremap <Leader>1R :IPythonCellRunTime<CR>
 
 " map <Leader>1c to execute the current cell
 nnoremap <Leader>1c :IPythonCellExecuteCell<CR>
+
+" map <Leader>1c to execute the current cell
+nnoremap <Leader>1v :IPythonCellExecuteCellVerbose<CR>
 
 " map <Leader>1C to execute the current cell and jump to the next cell
 nnoremap <Leader>1C :IPythonCellExecuteCellJump<CR>

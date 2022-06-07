@@ -547,10 +547,11 @@ endfunction
 " CreatePyView: TODO
 " Description: TODO 
 function! CreatePyView()
-        
+    
+    echo g:cwd
     execute ":cd ".g:cwd 
 
-    silent :Ex
+    execute "silent :Ex ".g:cwd
 
 endfunction
 
@@ -580,7 +581,6 @@ function! RunPyIDE()
 
     if len(pys) == 0
         
-        call CreateMainTemplate(GetCurrDir())
         let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
         
     endif
