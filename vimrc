@@ -218,48 +218,48 @@ let g:slime_python_ipython = 1
 " Keyboard mappings. <Leader> is \ (backslash) by default
 
 " map <Leader>s to start IPython
-nnoremap <Leader>1s :SlimeSend1 ipython --matplotlib<CR>
+nnoremap <Leader>ss :SlimeSend1 ipython --matplotlib<CR>
 
 " map <Leader>1r to run script
-nnoremap <Leader>1r :IPythonCellRun<CR>
+nnoremap <Leader>rr :IPythonCellRun<CR>
 
 " map <Leader>1R to run script and time the execution
-nnoremap <Leader>1R :IPythonCellRunTime<CR>
+nnoremap <Leader>RR :IPythonCellRunTime<CR>
 
-" map <Leader>1c to execute the current cell
+" map <Leader>lc to execute the current cell
 nnoremap <Leader>1c :IPythonCellExecuteCell<CR>
 
-" map <Leader>1c to execute the current cell
-nnoremap <Leader>1v :IPythonCellExecuteCellVerbose<CR>
+" map <Leader>lv to execute the current cell
+nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>
 
-" map <Leader>1C to execute the current cell and jump to the next cell
-nnoremap <Leader>1C :IPythonCellExecuteCellJump<CR>
+" map <Leader>ll to execute the current cell and jump to the next cell
+nnoremap <Leader>ll :IPythonCellExecuteCellJump<CR>
 
-" map <Leader>1l to clear IPython screen
-nnoremap <Leader>1l :IPythonCellClear<CR>
+" map <Leader>LL to clear IPython screen
+nnoremap <Leader>LL :IPythonCellClear<CR>
 
-" map <Leader>1x to close all Matplotlib figure windows
-nnoremap <Leader>1x :IPythonCellClose<CR>
+" map <Leader>x to close all Matplotlib figure windows
+nnoremap <Leader>xx :IPythonCellClose<CR>
 
 " map [c and ]c to jump to the previous and next cell header
 nnoremap [c :IPythonCellPrevCell<CR>
 nnoremap ]c :IPythonCellNextCell<CR>
 
 " map <Leader>1h to send the current line or current selection to IPython
-nmap <Leader>1h <Plug>SlimeLineSend
-xmap <Leader>1h <Plug>SlimeRegionSend
+nmap <Leader>hh <Plug>SlimeLineSend
+xmap <Leader>hh <Plug>SlimeRegionSend
 
-" map <Leader>1p to run the previous command
-nnoremap <Leader>1p :IPythonCellPrevCommand<CR>
+" map <Leader>p to run the previous command
+nnoremap <Leader>pp :IPythonCellPrevCommand<CR>
 
-" map <Leader>1Q to restart ipython
-nnoremap <Leader>1Q :IPythonCellRestart<CR>
+" map <Leader>Q to restart ipython
+nnoremap <Leader>QQ :IPythonCellRestart<CR>
 
-" map <Leader>1d to start debug mode
-nnoremap <Leader>1d :SlimeSend1 %debug<CR>
+" map <Leader>d to start debug mode
+nnoremap <Leader>dd :SlimeSend1 %debug<CR>
 
-" map <Leader>1q to exit debug mode or IPython
-nnoremap <Leader>1q :SlimeSend1 exit<CR>
+" map <Leader>q to exit debug mode or IPython
+nnoremap <Leader>qq :SlimeSend1 exit<CR>
 
 " map <F9> and <F10> to insert a cell header tag above/below and enter insert mode
 nmap <F9> :IPythonCellInsertAbove<CR>a
