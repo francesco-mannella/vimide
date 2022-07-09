@@ -530,16 +530,12 @@ endfunction
 function! FormatPyIDE()
 
     wincmd t
-    vertical res 20
     wincmd l
-    wincmd l
-    vertical res 5 
-    wincmd h
-    vertical res 200 
+    vertical res 400
 
-    au BufLeave *Netrw* :vertical res 2 
-    au BufEnter *Netrw* :vertical res 60 
-    au WinLeave *Tagbar* :vertical res 2 
+    au WinEnter *py :vertical res 400 
+    au WinLeave *Netrw* :vertical res 1 
+    au WinLeave *Tagbar* :vertical res 1 
     au WinEnter *Tagbar* :vertical res 60 
 endfunction
 
@@ -650,3 +646,4 @@ nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
 nmap ,cu :call UpdateView()<CR>
 nmap <enter> :call OpenFileUnderCursor(2)<CR>
+nmap <silent> ,cm :vertical res 400<CR>
