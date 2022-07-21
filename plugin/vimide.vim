@@ -530,17 +530,15 @@ endfunction
 function! FormatPyIDE()
 
     wincmd t
-    vertical res 20
     wincmd l
     wincmd l
-    vertical res 5 
     wincmd h
     vertical res 200 
 
     au BufLeave *Netrw* :vertical res 2 
-    au BufEnter *Netrw* :vertical res 60 
+    au BufEnter *Netrw* :vertical res 200 
     au WinLeave *Tagbar* :vertical res 2 
-    au WinEnter *Tagbar* :vertical res 60 
+    au WinEnter *Tagbar* :vertical res 200 
 endfunction
 
 
