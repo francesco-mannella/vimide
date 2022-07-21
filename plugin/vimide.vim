@@ -531,23 +531,24 @@ function! FormatPyIDE()
 
     wincmd t
     wincmd l
-    vertical res 400
+    wincmd l
+    wincmd h
+    vertical res 200 
 
-    au WinEnter *py :vertical res 400 
-    au WinLeave *Netrw* :vertical res 1 
-    au WinLeave *Tagbar* :vertical res 1 
-    au WinEnter *Tagbar* :vertical res 60 
+    au BufLeave *Netrw* :vertical res 2 
+    au BufEnter *Netrw* :vertical res 200 
+    au WinLeave *Tagbar* :vertical res 2 
+    au WinEnter *Tagbar* :vertical res 200 
 endfunction
 
 
 " CreatePyView: TODO
 " Description: TODO 
 function! CreatePyView()
-    
-    echo g:cwd
+        
     execute ":cd ".g:cwd 
 
-    execute "silent :Ex ".g:cwd
+    silent :Ex
 
 endfunction
 
@@ -577,6 +578,7 @@ function! RunPyIDE()
 
     if len(pys) == 0
         
+        call CreateMainTemplate(GetCurrDir())
         let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
         
     endif
@@ -646,4 +648,3 @@ nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
 nmap ,cu :call UpdateView()<CR>
 nmap <enter> :call OpenFileUnderCursor(2)<CR>
-nmap <silent> ,cm :vertical res 400<CR>
