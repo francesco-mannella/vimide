@@ -248,8 +248,9 @@ endfunction
 function! CreatePyView()
         
     execute ":cd ".g:cwd 
-
-    silent :Ex
+    
+    echo g:cwd
+    silent :Ex .
 
 endfunction
 
@@ -277,13 +278,6 @@ function! RunPyIDE()
     
     let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
 
-    if len(pys) == 0
-        
-        call CreateMainTemplate(GetCurrDir())
-        let pys = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.py$"`'),'\n')    
-        
-    endif
-        
     wincmd o
     bwipeout
     let has_main = 0
