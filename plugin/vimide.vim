@@ -9,19 +9,19 @@
 " Note:        Depends on tagbar.vim youcompleteme ctags 
 "
 " Description:
-"              RunIDE() finds all sources in the working dir 
+"              RunPyIDE() finds all sources in the working dir 
 "              and opens four windows:
 "
 "               ______________________________________________________
 "              |                |                      |              |
-"              |                |                      |   header     |
-"              |                |                      |   list       |
-"              |                |                      |              |
-"              |  tagbar        |       edit           |______________|
 "              |                |                      |              |
 "              |                |                      |              |
-"              |                |                      |    cpp       |
-"              |                |                      |    list      |
+"              |                |                      |              |
+"              |  tagbar        |       edit           |    files     |
+"              |                |                      |              |
+"              |                |                      |              |
+"              |                |                      |              |
+"              |                |                      |              |
 "              |________________|______________________|______________|
 "              
 "
@@ -31,27 +31,13 @@
 "                      - keyboard <return>        function/class/method 
 "                                                 definition 
 "                    
-"              header/cpp:
-"                      
-"                      - keyboard '+'          -> Open file in the edit
-"                         (normal mode)           window
-"                             
 "
 "              keyboard shortcuts 
 "                   (normal mode):
 "                      
-"                                ,ci           -> Open or reset IDE
 "                                ,cp           -> Open or reset IDE for python
 "                                                 visualization
 "
-"                                ,cc           -> Create a new Class (making
-"                                                 <classname>.h and 
-"                                                 <classname>.cpp)
-"                      
-"                                ,cC           -> Clone a Class (making
-"                                                 <newclassname>.h and 
-"                                                 <newclassname>.cpp)
-"                      
 "                                ,cf           -> Finds the occurrences of the
 "                                                 word under cursor and
 "                                                 display a list in the edit
@@ -113,158 +99,6 @@ function! GotoMainWindow()
 
 endfunction
 
-" FormatIDE: reset the width of the windows
-" Description: TODO 
-function! FormatIDE()
-
-    wincmd t
-    vertical res 5
-    wincmd l
-    wincmd l
-    vertical res 5 
-    wincmd h
-    vertical res 200 
-
-    au BufLeave *Netrw* :vertical res 2 
-    au BufEnter *Netrw* :vertical res 60 
-    au WinLeave *Tagbar* :vertical res 2 
-    au WinEnter *Tagbar* :vertical res 60 
-endfunction
-
-
-" CreateCppView: TODO
-" Description: TODO 
-function! CreateCppView()
-        
-    execute ":cd ".g:cwd 
-
-    silent :Ex
-
-endfunction
-
-
-" CreateHView: TODO
-" Description: TODO 
-function! CreateHView()
-
-    execute ":cd ".g:cwd 
-
-    silent :Ex
-
-endfunction
-
-" CreateMainTemplate: TODO
-" Description: TODO 
-function! CreateMainTemplate(path)
-    
-    call GotoMainWindow()
-    let main_cpp = a:path."main.cpp"
-    
-    let hlist = []
-    call add(hlist,'#include <iostream>' )
-    call add(hlist,''                    )
-    call add(hlist,'int main()'          )
-    call add(hlist,'{'                   )
-    call add(hlist,'    return 0;'       )
-    call add(hlist,'}'                   )
-
-    call writefile(hlist,main_cpp)
-    
-endfunction
-
-" CreateClassTemplate: TODO
-" Description: TODO 
-function! CreateClassTemplate()
-    
-    call GotoMainWindow()
-    let path = GetCurrDir() 
-    
-    call inputsave() 
-    let identifier = input("Class to create: ","")
-    call inputrestore()
-
-    let identifier = substitute(identifier,'^\(.\)','\U\1\E',"")
-    let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
-    let Uidentifier = substitute(identifier,'\(.*\)','\U\1\E',"")  
-
-    let filename_root = path.'/'.Lidentifier
-    let filename_cpp = filename_root.".cpp"
-    let filename_h = filename_root.".h"  
-  
-    
-    let hlist = []
-    call add(hlist,'#include "'.Lidentifier.'.h"')
-    call add(hlist,'')
-    call add(hlist,identifier.'::'.identifier.'()')
-    call add(hlist,'{')
-    call add(hlist,'}')
-    call add(hlist,'')
-    call add(hlist,'~'.identifier.'::'.identifier.'()')
-    call add(hlist,'{')
-    call add(hlist,'}')
-    call add(hlist,'')
-    call writefile(hlist,filename_cpp)
-   
-    let hlist = []
-    call add(hlist,'#ifndef '.Uidentifier.'_H')
-    call add(hlist,'#define '.Uidentifier.'_H')
-    call add(hlist,'')
-    call add(hlist,'class '.identifier)
-    call add(hlist,'{')
-    call add(hlist,'    public:')
-    call add(hlist,'        '.identifier.'();')
-    call add(hlist,'        ~'.identifier.'();')
-    call add(hlist,'};')
-    call add(hlist,'')
-    call add(hlist,'#endif //'.Uidentifier.'_H')
-    call add(hlist,'')
-    call writefile(hlist,filename_h)
-
-    call RunIDE()
- 
-endfunction
-
-" RunIDE: TODO
-" Description: TODO 
-function! RunIDE()
-    
-    let g:IDE = "CppIDE"
-
-    if g:cwd == ""
-        let g:cwd = GetCurrDir()    
-    else
-        bwipeout
-        execute ":cd ".g:cwd 
-    endif
-    
-    let cpps = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.cpp$"`'),'\n')    
-
-    if len(cpps) == 0
-        
-        let cpps = split(glob('`find '.g:cwd.'/| grep -v build | grep "\.cpp$"`'),'\n')    
-        
-        endif
-        
-    wincmd o
-    bwipeout
-    
-    silent execute ":e ".cpps[0] 
-    call LeftTagbarToggle()
-    wincmd t
-    wincmd l
-    vsplit 
-    
-    call CreateCppView() 
-    wincmd t
-    wincmd l    
-    wincmd l    
-    split
-    call CreateHView()
-      
-    call FormatIDE()
-    call ResetCtags()
-  
-endfunction
 
 
 " LeftTagbarToggle: open the tagbar on the left 
@@ -391,141 +225,8 @@ endfunction
 " =================================================================================================
 " =================================================================================================
 " =================================================================================================
- 
-" RenameClassIdentifier: TODO
-" Description: TODO 
-function! RenameClassIdentifier(idnt,new_idnt)   
 
-    call GotoMainWindow()
-    let path = GetCurrDir() 
-
-    let identifier = a:idnt
-    let L_identifier = substitute(identifier,'\(.*\)','\L\1\E',"")
-    let U_identifier = substitute(identifier,'\(.*\)','\U\1\E',"")
-    let new_identifier = a:new_idnt
-    let L_new_identifier = substitute(new_identifier,'\(.*\)','\L\1\E',"")
-    let U_new_identifier = substitute(new_identifier,'\(.*\)','\U\1\E',"")
-
-    let idlist = taglist(identifier)
-    let isclass = 0
-    for id in idlist
-        if id['kind'] == 'c' 
-            let isclass = 1
-            break
-        endif
-    endfor
-
-    " identifier is a class
-    if isclass == 1 
-
-
-        let filename_root = path.'/'.L_new_identifier
-        let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".\(h\|hpp\)"  
-
-        for fname in [filename_cpp, filename_h]
-            echo findfile(fname,"/") 
-            if findfile(fname,"/") == fname
-
-                silent execute ":e ".fname 
-                try
-                    silent execute ':%s/\<'.identifier.'\>/'.new_identifier.'/g'
-                catch
-                endtry
-                try
-                    silent execute ':%s/\<'.L_identifier.'\.h/'.L_new_identifier.'.h/g'
-                catch
-                endtry
-                try
-                    silent execute ':%s/\<'.L_identifier.'\.hpp/'.L_new_identifier.'.hpp/g'
-                catch
-                endtry
-                try
-                    silent execute ':%s/\<'.U_identifier.'_H/'.U_new_identifier.'_H/g'
-                catch
-                endtry
-
-                write
-
-            endif
-        endfor
-
-        "echo " ...Done"
-
-    else
-        echo identifier." is not a class identifier!" 
-    endif
-
-endfunction
-
- 
-" CopyClass: TODO
-" Description: TODO 
-function! CopyClass()
-
-    let path = GetCurrDir() 
-
-    call inputsave() 
-    let identifier = input("Class to copy: ","")
-    call inputrestore()
-
-    
-    let idlist = taglist(identifier)
-    let isclass = 0
-    for id in idlist
-        if id['kind'] == 'c' 
-            let isclass = 1
-            break
-        endif
-    endfor
-
-    " identifier is a class
-    if isclass == 1 
-
-        call inputsave() 
-        let new_identifier = input("Rename: ",identifier)
-        call inputrestore()
-
-        let Lidentifier = substitute(identifier,'\(.*\)','\L\1\E',"")
-        let Lnewidentifier = substitute(new_identifier,'\(.*\)','\L\1\E',"")
-
-
-        let filename_root = path.'/'.Lidentifier
-        let filename_cpp = filename_root.".cpp"
-        let filename_h = filename_root.".\(h\|hpp\)"  
-
-        let filename_new_root = path.'/'.Lnewidentifier
-        let filename_new_cpp = filename_new_root.".cpp"
-        let filename_new_h = filename_new_root.".\(h\|hpp\)"  
-
-        if findfile(filename_h,"/") == filename_h 
-
-            call GotoMainWindow()
-            execute ":e ".filename_h
-            execute ":sav ".filename_new_h
-
-            if findfile(filename_cpp,"/") == filename_cpp 
-
-                execute ":e ".filename_cpp
-                execute ":sav ".filename_new_cpp
-
-            endif
-
-            call RunIDE()
-
-            call RenameClassIdentifier(identifier,new_identifier)
-
-        endif
-
-    endif
-
-endfunction
-
-" =================================================================================================
-" =================================================================================================
-" =================================================================================================
-
-" FormatIDE: reset the width of the windows
+" FormatPyIDE: reset the width of the windows
 " Description: TODO 
 function! FormatPyIDE()
 
@@ -639,10 +340,7 @@ endfunction
 " =================================================================================================
  
 
-nmap ,ci :silent call RunIDE()<CR>
 nmap ,cp : call RunPyIDE()<CR>
-nmap ,cc :call CreateClassTemplate()<CR>
-nmap ,cC :call CopyClass()<CR>
 nmap ,cf :call FindUnderCursor()<CR>
 nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
