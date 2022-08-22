@@ -219,6 +219,7 @@ let g:slime_python_ipython = 1
 
 " map <Leader>s to start IPython
 nnoremap <Leader>ss :SlimeSend1 ipython --matplotlib<CR>
+nnoremap <Leader>as :SlimeSend1 ipython --matplotlib=agg<CR>
 
 " map <Leader>1r to run script
 nnoremap <Leader>rr :IPythonCellRun<CR>
@@ -230,7 +231,7 @@ nnoremap <Leader>RR :IPythonCellRunTime<CR>
 nnoremap <Leader>1c :IPythonCellExecuteCell<CR>
 
 " map <Leader>lv to execute the current cell
-nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>
+nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
 
 " map <Leader>ll to execute the current cell and jump to the next cell
 nnoremap <Leader>ll :IPythonCellExecuteCellJump<CR>
@@ -248,6 +249,7 @@ nnoremap ]c :IPythonCellNextCell<CR>
 " map <Leader>1h to send the current line or current selection to IPython
 nmap <Leader>hh <Plug>SlimeLineSend
 xmap <Leader>hh <Plug>SlimeRegionSend
+nmap <Leader>aa <Plug>SlimeLineSend :execute "norm j"<CR>
 
 " map <Leader>p to run the previous command
 nnoremap <Leader>pp :IPythonCellPrevCommand<CR>
