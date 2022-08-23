@@ -212,6 +212,8 @@ let g:slime_python_ipython = 1
 "             \ 'target_pane': '{top-right}' }
 " let g:slime_dont_ask_default = 1
 
+
+
 "------------------------------------------------------------------------------
 " ipython-cell configuration
 "------------------------------------------------------------------------------
@@ -228,7 +230,7 @@ nnoremap <Leader>rr :IPythonCellRun<CR>
 nnoremap <Leader>RR :IPythonCellRunTime<CR>
 
 " map <Leader>lc to execute the current cell
-nnoremap <Leader>1c :IPythonCellExecuteCell<CR>
+nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
 
 " map <Leader>lv to execute the current cell
 nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
@@ -249,7 +251,9 @@ nnoremap ]c :IPythonCellNextCell<CR>
 " map <Leader>1h to send the current line or current selection to IPython
 nmap <Leader>hh <Plug>SlimeLineSend
 xmap <Leader>hh <Plug>SlimeRegionSend
-nmap <Leader>aa <Plug>SlimeLineSend :execute "norm j"<CR>
+nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>
+xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
+ 
 
 " map <Leader>p to run the previous command
 nnoremap <Leader>pp :IPythonCellPrevCommand<CR>
