@@ -32,6 +32,8 @@ let g:tex_flavor='latex'
 let g:jedi#popup_select_first = 0
 autocmd FileType python setlocal completeopt-=preview
 let g:pymode_rope = 0
+let g:jedi#completions_enabled = 0
+
 
 map <silent> <Up> gk
 imap <silent> <Up> <C-o>gk
