@@ -76,7 +76,8 @@ au FocusLost * silent! wa
 :filetype plugin indent on
 :autocmd filetype python set expandtab
 :autocmd BufEnter * cd %:p:h
-colorscheme late_evening "https://raw.githubusercontent.com/h3xx/vim-late_evening/main/colors/late_evening.vim
+":colorscheme late_evening "https://raw.githubusercontent.com/h3xx/vim-late_evening/main/colors/late_evening.vim
+:colorscheme calmar256-light
 :set switchbuf=usetab,split
 :set spr
 :let g:netrw_preview = 1
