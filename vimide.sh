@@ -58,7 +58,7 @@ fi
 
 cd $CWD
 
-[[ -z "$(screen -ls | grep "$NAME")" ]] && screen -dmS $NAME
+[[ -z "$(screen -ls | grep "$NAME")" ]] && screen -T rxvt-color -dmS $NAME
 SCREEN_PID=$(screen -ls| grep $NAME| sed -e"s/\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
 
 winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
@@ -78,13 +78,15 @@ ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/
 windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
 
 if [[ -z "$(pstree $SCREEN_PID| grep vim)" ]]; then
-    screen -S $NAME -p code -X stuff "vim -c 'call RunPyIDE()'\n"
-    sleep 4
+    screen -S $NAME -p code -X stuff "vim .\n"
+    screen -S $NAME -p code -X stuff ":call RunPyIDE()\n"
+    sleep 1
     screen -S $NAME -p code -X stuff ":redraw!\n"
 fi
 
 bash -c "
 sleep 1
+screen -S $NAME -X select code
 screen -S $NAME -X split
 screen -S $NAME -X focus
 screen -S $NAME -X select console
