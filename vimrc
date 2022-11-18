@@ -263,7 +263,7 @@ nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
 nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
 
 " map <Leader>ll to execute the current cell and jump to the next cell
-nnoremap <Leader>ll :IPythonCellExecuteCellJump<CR>
+nnoremap <Leader>ll :IPythonCellClear<CR>:IPythonCellExecuteCellJump<CR>
 
 " map <Leader>LL to clear IPython screen
 nnoremap <Leader>LL :IPythonCellClear<CR>
@@ -278,8 +278,8 @@ nnoremap ]c :IPythonCellNextCell<CR>
 " map <Leader>1h to send the current line or current selection to IPython
 nmap <Leader>hh <Plug>SlimeLineSend
 xmap <Leader>hh <Plug>SlimeRegionSend
-nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>
-xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
+nmap <silent> <Leader>aa :IPythonCellClear<CR><Plug>SlimeLineSend :norm! j<CR>
+xmap <silent> <Leader>aa :IPythonCellClear<CR><Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
  
 
 " map <Leader>p to run the previous command
