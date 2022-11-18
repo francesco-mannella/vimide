@@ -33,6 +33,7 @@ let g:jedi#popup_select_first = 0
 autocmd FileType python setlocal completeopt-=preview
 let g:pymode_rope = 0
 let g:jedi#completions_enabled = 0
+let g:jedi#show_call_signatures = "0"
 
 
 map <silent> <Up> gk
@@ -44,10 +45,13 @@ imap <silent> <home> <C-o>g<home>
 map <silent> <End> g<End>
 imap <silent> <End> <C-o>g<End>
 
+se clipboard=unnamed
 vnoremap <C-X> "+d
 vnoremap <C-C> "+y
 nnoremap <C-V> "+gPl
 se nospell
+
+se t_Co=256
 
 setlocal linebreak
 setlocal nolist
@@ -79,7 +83,7 @@ au FocusLost * silent! wa
 :autocmd filetype python set expandtab
 :autocmd BufEnter * cd %:p:h
 ":colorscheme late_evening "https://raw.githubusercontent.com/h3xx/vim-late_evening/main/colors/late_evening.vim
-:colorscheme calmar256-light
+:colorscheme late_evening
 :set switchbuf=usetab,split
 :set spr
 :let g:netrw_preview = 1
@@ -196,7 +200,7 @@ command! Bdi :call CloseHiddenBuffers()
 " mapping '§' to reformat selected code in latex
 :map <silent> § :call IndentComments("%") <CR>
 " put the path of your clang library
-let g:clang_library_path='/usr/lib/llvm-8/lib/libclang-8.so.1'
+let g:clang_library_path='/usr/lib/llvm-10/lib/libclang-10.so.1'
 
 
 let g:jupytext_enable = 1
