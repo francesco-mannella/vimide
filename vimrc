@@ -35,6 +35,8 @@ let g:pymode_rope = 0
 let g:jedi#completions_enabled = 0
 let g:jedi#show_call_signatures = "0"
 
+se t_Co=256
+se mouse-=a
 
 map <silent> <Up> gk
 imap <silent> <Up> <C-o>gk
@@ -50,8 +52,6 @@ vnoremap <C-X> "+d
 vnoremap <C-C> "+y
 nnoremap <C-V> "+gPl
 se nospell
-
-se t_Co=256
 
 setlocal linebreak
 setlocal nolist
