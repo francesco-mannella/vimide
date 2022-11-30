@@ -20,6 +20,7 @@ Plugin 'will133/vim-dirdiff'
 Plugin 'anosillus/vim-ipynb'
 Plugin 'jpalardy/vim-slime'
 Plugin 'hanschen/vim-ipython-cell'
+Plugin 'kshenoy/vim-signature'
 
 
 " All of your Plugins must be added before the following line
@@ -278,8 +279,8 @@ nnoremap ]c :IPythonCellNextCell<CR>
 " map <Leader>1h to send the current line or current selection to IPython
 nmap <Leader>hh <Plug>SlimeLineSend
 xmap <Leader>hh <Plug>SlimeRegionSend
-nmap <silent> <Leader>aa :IPythonCellClear<CR><Plug>SlimeLineSend :norm! j<CR>
-xmap <silent> <Leader>aa :IPythonCellClear<CR><Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
+nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>
+xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
  
 
 " map <Leader>p to run the previous command
@@ -304,3 +305,8 @@ imap <F10> <C-o>:IPythonCellInsertBelow<CR>
 
 let g:ipython_cell_cell_command = '%paste'
 let g:ipython_cell_tag = ['# %%', '#%%']
+
+" marks
+hi SignColumn ctermbg=none
+hi SignatureMarkText ctermfg=White
+
