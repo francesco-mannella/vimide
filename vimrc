@@ -279,7 +279,7 @@ nnoremap ]c :IPythonCellNextCell<CR>
 nmap <Leader>hh <Plug>SlimeLineSend
 xmap <Leader>hh <Plug>SlimeRegionSend
 nmap <silent> <Leader>aa :IPythonCellClear<CR><Plug>SlimeLineSend :norm! j<CR>
-xmap <silent> <Leader>aa :IPythonCellClear<CR><Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
+xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `> :norm! j<CR>
  
 
 " map <Leader>p to run the previous command
@@ -289,7 +289,7 @@ nnoremap <Leader>pp :IPythonCellPrevCommand<CR>
 nnoremap <Leader>QQ :IPythonCellRestart<CR>
 
 " map <Leader>d to start debug mode
-nnoremap <Leader>dd :SlimeSend1 %debug<CR>
+nnoremap <Leader>dd :execute 'SlimeSend1 %run -d' expand('%:p')  <CR>
 
 " map <Leader>q to exit debug mode or IPython
 nnoremap <Leader>qq :SlimeSend1 exit<CR>
