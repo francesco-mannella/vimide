@@ -305,6 +305,8 @@ imap <F10> <C-o>:IPythonCellInsertBelow<CR>
 
 let g:ipython_cell_cell_command = '%paste'
 let g:ipython_cell_tag = ['# %%', '#%%']
+let g:ipython_cell_prefer_external_copy = 1
+
 
 " marks
 hi SignColumn ctermbg=none
