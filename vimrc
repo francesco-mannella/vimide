@@ -33,7 +33,6 @@ let g:tex_flavor='latex'
 let g:jedi#popup_select_first = 0
 autocmd FileType python setlocal completeopt-=preview
 let g:pymode_rope = 0
-let g:jedi#completions_enabled = 0
 let g:jedi#show_call_signatures = "0"
 
 se t_Co=256
