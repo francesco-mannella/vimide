@@ -31,7 +31,8 @@ let g:tex_flavor='latex'
 
 "jedi-vim
 let g:jedi#popup_select_first = 0
-autocmd FileType python setlocal completeopt-=preview
+autocmd FileType python setlocal completeopt-=preview 
+autocmd FileType python setlocal completeopt-=popup 
 let g:pymode_rope = 0
 let g:jedi#show_call_signatures = "0"
 
