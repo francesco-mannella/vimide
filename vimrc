@@ -36,6 +36,7 @@ autocmd FileType python setlocal completeopt-=popup
 let g:pymode_rope = 0
 let g:jedi#show_call_signatures = "0"
 
+"general 
 se t_Co=256
 se mouse-=a
 
@@ -52,6 +53,8 @@ se clipboard=unnamed
 vnoremap <C-X> "+d
 vnoremap <C-C> "+y
 nnoremap <C-V> "+gPl
+se pastetoggle=<F3>
+
 se nospell
 
 setlocal linebreak
