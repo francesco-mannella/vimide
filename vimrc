@@ -17,6 +17,7 @@ Plug 'anosillus/vim-ipynb'
 Plug 'jpalardy/vim-slime'
 Plug 'hanschen/vim-ipython-cell'
 Plug 'kshenoy/vim-signature'
+Plug 'acarapetis/vim-sh-heredoc-highlighting'
 
 call plug#end()            
 
