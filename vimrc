@@ -1,31 +1,26 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" open plug-vim
+call plug#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+Plug 'vim-latex/vim-latex'
+Plug 'davidhalter/jedi-vim'
+Plug 'xavierd/clang_complete'
+Plug 'majutsushi/tagbar'
+Plug 'francesco-mannella/vimide'
+Plug 'python-rope/ropevim'
+Plug 'goerz/jupytext.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'will133/vim-dirdiff'
+Plug 'anosillus/vim-ipynb'
+Plug 'jpalardy/vim-slime'
+Plug 'hanschen/vim-ipython-cell'
+Plug 'kshenoy/vim-signature'
 
-Plugin 'vim-latex/vim-latex'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'xavierd/clang_complete'
-Plugin 'majutsushi/tagbar'
-Plugin 'francesco-mannella/vimide'
-Plugin 'python-rope/ropevim'
-Plugin 'goerz/jupytext.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'will133/vim-dirdiff'
-Plugin 'anosillus/vim-ipynb'
-Plugin 'jpalardy/vim-slime'
-Plugin 'hanschen/vim-ipython-cell'
-Plugin 'kshenoy/vim-signature'
+call plug#end()            
 
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+filetype plugin indent on    
 filetype plugin on
 let g:tex_flavor='latex'
 
