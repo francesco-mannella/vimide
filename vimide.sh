@@ -11,9 +11,10 @@ usage: $(basename $0) options
 This script runs vimide in a screen environment
 
 OPTIONS:
-   -n --name                  name of the screen environment
-   -d --dir                   working directory (if none the directory from which $(basename $0) is launched)
-   -h --help                  show this help
+    -n --name   name of the screen environment
+    -l --list   list all open screen sessions        
+    -d --dir    working directory (if none the directory from which $(basename $0) is launched)
+    -h --help   show this help
 
 EOF
 }
@@ -21,9 +22,10 @@ EOF
 NAME=
 CWD=$(realpath .)
 CDIR=$CWD
+LIST=false
 
 # getopt
-GOTEMP="$(getopt -o "n:d:h" -l "name:,dir:,help"  -n '' -- "$@")"
+GOTEMP="$(getopt -o "n:ld:h" -l "name:,list,dir:,help"  -n '' -- "$@")"
 
 if ! [ "$(echo -n $GOTEMP |sed -e"s/\-\-.*$//")" ]; then
     usage; exit;
@@ -38,6 +40,10 @@ do
         -n | --name) 
             NAME="$2"
             shift 2;;
+        -l | --list)
+            LIST=true
+            shift;
+            break;;
         -d | --dir) 
             CWD="$2"
             shift 2;;
@@ -46,10 +52,16 @@ do
             usage; exit;
             shift;
             break;;
-        --) shift ; 
-            break ;;
+        --) shift; 
+            break;;
     esac
 done
+
+if [[ "$LIST" == true ]]; then
+    screen -ls
+    exit 1
+fi
+
 
 if [[ -z "$NAME" ]]; then
     echo "Must give a name to the session"
