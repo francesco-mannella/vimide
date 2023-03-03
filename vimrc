@@ -18,6 +18,7 @@ Plug 'jpalardy/vim-slime'
 Plug 'hanschen/vim-ipython-cell'
 Plug 'kshenoy/vim-signature'
 Plug 'acarapetis/vim-sh-heredoc-highlighting'
+Plug "arzg/vim-sh"
 
 call plug#end()            
 
