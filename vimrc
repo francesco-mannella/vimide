@@ -18,6 +18,7 @@ Plug 'jpalardy/vim-slime'
 Plug 'hanschen/vim-ipython-cell'
 Plug 'kshenoy/vim-signature'
 Plug 'acarapetis/vim-sh-heredoc-highlighting'
+Plug "arzg/vim-sh"
 Plug 'markonm/traces.vim'
 
 call plug#end()            
@@ -296,6 +297,10 @@ autocmd FileType bash xmap <Leader>hh <Plug>SlimeRegionSend
 autocmd FileType bash nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>
 autocmd FileType bash xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
  
+
+" map <Leader>p to run the previous command
+autocmd FileType python nnoremap <Leader>pp :IPythonCellPrevCommand<CR>
+
 " map <Leader>Q to restart ipython
 autocmd FileType python nnoremap <Leader>QQ :IPythonCellRestart<CR>
 
