@@ -18,6 +18,7 @@ Plug 'jpalardy/vim-slime'
 Plug 'hanschen/vim-ipython-cell'
 Plug 'kshenoy/vim-signature'
 Plug 'acarapetis/vim-sh-heredoc-highlighting'
+Plug 'markonm/traces.vim'
 
 call plug#end()            
 
@@ -50,6 +51,14 @@ vnoremap <C-X> "+d
 vnoremap <C-C> "+y
 nnoremap <C-V> "+gPl
 se pastetoggle=<F3>
+" Copy to X CLIPBOARD
+map <leader>cc :w !xsel -i -b<CR>
+map <leader>cp :w !xsel -i -p<CR>
+map <leader>cs :w !xsel -i -s<CR>
+" Paste from X CLIPBOARD
+map <leader>pp :r!xsel -p<CR>
+map <leader>ps :r!xsel -s<CR>
+map <leader>pb :r!xsel -b<CR>
 
 se nospell
 
@@ -106,6 +115,9 @@ autocmd FileType vim              let b:comment_leader = '" '
 
 
 " vim-latex
+set nocompatible
+set grepprg=grep\ -nH\ $*
+let g:tex_flavor='latex'
 let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
 set iskeyword+=:
@@ -239,8 +251,6 @@ let g:slime_python_ipython = 1
 "             \ 'target_pane': '{top-right}' }
 " let g:slime_dont_ask_default = 1
 
-
-
 "------------------------------------------------------------------------------
 " ipython-cell configuration
 "------------------------------------------------------------------------------
@@ -286,10 +296,6 @@ autocmd FileType bash xmap <Leader>hh <Plug>SlimeRegionSend
 autocmd FileType bash nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>
 autocmd FileType bash xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
  
-
-" map <Leader>p to run the previous command
-autocmd FileType python nnoremap <Leader>pp :IPythonCellPrevCommand<CR>
-
 " map <Leader>Q to restart ipython
 autocmd FileType python nnoremap <Leader>QQ :IPythonCellRestart<CR>
 
