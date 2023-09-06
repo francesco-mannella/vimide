@@ -49,18 +49,18 @@ map <silent> <End> g<End>
 imap <silent> <End> <C-o>g<End>
 
 se clipboard=unnamed
-vnoremap <C-X> "+d
-vnoremap <C-C> "+y
-nnoremap <C-V> "+gPl
-se pastetoggle=<F3>
-" Copy to X CLIPBOARD
-map <leader>cc :w !xsel -i -b<CR>
-map <leader>cp :w !xsel -i -p<CR>
-map <leader>cs :w !xsel -i -s<CR>
-" Paste from X CLIPBOARD
-map <leader>pp :r!xsel -p<CR>
-map <leader>ps :r!xsel -s<CR>
-map <leader>pb :r!xsel -b<CR>
+
+function! ClipboardYank()
+  call system('xclip -i -selection clipboard', @@)
+endfunction
+function! ClipboardPaste()
+  let @@ = system('xclip -o -selection clipboard')
+endfunction
+
+
+vnoremap <silent> y y:call ClipboardYank()<cr>
+vnoremap <silent> d d:call ClipboardYank()<cr>
+nnoremap <silent> p :call ClipboardPaste()<cr>p
 
 se nospell
 
@@ -121,7 +121,7 @@ set nocompatible
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 let g:Tex_DefaultTargetFormat = 'pdf'
-let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
+let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*; latexmk -c'
 set iskeyword+=:
 
 " Comment text
