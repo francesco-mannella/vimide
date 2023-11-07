@@ -21,6 +21,8 @@ Plug 'acarapetis/vim-sh-heredoc-highlighting'
 Plug 'madox2/vim-ai'
 Plug 'arzg/vim-sh'
 Plug 'markonm/traces.vim'
+Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
+Plug 'vim-scripts/loremipsum'
 
 call plug#end()            
 
@@ -324,3 +326,15 @@ let g:ipython_cell_prefer_external_copy = 1
 hi SignColumn ctermbg=none
 hi SignatureMarkText ctermfg=White
 
+" Instant-Markdown-preview
+"let g:instant_markdown_slow = 1
+"let g:instant_markdown_autostart = 0
+"let g:instant_markdown_open_to_the_world = 1
+"let g:instant_markdown_allow_unsafe_content = 1
+"let g:instant_markdown_allow_external_content = 0
+let g:instant_markdown_mathjax = 1
+"let g:instant_markdown_mermaid = 1
+"let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
+"let g:instant_markdown_autoscroll = 0
+"let g:instant_markdown_port = 8888
+"let g:instant_markdown_python = 1
