@@ -60,10 +60,10 @@ function! ClipboardPaste()
 endfunction
 
 
-vnoremap <silent> y y:call ClipboardYank()<cr>
-vnoremap <silent> x x:call ClipboardYank()<cr>
-vnoremap <silent> d d:call ClipboardYank()<cr>
-nnoremap <silent> p :call ClipboardPaste()<cr>p
+vnoremap <silent> ay y:call ClipboardYank()<cr>
+vnoremap <silent> ax x:call ClipboardYank()<cr>
+vnoremap <silent> ad d:call ClipboardYank()<cr>
+nnoremap <silent> ap p:call ClipboardPaste()<cr>p
 
 se nospell
 
@@ -255,6 +255,8 @@ let g:slime_python_ipython = 1
 "             \ 'socket_name': get(split($TMUX, ','), 0),
 "             \ 'target_pane': '{top-right}' }
 " let g:slime_dont_ask_default = 1
+
+
 
 "------------------------------------------------------------------------------
 " ipython-cell configuration

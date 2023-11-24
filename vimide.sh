@@ -69,10 +69,9 @@ if [[ -z "$NAME" ]]; then
 fi
 
 cd $CWD
-
-[[ -z "$(screen -ls | grep "$NAME")" ]] && screen -T screen-256color -dmS $NAME
-SCREEN_PID=$(screen -ls| grep $NAME| sed -e"s/\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
-
+[[ -z "$(screen -ls | grep "\.$NAME")" ]] && screen -T screen-256color -dmS $NAME
+SCREEN_PID=$(screen -ls| grep "\.$NAME" | sed -e"s/^\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
+echo $SCREEN_PID
 winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
 ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/'))
 windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
