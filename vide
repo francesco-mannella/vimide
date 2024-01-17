@@ -69,6 +69,7 @@ if [[ -z "$NAME" ]]; then
 fi
 
 cd $CWD
+<<<<<<< HEAD:vide
 
 # Check if a `screen` session with the provided $NAME exists. If the session
 # does not exist, it creates a new detached `screen` session with the specified
@@ -79,6 +80,11 @@ SCREEN_PID=$(screen -ls| grep $NAME| sed -e"s/\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
 
 # Extract the window IDs and window names of a `screen` session with the
 # specified name (`$NAME`) and stores them in separate arrays.
+=======
+[[ -z "$(screen -ls | grep "\.$NAME")" ]] && screen -T screen-256color -dmS $NAME
+SCREEN_PID=$(screen -ls| grep "\.$NAME" | sed -e"s/^\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
+echo $SCREEN_PID
+>>>>>>> 68ae08ca7392a1bd21137a8dfe2666f5373f10e0:vimide.sh
 winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
 ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/'))
 windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
