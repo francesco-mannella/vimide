@@ -38,7 +38,7 @@ while true ;
 do
     case "$1" in
         -n | --name) 
-            NAME="$2"
+            NAME="vide_$2"
             shift 2;;
         -l | --list)
             LIST=true
@@ -58,7 +58,7 @@ do
 done
 
 if [[ "$LIST" == true ]]; then
-    screen -ls
+    screen -ls | grep vide_
     exit 1
 fi
 
@@ -70,32 +70,46 @@ fi
 
 cd $CWD
 
+# Check if a `screen` session with the provided $NAME exists. If the session
+# does not exist, it creates a new detached `screen` session with the specified
+# name. Finally, it retrieves the process ID (PID) of the newly created
+# `screen` session.
 [[ -z "$(screen -ls | grep "$NAME")" ]] && screen -T screen-256color -dmS $NAME
 SCREEN_PID=$(screen -ls| grep $NAME| sed -e"s/\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
 
+# Extract the window IDs and window names of a `screen` session with the
+# specified name (`$NAME`) and stores them in separate arrays.
 winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
 ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/'))
 windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
 
 
+# Create the `code` buffer
 [[ ! "$( echo "${ids[@]}" | grep 0)" ]] && screen -S $NAME -X screen
 [[ "${windows[0]}" != "code" ]] && screen -S $NAME -p 0 -X title code 
 
+# Create the `console` buffer
 [[ ! "$( echo "${ids[@]}" | grep 1)" ]] && screen -S $NAME -X screen
 [[ "${windows[1]}" != "console" ]] && screen -S $NAME -p 1 -X title console 
 
 
+# Update the window IDs and window names of a `screen` session with the
+# specified name (`$NAME`).
 winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
 ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/'))
 windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
 
+# Rin vimide in the `code` buffer and link it to a terminal in the `console` buffer
 if [[ -z "$(pstree $SCREEN_PID| grep vim)" ]]; then
     screen -S $NAME -p code -X stuff "vim .\n"
     screen -S $NAME -p code -X stuff ":call RunPyIDE()\n"
+    sleep 0.1
+    screen -S $NAME -p code -X stuff ":let b:slime_config={'sessionname':'$NAME', 'windowname':'console'}\n"
     sleep 1
     screen -S $NAME -p code -X stuff ":redraw!\n"
 fi
 
+# Open a bash shell and attach to the vide `screen` session.
 bash -c "
 sleep 1
 screen -S $NAME -X select code
