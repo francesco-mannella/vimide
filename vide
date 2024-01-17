@@ -58,8 +58,8 @@ do
 done
 
 if [[ "$LIST" == true ]]; then
-    screen -ls | grep vide_
-    exit 1
+    screen -ls | grep vide_ | sed -e"s/^.*vide_\([A-Za-z0-9]\+\).*\(..tached\).*$/\1 \2/"
+    exit 0
 fi
 
 
