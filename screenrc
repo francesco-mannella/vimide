@@ -1,0 +1,18 @@
+
+# navigating regions
+bind j focus down
+bind k focus up
+bind h focus left
+bind l focus right
+ 
+# resizing regions
+bind + resize +5
+bind - resize -5
+bind = resize =
+
+
+msgwait 0
+msgminwait 0
+
+
+
