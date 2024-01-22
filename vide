@@ -105,6 +105,8 @@ if [[ -z "$(pstree $SCREEN_PID| grep vim)" ]]; then
     screen -S $NAME -p code -X stuff ":call RunPyIDE()\n"
     sleep 0.1
     screen -S $NAME -p code -X stuff ":let b:slime_config={'sessionname':'$NAME', 'windowname':'console'}\n"
+    sleep 0.1
+    screen -S $NAME -p code -X stuff ":au BufRead *.py let b:slime_config={'sessionname':'$NAME', 'windowname':'console'}\n"
     sleep 1
     screen -S $NAME -p code -X stuff ":redraw!\n"
 fi
