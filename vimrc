@@ -61,8 +61,6 @@ endfunction
 
 
 vnoremap <silent> ay y:call ClipboardYank()<cr>
-vnoremap <silent> ax x:call ClipboardYank()<cr>
-vnoremap <silent> ad d:call ClipboardYank()<cr>
 nnoremap <silent> ap p:call ClipboardPaste()<cr>p
 
 se nospell

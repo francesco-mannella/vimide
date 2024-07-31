@@ -230,16 +230,20 @@ endfunction
 " Description: TODO 
 function! FormatPyIDE()
 
-    wincmd t
-    wincmd l
-    wincmd l
-    wincmd h
-    vertical res 200 
-
-    au BufLeave *Netrw* :vertical res 2 
-    au BufEnter *Netrw* :vertical res 200 
+    au WinLeave *Netrw* :vertical res 2 
+    au WinEnter *Netrw* :vertical res 200
     au WinLeave *Tagbar* :vertical res 2 
     au WinEnter *Tagbar* :vertical res 200 
+    wincmd t
+    vertical res 200
+    wincmd l
+    vertical res 2
+    wincmd l
+    vertical res 2
+    wincmd h
+    vertical res 200
+
+
 endfunction
 
 
