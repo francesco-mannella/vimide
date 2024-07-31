@@ -235,11 +235,8 @@ function! FormatPyIDE()
     au WinLeave *Tagbar* :vertical res 2 
     au WinEnter *Tagbar* :vertical res 200 
     wincmd t
-    vertical res 200
     wincmd l
-    vertical res 2
     wincmd l
-    vertical res 2
     wincmd h
     vertical res 200
 
