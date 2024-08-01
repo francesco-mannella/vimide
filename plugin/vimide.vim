@@ -230,16 +230,10 @@ endfunction
 " Description: TODO 
 function! FormatPyIDE()
 
-    au WinLeave *Netrw* :vertical res 2 
-    au WinEnter *Netrw* :vertical res 200
-    au WinLeave *Tagbar* :vertical res 2 
-    au WinEnter *Tagbar* :vertical res 200 
+    echo '<format'
     wincmd t
     wincmd l
-    wincmd l
-    wincmd h
-    vertical res 200
-
+    vertical resize 200 
 
 endfunction
 
@@ -341,3 +335,14 @@ nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
 nmap ,cu :call UpdateView()<CR>
 nmap <enter> :call OpenFileUnderCursor(2)<CR>
+augroup vimide
+    au!
+
+    au WinLeave *Netrw* :vertical res 2 
+    au WinEnter *Netrw* :vertical res 200
+    au WinLeave *Tagbar* :vertical res 2 
+    au WinEnter *Tagbar* :vertical res 200 
+
+
+augroup END
+au VimResized * call FormatPyIDE()
