@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved, required
+set nocompatible              " be iMproved, require
 filetype off                  " required
 
 " open plug-vim
@@ -261,8 +261,8 @@ let g:slime_python_ipython = 1
 
 " map <Leader>s to start IPython
 autocmd FileType sh nnoremap <Leader>ss :SlimeSend1 echo "connect"<CR>
-autocmd FileType python nnoremap <Leader>ss :SlimeSend1 ipython --matplotlib<CR>
-autocmd FileType python nnoremap <Leader>as :SlimeSend1 ipython --matplotlib=agg<CR>
+autocmd FileType python nnoremap <Leader>ss :SlimeSend1 ipython qt <CR>
+autocmd FileType python nnoremap <Leader>as :SlimeSend1 ipython agg<CR>
 
 " map <Leader>1r to run script
 autocmd FileType python nnoremap <Leader>rr :IPythonCellRun<CR>
