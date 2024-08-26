@@ -23,6 +23,9 @@ Plug 'arzg/vim-sh'
 Plug 'markonm/traces.vim'
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 Plug 'vim-scripts/loremipsum'
+Plug 'nathanaelkane/vim-indent-guides'
+
+
 
 call plug#end()            
 
@@ -336,3 +339,12 @@ let g:instant_markdown_mathjax = 1
 "let g:instant_markdown_autoscroll = 0
 "let g:instant_markdown_port = 8888
 "let g:instant_markdown_python = 1
+
+
+" indent gudark     
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+let g:indent_guides_auto_colors = 0
+hi IndentGuidesOdd  ctermbg=236
+hi IndentGuidesEven ctermbg=234
+
