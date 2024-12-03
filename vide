@@ -77,13 +77,6 @@ cd $CWD
 [[ -z "$(screen -ls | grep "$NAME")" ]] && screen -T screen-256color -dmS $NAME
 SCREEN_PID=$(screen -ls| grep $NAME| sed -e"s/\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
 
-# Extract the window IDs and window names of a `screen` session with the
-# specified name (`$NAME`) and stores them in separate arrays.
-winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
-ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/'))
-windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
-
-
 # Create the `code` buffer
 [[ ! "$( echo "${ids[@]}" | grep 0)" ]] && screen -S $NAME -X screen
 [[ "${windows[0]}" != "code" ]] && screen -S $NAME -p 0 -X title code 
@@ -121,6 +114,6 @@ screen -S $NAME -X focus
 screen -S $NAME -X resize 25
 screen -S $NAME -p code -X stuff \":redraw!\\n\"
 " &
-
+echo -ne "\033]0; $(echo -n $(hostname -i)): $(echo $NAME | sed -e"s/vide_//")  \a"
 screen -rdS $NAME
 
