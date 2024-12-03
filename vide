@@ -95,20 +95,19 @@ windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)
 
 # Update the window IDs and window names of a `screen` session with the
 # specified name (`$NAME`).
-winstr="$(screen -S $NAME -Q windows | sed -e"s/\(^\| \)\([0-9]\+\)\s\+\([[:alnum:]]\+\)/\2 \3\n/g")"
-ids=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\1/'))
-windows=($(echo "$winstr" | sed -e's/\s*\([0-9]\+\)[\$]*\s*\s\+\([[:alnum:]]\+\)/\2/'))
+winstr="$(screen -S $NAME -Q windows| sed -e's/ \([0-9]\)/\n\1/g' )"
+ids="$(echo "$winstr" | awk '{print $1}')"
+windows="$(echo "$winstr" | awk '{print $2}')"
 
 # Rin vimide in the `code` buffer and link it to a terminal in the `console` buffer
 if [[ -z "$(pstree $SCREEN_PID| grep vim)" ]]; then
+    screen -S $NAME -p code -X width 110
     screen -S $NAME -p code -X stuff "vim .\n"
     screen -S $NAME -p code -X stuff ":call RunPyIDE()\n"
     sleep 0.1
     screen -S $NAME -p code -X stuff ":let b:slime_config={'sessionname':'$NAME', 'windowname':'console'}\n"
     sleep 0.1
     screen -S $NAME -p code -X stuff ":au BufRead *.py let b:slime_config={'sessionname':'$NAME', 'windowname':'console'}\n"
-    sleep 0.1
-    screen -S $NAME -p code -X stuff ":redraw!\n"
 fi
 
 # Open a bash shell and attach to the vide `screen` session.
@@ -120,6 +119,7 @@ screen -S $NAME -X focus
 screen -S $NAME -X select console
 screen -S $NAME -X focus
 screen -S $NAME -X resize 25
+screen -S $NAME -p code -X stuff \":redraw!\\n\"
 " &
 
 screen -rdS $NAME
