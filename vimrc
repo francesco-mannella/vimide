@@ -64,7 +64,7 @@ endfunction
 
 
 vnoremap <silent> ay y:call ClipboardYank()<cr>
-nnoremap <silent> ap p:call ClipboardPaste()<cr>p
+nnoremap <silent> ap p:call ClipboardPaste()<cr>
 
 se nospell
 
@@ -256,8 +256,6 @@ let g:slime_python_ipython = 1
 "             \ 'socket_name': get(split($TMUX, ','), 0),
 "             \ 'target_pane': '{top-right}' }
 " let g:slime_dont_ask_default = 1
-
-
 
 "------------------------------------------------------------------------------
 " ipython-cell configuration
