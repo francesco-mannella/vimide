@@ -110,7 +110,7 @@ screen -S $NAME -X split
 screen -S $NAME -X focus
 screen -S $NAME -X select console
 screen -S $NAME -X focus
-screen -S $NAME -X resize 25
+screen -S $NAME -X resize $(echo "$LINES * 0.75" | bc) 
 screen -S $NAME -p code -X stuff \":redraw!\\n\"
 " &
 echo -ne "\033]0; $(echo -n $(hostname -I | awk '{print $1}')): $(echo $NAME | sed -e"s/vide_//")  \a"
