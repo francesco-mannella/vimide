@@ -1,5 +1,5 @@
-set nocompatible              " be iMproved, require
-filetype off                  " required
+set nocompatible             
+filetype off                  
 
 " open plug-vim
 call plug#begin()
@@ -274,7 +274,7 @@ autocmd FileType python nnoremap <Leader>rr :IPythonCellRun<CR>
 autocmd FileType python nnoremap <Leader>RR :IPythonCellRunTime<CR>
 
 " map <Leader>lc to execute the current cell
-autocmd FileType nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
+autocmd FileType python nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
 
 " map <Leader>lv to execute the current cell
 autocmd FileType python nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
@@ -328,17 +328,7 @@ hi SignColumn ctermbg=none
 hi SignatureMarkText ctermfg=White
 
 " Instant-Markdown-preview
-"let g:instant_markdown_slow = 1
-"let g:instant_markdown_autostart = 0
-"let g:instant_markdown_open_to_the_world = 1
-"let g:instant_markdown_allow_unsafe_content = 1
-"let g:instant_markdown_allow_external_content = 0
 let g:instant_markdown_mathjax = 1
-"let g:instant_markdown_mermaid = 1
-"let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
-"let g:instant_markdown_autoscroll = 0
-"let g:instant_markdown_port = 8888
-"let g:instant_markdown_python = 1
 
 
 " indent gudark     
