@@ -1,5 +1,5 @@
-set nocompatible              " be iMproved, require
-filetype off                  " required
+set nocompatible             
+filetype off                  
 
 " open vim-plug
 call plug#begin()
@@ -270,7 +270,7 @@ autocmd FileType python nnoremap <Leader>rr :IPythonCellRun<CR>
 autocmd FileType python nnoremap <Leader>RR :IPythonCellRunTime<CR>
 
 " map <Leader>lc to execute the current cell
-autocmd FileType nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
+autocmd FileType python nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
 
 " map <Leader>lv to execute the current cell
 autocmd FileType python nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
@@ -342,7 +342,4 @@ let g:ale_python_black_options='-l 79'
 let g:ale_sign_column_always = 1
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
-
-
-
 
