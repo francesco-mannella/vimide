@@ -1,10 +1,11 @@
 set nocompatible             
 filetype off                  
 
-" open vim-plug
+" open plug-vim
 call plug#begin()
 
 Plug 'vim-latex/vim-latex'
+Plug 'jamespeapen/Nvim-R'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
