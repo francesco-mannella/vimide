@@ -1,7 +1,7 @@
 set nocompatible             
 filetype off                  
 
-" open plug-vim
+" open vim-plug
 call plug#begin()
 
 Plug 'vim-latex/vim-latex'
