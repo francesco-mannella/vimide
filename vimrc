@@ -1,17 +1,15 @@
 set nocompatible              " be iMproved, require
 filetype off                  " required
 
-" open plug-vim
+" open vim-plug
 call plug#begin()
 
 Plug 'vim-latex/vim-latex'
 Plug 'davidhalter/jedi-vim'
-Plug 'xavierd/clang_complete'
+Plug 'dense-analysis/ale', {'do': 'pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
 Plug 'francesco-mannella/vimide'
-Plug 'python-rope/ropevim'
 Plug 'goerz/jupytext.vim'
-Plug 'tpope/vim-fugitive'
 Plug 'will133/vim-dirdiff'
 Plug 'anosillus/vim-ipynb'
 Plug 'jpalardy/vim-slime'
@@ -24,8 +22,6 @@ Plug 'markonm/traces.vim'
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 Plug 'vim-scripts/loremipsum'
 Plug 'nathanaelkane/vim-indent-guides'
-
-
 
 call plug#end()            
 
@@ -328,18 +324,7 @@ hi SignColumn ctermbg=none
 hi SignatureMarkText ctermfg=White
 
 " Instant-Markdown-preview
-"let g:instant_markdown_slow = 1
-"let g:instant_markdown_autostart = 0
-"let g:instant_markdown_open_to_the_world = 1
-"let g:instant_markdown_allow_unsafe_content = 1
-"let g:instant_markdown_allow_external_content = 0
 let g:instant_markdown_mathjax = 1
-"let g:instant_markdown_mermaid = 1
-"let g:instant_markdown_logfile = '/tmp/instant_markdown.log'
-"let g:instant_markdown_autoscroll = 0
-"let g:instant_markdown_port = 8888
-"let g:instant_markdown_python = 1
-
 
 " indent gudark     
 let g:indent_guides_enable_on_vim_startup = 1
@@ -347,4 +332,17 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_auto_colors = 0
 hi IndentGuidesOdd  ctermbg=236
 hi IndentGuidesEven ctermbg=234
+
+" ALE
+
+let g:ale_completion_enabled = 0
+let g:ale_linters = {'python': ['pylsp']}
+let g:ale_fixers = {'python': ['black', 'autoflake', 'autopep8', 'isort', 'autoimport']}
+let g:ale_python_black_options='-l 79'
+let g:ale_sign_column_always = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+
+
+
 
