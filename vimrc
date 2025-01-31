@@ -337,10 +337,34 @@ hi IndentGuidesEven ctermbg=234
 " ALE
 
 let g:ale_completion_enabled = 0
-let g:ale_linters = {'python': ['pylsp']}
-let g:ale_fixers = {'python': ['black', 'autoflake', 'autopep8', 'isort', 'autoimport']}
+let g:ale_linters = {
+            \ 'python': ['pylsp','mypy'],
+            \}
+let g:ale_fixers = {
+            \ 'python': ['black', 'autoflake', 'autopep8', 'isort', 'autoimport'],
+            \}
 let g:ale_python_black_options='-l 79'
 let g:ale_sign_column_always = 1
-let g:ale_set_loclist = 0
+let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 1
 
+function! ALEPreviewWindowClose()
+    " Iterate through all buffer numbers
+    for buf in range(1, bufnr('$'))
+        " Check if the buffer is loaded before getting the name
+        if bufloaded(buf)
+            " Get the name of the buffer
+            let bufferName = bufname(buf)
+            " Close the buffer if its name is ALEPreviewWindow
+            if bufferName ==# 'ALEPreviewWindow'
+                execute 'bdelete' buf
+            endif
+        endif
+    endfor
+endfunction
+
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+nmap <silent> <C-f> <Plug>(ale_fix)
+nmap <silent> <C-h> <Plug>(ale_hover)
+nmap <silent> <C-x> :call ALEPreviewWindowClose()<CR>
