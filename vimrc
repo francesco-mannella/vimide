@@ -5,7 +5,6 @@ filetype off
 call plug#begin()
 
 Plug 'vim-latex/vim-latex'
-Plug 'jamespeapen/Nvim-R'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
@@ -341,8 +340,20 @@ let g:ale_linters = {
             \ 'python': ['pylsp','mypy'],
             \}
 let g:ale_fixers = {
-            \ 'python': ['black', 'autoflake', 'autopep8', 'isort', 'autoimport'],
+            \ 'python': ['black','isort', 'autoimport'],
             \}
+
+let g:ale_python_pylsp_config={'pylsp': {
+  \ 'configurationSources': ['flake8'],
+  \ 'plugins': {
+  \   'flake8': {'enabled': v:true,  'ignore': "E2"  },
+  \   'pycodestyle': {'enabled': v:false},
+  \   'pyflakes': {'enabled': v:false},
+  \   'pydocstyle': {'enabled': v:false},
+  \   'pylsp_mypy': {'dmypy': v:true},
+  \ },
+  \ }}
+let g:ale_python_flake8_options = '--ignore=E203'
 let g:ale_python_black_options='-l 79'
 let g:ale_sign_column_always = 1
 let g:ale_set_loclist = 1
