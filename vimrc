@@ -346,18 +346,18 @@ let g:ale_fixers = {
 let g:ale_python_pylsp_config={'pylsp': {
   \ 'configurationSources': ['flake8'],
   \ 'plugins': {
-  \   'flake8': {'enabled': v:true,  'ignore': "E2"  },
+  \   'flake8': {'enabled': v:true,  'ignore': "E203,W503"  },
   \   'pycodestyle': {'enabled': v:false},
   \   'pyflakes': {'enabled': v:false},
   \   'pydocstyle': {'enabled': v:false},
   \   'pylsp_mypy': {'dmypy': v:true},
   \ },
   \ }}
-let g:ale_python_flake8_options = '--ignore=E203'
 let g:ale_python_black_options='-l 79'
 let g:ale_sign_column_always = 1
 let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 1
+let g:ale_python_mypy_options = '--ignore-missing-imports'
 
 function! ALEPreviewWindowClose()
     " Iterate through all buffer numbers
