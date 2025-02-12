@@ -341,6 +341,7 @@ let g:ale_linters = {
             \}
 let g:ale_fixers = {
             \ 'python': ['black','isort', 'autoimport'],
+            \ 'sh': ['shfmt'],
             \}
 
 let g:ale_python_pylsp_config={'pylsp': {
