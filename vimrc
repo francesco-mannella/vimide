@@ -338,9 +338,11 @@ hi IndentGuidesEven ctermbg=234
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
             \ 'python': ['pylsp','mypy'],
+            \ 'tex': ['lacheck'],
             \}
 let g:ale_fixers = {
             \ 'python': ['black','isort', 'autoimport'],
+            \ 'tex': ['latexindent','textlint'],
             \}
 
 let g:ale_python_pylsp_config={'pylsp': {
