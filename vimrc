@@ -6,7 +6,7 @@ call plug#begin()
 
 Plug 'vim-latex/vim-latex'
 Plug 'davidhalter/jedi-vim'
-Plug 'dense-analysis/ale', {'do': 'pip install python-lsp-server'}
+Plug 'dense-analysis/ale', {'do': 'python -m pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
 Plug 'francesco-mannella/vimide'
 Plug 'goerz/jupytext.vim'
@@ -338,9 +338,11 @@ hi IndentGuidesEven ctermbg=234
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
             \ 'python': ['pylsp','mypy'],
+            \ 'tex': ['lacheck'],
             \}
 let g:ale_fixers = {
             \ 'python': ['black','isort', 'autoimport'],
+            \ 'tex': ['latexindent','textlint'],
             \}
 
 let g:ale_python_pylsp_config={'pylsp': {
