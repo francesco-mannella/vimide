@@ -112,7 +112,7 @@ function! FindOccurrence(atom)
     :1,$d
 
     let findstring = 'silent r! find '.g:cwd.'/ | grep "\.\(cpp\|h\|hpp\|py\)$"'
-    let findstring .= '| xargs grep -n "\<'.a:atom.'\>" | '
+    let findstring .= '| xargs grep -Hn "\<'.a:atom.'\>" | '
     let findstring .= 'sed -e"s/^\([^:]\+\/\([^\/^:]\+\)\):\([^:]\+\):\(.*\)/\2'.g:separator.'\3'.g:separator.'\4'.g:separator.'\1/"' 
 
     execute findstring
