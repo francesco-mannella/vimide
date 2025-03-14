@@ -1,21 +1,36 @@
 #!/bin/bash
 
 set -e
+BOLD='tput bold'
+UNBOLD='tput sgr0'
 
 usage()
 {
 cat << EOF
 
-usage: $(basename $0) options
+usage: $($BOLD)$(basename $0)$($UNBOLD) options
 
-This script runs vimide in a screen environment
+This script launches or manages vimide within a screen environment.
+  
+1. The script begins by launching a screen session that includes a dedicated window labeled `code`, where VimIDE is executed.
+2. Another window, labeled `console`, is simultaneously created to host a bash shell, providing a separate space for interactive command-line tasks.
+
+VimIDE Interactive Commands (to be used in the `code` window, in Vim's visual mode):
+
+- '\\ss': Opens an IPython console in the 'console' window that is directly linked to the active Vim instance.
+- '\\\aa': Executes the selected lines of code from the 'code' window in the IPython console.
+- '\\xx': Clears the IPython console, providing a clean slate.
+- '\\ll': Runs the code cell in the 'code' window, defined by bounds marked with '# %%'.
+- '\\dd': Initiates the debugger (pdb) on the current script in the 'code' window within the IPython console.
+- '\\\rr': Executes the entire current script in the 'code' window using the IPython console.
+
 
 OPTIONS:
-    -n --name   name of the screen environment
-    -l --list   list all open screen sessions        
-    -d --dir    working directory (if none the directory from which $(basename $0) is launched)
-    -h --help   show this help
-
+    $($BOLD)-n, --name NAME$($UNBOLD)   Open a screen session with the specified NAME. If the session does not exist, it will be created.
+    $($BOLD)-q, --quit NAME$($UNBOLD)   Terminate the specified screen session.
+    $($BOLD)-l, --list$($UNBOLD)        Display a list of all active screen sessions.
+    $($BOLD)-d, --dir DIR$($UNBOLD)     Specify the working directory for the session. Defaults to the directory where $(basename "$0") is executed if not provided.
+    $($BOLD)-h, --help$($UNBOLD)        Display this help message and exit.
 EOF
 }
 
@@ -23,12 +38,13 @@ NAME=
 CWD=$(realpath .)
 CDIR=$CWD
 LIST=false
+QUIT=false
 
 # getopt
-GOTEMP="$(getopt -o "n:ld:h" -l "name:,list,dir:,help"  -n '' -- "$@")"
+GOTEMP="$(getopt -o "n:q:ld:h" -l "name:,quit:,list,dir:,help"  -n '' -- "$@")"
 
 if ! [ "$(echo -n $GOTEMP |sed -e"s/\-\-.*$//")" ]; then
-    usage; exit;
+    echo -En "$(usage)"; exit;
 fi
 
 eval set -- "$GOTEMP"
@@ -40,6 +56,10 @@ do
         -n | --name) 
             NAME="vide_$2"
             shift 2;;
+        -q | --quit) 
+            NAME="vide_$2"
+            QUIT=true
+            shift 2;;
         -l | --list)
             LIST=true
             shift;
@@ -48,8 +68,7 @@ do
             CWD="$2"
             shift 2;;
         -h | --help)
-            echo "on help"
-            usage; exit;
+            echo -e "$(usage)"; exit;
             shift;
             break;;
         --) shift; 
@@ -70,6 +89,14 @@ fi
 
 cd $CWD
 
+
+if [[ "$QUIT" == true ]]; then
+    echo "Quitting $(echo $NAME | sed -e"s/vide_//g")..."
+    screen -S $NAME -X quit
+    echo done
+    exit 0
+fi
+
 # Check if a `screen` session with the provided $NAME exists. If the session
 # does not exist, it creates a new detached `screen` session with the specified
 # name. Finally, it retrieves the process ID (PID) of the newly created
@@ -82,6 +109,10 @@ SCREEN_PID=$(screen -ls| grep $NAME| sed -e"s/\s*\([0-9]\+\)\.$NAME\s*.*/\1/")
 winstr="$(screen -S $NAME -Q windows| sed -e's/ \([0-9]\)/\n\1/g' )"
 ids="$(echo "$winstr" | awk '{print $1}')"
 windows="$(echo "$winstr" | awk '{print $2}')"
+
+
+    
+
 
 # Create the `code` buffer
 [[ ! "$( echo "${ids[@]}" | grep 0)" ]] && screen -S $NAME -X screen
