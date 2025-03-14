@@ -12,10 +12,10 @@ usage: $($BOLD)$(basename $0)$($UNBOLD) options
 
 This script launches or manages vimide within a screen environment.
   
-1. The script begins by launching a screen session that includes a dedicated window labeled `code`, where VimIDE is executed.
-2. Another window, labeled `console`, is simultaneously created to host a bash shell, providing a separate space for interactive command-line tasks.
+1. The script begins by launching a screen session that includes a dedicated window labeled 'code', where VimIDE is executed.
+2. Another window, labeled 'console', is simultaneously created to host a bash shell, providing a separate space for interactive command-line tasks.
 
-VimIDE Interactive Commands (to be used in the `code` window, in Vim's visual mode):
+VimIDE Interactive Commands (to be used in the 'code' window, in Vim's visual mode):
 
 - '\\ss': Opens an IPython console in the 'console' window that is directly linked to the active Vim instance.
 - '\\\aa': Executes the selected lines of code from the 'code' window in the IPython console.
