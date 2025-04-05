@@ -17,6 +17,7 @@ Plug 'hanschen/vim-ipython-cell'
 Plug 'kshenoy/vim-signature'
 Plug 'acarapetis/vim-sh-heredoc-highlighting'
 Plug 'madox2/vim-ai'
+Plug 'madox2/vim-ai-provider-google'
 Plug 'arzg/vim-sh'
 Plug 'markonm/traces.vim'
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
@@ -333,6 +334,10 @@ let g:indent_guides_auto_colors = 0
 hi IndentGuidesOdd  ctermbg=236
 hi IndentGuidesEven ctermbg=234
 
+" vim-ai
+let g:vim_ai_roles_config_file = '~/.config/ai/gemini_roles.ini'
+
+
 " ALE
 
 let g:ale_completion_enabled = 0
@@ -342,7 +347,8 @@ let g:ale_linters = {
             \}
 let g:ale_fixers = {
             \ 'python': ['black','isort', 'autoimport'],
-            \ 'tex': ['latexindent','textlint'],
+            \ 'sh': ['shfmt'],
+            \ 'html': ['fecs', 'html-beautify', 'prettier', 'remove_trailing_lines', 'rustywind', 'tidy']
             \}
 
 let g:ale_python_pylsp_config={'pylsp': {

@@ -33,18 +33,8 @@ RunIDE() finds all sources in the working dir and opens four windows:
               keyboard shortcuts
                    (normal mode):
 
-                                ,ci           -> Open or reset IDE
-
                                 ,cp           -> Open or reset IDE for python
                                                  visualization
-
-                                ,cc           -> Create a new Class (making
-                                                 <classname>.h and
-                                                 <classname>.cpp)
-
-                                ,cC           -> Clone a Class (making
-                                                 <newclassname>.h and
-                                                 <newclassname>.cpp)
 
                                 ,cf           -> Finds the occurrences of the
                                                  word under cursor and
