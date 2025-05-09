@@ -11,7 +11,8 @@ fi
 cp ${SRC_DIR}/vimrc ${HOME}/.vimrc
 
 # install all plugins
-vim -T dumb -n -i NONE -es -S <(echo -e "silent! PluginInstall\nqall")
+vim -T dumb -n -i NONE -es -S <(echo -e "silent! PlugUpdate\nqall")
+vim -T dumb -n -i NONE -es -S <(echo -e "silent! PlugInstall\nqall")
 
 # install gemini conf or vim-ai
 # -- you must also export your GEMINI_KEY in bashrc
