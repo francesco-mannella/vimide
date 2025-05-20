@@ -17,4 +17,4 @@ vim -T dumb -n -i NONE -es -S <(echo -e "silent! PlugInstall\nqall")
 # install gemini conf or vim-ai
 # -- you must also export your GEMINI_KEY in bashrc
 mkdir -p ${HOME}/.config/ai 
-cp ${SRC_DIR}/gemini_roles.ini ${HOME}/.config/ai/gemini_roles.ini
+cp ${SRC_DIR}/roles.ini ${HOME}/.config/ai/roles.ini
