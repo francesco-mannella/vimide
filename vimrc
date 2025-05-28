@@ -342,7 +342,7 @@ let g:vim_ai_roles_config_file = '~/.config/ai/roles.ini'
 
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
-            \ 'python': ['pylsp','mypy'],
+            \ 'python': ['pylsp', 'jedils'],
             \ 'tex': ['lacheck'],
             \}
 let g:ale_fixers = {
