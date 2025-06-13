@@ -335,14 +335,14 @@ hi IndentGuidesOdd  ctermbg=236
 hi IndentGuidesEven ctermbg=234
 
 " vim-ai
-let g:vim_ai_roles_config_file = '~/.config/ai/gemini_roles.ini'
+let g:vim_ai_roles_config_file = '~/.config/ai/roles.ini'
 
 
 " ALE
 
 let g:ale_completion_enabled = 0
 let g:ale_linters = {
-            \ 'python': ['pylsp','mypy'],
+            \ 'python': ['pylsp', 'jedils'],
             \ 'tex': ['lacheck'],
             \}
 let g:ale_fixers = {
