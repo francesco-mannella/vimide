@@ -9,8 +9,9 @@ hi SpellBad cterm=underline
 set nocompatible
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
-let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_CompileRule_pdf = 'latexmk -pdf -pdflatex="pdflatex --shell-escape" -f $*; latexmk -c'
+let g:Tex_FormatDependency_pdf = '.tex -> .pdf'
+let g:Tex_UseMakefile = "0"
 set iskeyword+=:
 
 " mapping '§' to reformat selected code in latex

@@ -19,9 +19,9 @@ cp ${SRC_DIR}/screenrc ${HOME}/.screenrc
 
 
 echo "Updating plugins"
-vim -T dumb -n -i NONE -es -S <(echo -e "silent! PlugUpdate\nqall")
+vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugUpdate\nqall")
 echo "Installing plugins"
-vim -T dumb -n -i NONE -es -S <(echo -e "silent! PlugInstall\nqall")
+vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugInstall\nqall")
 
 # install gemini conf or vim-ai
 # -- you must also export your GEMINI_KEY in bashrc
