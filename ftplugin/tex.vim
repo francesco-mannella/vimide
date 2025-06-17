@@ -1,6 +1,6 @@
 " spell
-set spelllang=en_gb spell
-set spellfile=$HOME/Dropbox/vim/spell/en.utf-8.add
+set spelllang=en_us spell
+set spellfile=$HOME/.vim/plugged/vimide/spell/dict.utf-8.add
 
 hi clear SpellBad
 hi SpellBad cterm=underline
@@ -18,3 +18,4 @@ set iskeyword+=:
 autocmd FileType tex set foldlevelstart=99
 
 :set wrap
+:ALEDisable
