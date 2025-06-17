@@ -15,4 +15,6 @@ set iskeyword+=:
 
 " mapping '§' to reformat selected code in latex
 :map <silent> § :call IndentComments("%") <CR>
+autocmd FileType tex set foldlevelstart=99
 
+:set wrap
