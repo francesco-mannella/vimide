@@ -12,3 +12,11 @@ autocmd FileType tex set foldlevelstart=99
 
 :set wrap
 :ALEDisable
+
+
+
+if has('gui_running')
+    imap <buffer> <silent> <F9> <Plug>Tex_Completion
+else
+    imap <buffer> <F9> <Plug>Tex_Completion
+endif
