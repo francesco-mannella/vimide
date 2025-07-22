@@ -17,6 +17,13 @@ echo "updating ~/.screenrc"
 [[ -f ${HOME}/.screenrc ]] && cp ${HOME}/.screenrc ${HOME}/.screenrc.orig
 cp ${SRC_DIR}/screenrc ${HOME}/.screenrc  
 
+echo "installing vide"
+if [[ -z $(echo $PATH| grep ":${HOME}/bin:") ]]; then
+    echo 'export PATH=$PATH:${HOME}/bin' >> ${HOME}/.bashrc
+fi
+mkdir -p ${HOME}/bin
+cp ${SRC_DIR}/vide ${HOME}/bin/vide
+
 
 echo "Updating plugins"
 vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugUpdate\nqall")
@@ -28,3 +35,4 @@ vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugInstall\nqall")
 echo "Updating ai roles into .config/ai directory"
 mkdir -p "${HOME}/.config/ai"
 cp "${SRC_DIR}/roles.ini" "${HOME}/.config/ai/roles.ini"
+
