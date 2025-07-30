@@ -137,13 +137,13 @@ fi
 bash -c "
 sleep 0.1
 screen -S $NAME -X select code
+screen -S $NAME -p code -X stuff \":silent call system('reset')\n\"
 screen -S $NAME -X split
 screen -S $NAME -X focus
-screen -S $NAME -p code -X stuff \":silent call system('reset')\n\"
 screen -S $NAME -X select console
+screen -S $NAME -p console -X stuff \"reset\n\"
 screen -S $NAME -X focus
 screen -S $NAME -X resize $(echo "$LINES * 0.75" | bc) 
-screen -S $NAME -p console -X stuff \"reset\n\"
 " &
 echo -ne "\033]0; $(echo -n $(hostname -I | awk '{print $1}')): $(echo $NAME | sed -e"s/vide_//")  \a"
 screen -rdS $NAME
