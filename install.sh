@@ -38,6 +38,7 @@ cp "${SRC_DIR}/roles.ini" "${HOME}/.config/ai/roles.ini"
 
 echo "Installing python modules"
 uv pip install ipynb-py-convert
+uv pip install notedown
 
 echo "Installing gnu screen ..."
 sudo apt install -y screen
