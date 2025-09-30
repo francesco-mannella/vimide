@@ -23,12 +23,29 @@ Plug 'markonm/traces.vim'
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 Plug 'vim-scripts/loremipsum'
 Plug 'nathanaelkane/vim-indent-guides'
+Plug 'eranfrie/gitgrep.vim'
 
 call plug#end()            
 
 filetype plugin indent on    
 filetype plugin on
 let g:tex_flavor='latex'
+
+"git-grep
+let g:gitgrep_cmd = "git grep"
+let g:gitgrep_exclude_files = ".pyc$"
+"let g:loaded_gitgrep = 1
+
+
+command -bang -nargs=* GG call GitGrep("", expand(<q-args>))
+command -bang -nargs=* GGw call GitGrep("-w", expand(<q-args>))
+command -bang -nargs=* GGi call GitGrep("-i", expand(<q-args>))
+let g:gitgrep_menu_height = 2
+
+
+
+nnoremap <leader>g :call GitGrep("-w", expand("<cword>"))<CR>
+nnoremap <leader>t :call GitGrepBack()<CR>
 
 " vim-latex
 set nocompatible
