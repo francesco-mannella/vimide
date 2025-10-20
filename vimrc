@@ -299,7 +299,7 @@ endfunction
 " ==============================================================================
 " Main function to add anchors to Markdown headings
 " ==============================================================================
-function! MarkdownAddAnchorsToHeadings() abort
+function!  AddAnchorsToMarkdownHeadings() abort
     " Search all lines starting with one or more '#' followed by a space.
     " Perform a global substitution on these lines.
     " Pattern: (^\s*#\+)\s\+\(.*\)$
@@ -312,4 +312,4 @@ function! MarkdownAddAnchorsToHeadings() abort
 endfunction
 
 " Map a command for easy use
-command! AddMarkdownAnchors call AddAnchorsToMarkdownHeadings()
+command! MarkdownAddAnchors call AddAnchorsToMarkdownHeadings()
