@@ -250,4 +250,48 @@ hi IndentGuidesEven ctermbg=234
 " vim-ai
 let g:vim_ai_roles_config_file = '~/.config/ai/roles.ini'
 
+" markdown
 
+" ==============================================================================
+" Support function to 'slugify' a string
+" Transforms "A Title With Spaces & Strange Characters" into "a-title-with-spaces--strange-characters"
+" ==============================================================================
+function! Slugify(text) abort
+    " 1. Remove leading and trailing spaces
+    let l:slug = trim(a:text)
+
+    " 2. Convert to lowercase
+    let l:slug = tolower(l:slug)
+
+    
+    " 4. Replace all non-alphanumeric characters (excluding spaces and hyphens) with a hyphen.
+    "    Note: we use ' -' to keep existing hyphens and spaces.
+    let l:slug = substitute(l:slug, '[^a-z0-9àáâãäåèéêëìíîïòóôõöùúûüç -]', '', 'g')
+    
+    " 5. Replace multiple spaces and hyphens with a single hyphen
+    let l:slug = substitute(l:slug, '[ -]\+', '-', 'g')
+
+    " 6. Remove residual leading and trailing hyphens
+    let l:slug = substitute(l:slug, '^-', '', '')
+    let l:slug = substitute(l:slug, '-$', '', '')
+    
+    return l:slug
+endfunction
+
+" ==============================================================================
+" Main function to add anchors to Markdown headings
+" ==============================================================================
+function! AddAnchorsToMarkdownHeadings() abort
+    " Search all lines starting with one or more '#' followed by a space.
+    " Perform a global substitution on these lines.
+    " Pattern: (^\s*#\+)\s\+\(.*\)$
+    " Group 1: Heading symbols (e.g., '##')
+    " Group 2: Heading text (e.g., 'My Title')
+    
+    execute 'g/^\s*#\+\s\+.*$/s/^\(\s*#\+\)\s\+\(.*\)$/\=submatch(1) . " " . submatch(3) . " <a id=\"#" . Slugify(submatch(2)) . "\">"/'
+    
+    echo "Markdown anchors added to headings"
+endfunction
+
+" Map a command for easy use
+command! AddMarkdownAnchors call AddAnchorsToMarkdownHeadings()
