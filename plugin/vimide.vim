@@ -51,7 +51,7 @@ endfunction
 " ResetCtags: Reset the ctags database
 " Description: Executes ctags over all subdirectories to rebuild the tag database
 function! ResetCtags()
-    execute "silent !ctags -R --c-types=+l --python-kinds=-i --langdef=C++ --sort=yes --c++-kinds=+cdefglmnpstuvx --fields=+imatS --extra=+q -f ".g:tags." ."
+    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q -f ".g:tags." ."
 endfunction
 
 " GotoMainWindow: Go to the source window
