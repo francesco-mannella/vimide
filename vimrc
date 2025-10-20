@@ -23,6 +23,7 @@ Plug 'markonm/traces.vim'
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 Plug 'vim-scripts/loremipsum'
 Plug 'nathanaelkane/vim-indent-guides'
+Plug 'vsego/markdown_toc'
 
 call plug#end()            
 
