@@ -302,4 +302,4 @@ function! AddAnchorsToMarkdownHeadingsInRange(start, end) abort
 endfunction
 
 " Mappatura dei tasti in modalità visuale per chiamare la funzione su un intervallo di selezione
-xnoremap <leader>ma :<C-u>call AddAnchorsToMarkdownHeadingsInRange('<','>')<CR>
+xnoremap <leader>mm :<C-u>call AddAnchorsToMarkdownHeadingsInRange('<','>')<CR>
