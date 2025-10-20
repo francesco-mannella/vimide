@@ -306,7 +306,7 @@ function!  AddAnchorsToMarkdownHeadings() abort
     " Group 1: Heading symbols (e.g., '##')
     " Group 2: Heading text (e.g., 'My Title')
     
-    execute 'g/^\s*#\+\s\+.*$/s/^\(\s*#\+\)\s\+\(.*\)$/\=submatch(1) . " " . submatch(3) . " <a id=\"#" . Slugify(submatch(2)) . "\">"/'
+    execute 'g/^\s*#\+\s\+.*$/s/^\(\s*#\+\)\s\+\(.*\)$/\=submatch(1) . " " . submatch(2) . " <a id=\"#" . Slugify(submatch(2)) . "\/>"/'
     
     echo "Markdown anchors added to headings"
 endfunction
