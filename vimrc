@@ -299,20 +299,10 @@ function! Slugify(text) abort
     return l:slug
 endfunction
 
-" ==============================================================================
-" Main function to add anchors to Markdown headings
-" ==============================================================================
-function! MarkdownAddAnchorsToHeadings() abort
-    " Search all lines starting with one or more '#' followed by a space.
-    " Perform a global substitution on these lines.
-    " Pattern: (^\s*#\+)\s\+\(.*\)$
-    " Group 1: Heading symbols (e.g., '##')
-    " Group 2: Heading text (e.g., 'My Title')
-    
-    execute 'g/^\s*#\+\s\+.*$/s/^\(\s*#\+\)\s\+\(.*\)$/\=submatch(1) . " " . submatch(3) . " <a id=\"#" . Slugify(submatch(2)) . "\">"/'
-    
-    echo "Markdown anchors added to headings"
+function! AddAnchorsToMarkdownHeadingsInRange(start, end) abort
+    execute a:start . ',' . a:end . 'g/^\s*#\+\s\+.*$/s/^\(\s*#\+\)\s\+\(.*\)$/\=submatch(1) . " " . submatch(2) . " <a id=\"#" . Slugify(submatch(2)) . "\/>"/'
+    echo "Markdown anchors added to headings in range"
 endfunction
 
-" Map a command for easy use
-command! AddMarkdownAnchors call AddAnchorsToMarkdownHeadings()
+" Mappatura dei tasti in modalità visuale per chiamare la funzione su un intervallo di selezione
+xnoremap <leader>mm :<C-u>call AddAnchorsToMarkdownHeadingsInRange('<','>')<CR>
