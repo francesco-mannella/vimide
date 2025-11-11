@@ -5,6 +5,7 @@ filetype off
 call plug#begin()
 
 Plug 'vim-latex/vim-latex'
+Plug 'gauteh/vim-evince-synctex'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'python -m pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
