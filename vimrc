@@ -37,6 +37,8 @@ let g:gitgrep_cmd = "git grep"
 let g:gitgrep_exclude_files = ".pyc$"
 "let g:loaded_gitgrep = 1
 
+nnoremap <Leader>lf :call SyncTexForward()<CR>
+
 
 command -bang -nargs=* GG call GitGrep("", expand(<q-args>))
 command -bang -nargs=* GGw call GitGrep("-w", expand(<q-args>))
@@ -53,9 +55,10 @@ set nocompatible
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 let g:Tex_DefaultTargetFormat = 'pdf'
-let g:Tex_CompileRule_pdf = 'latexmk -pdf -pdflatex="pdflatex --shell-escape" -f $*; latexmk -c'
+let g:Tex_CompileRule_pdf = 'latexmk -pdf -pdflatex="pdflatex -synctex=1 -interaction=nonstopmode --shell-escape" -f $*; latexmk -c'
 set iskeyword+=:
 
+nmap <Leader>f VimtexForwardSearch<CR>
 "jedi-vim
 let g:jedi#popup_select_first = 0
 autocmd FileType python setlocal completeopt-=preview 
