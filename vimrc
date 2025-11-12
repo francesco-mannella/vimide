@@ -4,7 +4,6 @@ filetype off
 " open vim-plug
 call plug#begin()
 
-Plug 'vim-latex/vim-latex'
 Plug 'lervag:vimtex'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'python -m pip install python-lsp-server'}
@@ -51,13 +50,13 @@ let g:gitgrep_menu_height = 2
 nnoremap <leader>g :call GitGrep("-w", expand("<cword>"))<CR>
 nnoremap <leader>t :call GitGrepBack()<CR>
 
-" vim-latex
-set nocompatible
-set grepprg=grep\ -nH\ $*
-let g:tex_flavor='latex'
-let g:Tex_DefaultTargetFormat = 'pdf'
-let g:Tex_CompileRule_pdf = 'latexmk -pdf -pdflatex="pdflatex -synctex=1 -interaction=nonstopmode --shell-escape" -f $*; latexmk -c'
-set iskeyword+=:
+" " vim-latex
+" set nocompatible
+" set grepprg=grep\ -nH\ $*
+" let g:tex_flavor='latex'
+" let g:Tex_DefaultTargetFormat = 'pdf'
+" let g:Tex_CompileRule_pdf = 'latexmk -pdf -pdflatex="pdflatex -synctex=1 -interaction=nonstopmode --shell-escape" -f $*; latexmk -c'
+" set iskeyword+=:
 
 # vimtex
 let g:vimtex_view_general_viewer = 'okular'
