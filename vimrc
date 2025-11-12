@@ -26,7 +26,7 @@ Plug 'vim-scripts/loremipsum'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'eranfrie/gitgrep.vim'
-Plug 'lervag:vimtex'
+Plug 'lervag/vimtex'
 
 call plug#end()            
 
