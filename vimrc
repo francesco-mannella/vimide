@@ -71,6 +71,10 @@ let g:vimtex_compiler_latexmk = {
       \   '-interaction=nonstopmode',
       \ ],
       \}
+let g:vimtex_quickfix_ignore_filters = [
+      \ 'Underfull',
+      \ 'Overfull',
+      \]
 
 "jedi-vim
 let g:jedi#popup_select_first = 0
