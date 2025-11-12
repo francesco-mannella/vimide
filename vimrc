@@ -146,7 +146,7 @@ au FocusLost * silent! wa
 :autocmd BufEnter * cd %:p:h
 ":colorscheme late_evening "https://raw.githubusercontent.com/h3xx/vim-late_evening/main/colors/late_evening.vim
 :colorscheme late_evening
-:highlight  Visual ctermfg black ctermbg white
+:highlight  Visual ctermfg=black ctermbg=white
 :set switchbuf=usetab,split
 :set spr
 :let g:netrw_preview = 1
