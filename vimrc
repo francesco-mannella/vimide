@@ -76,6 +76,8 @@ let g:vimtex_quickfix_ignore_filters = [
       \ 'Underfull',
       \ 'Overfull',
       \ 'Font',
+      \ 'Float',
+      \ 'Difference',
       \]
 
 "jedi-vim
