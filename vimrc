@@ -71,9 +71,11 @@ let g:vimtex_compiler_latexmk = {
       \   '-interaction=nonstopmode',
       \ ],
       \}
+
 let g:vimtex_quickfix_ignore_filters = [
       \ 'Underfull',
       \ 'Overfull',
+      \ 'Font',
       \]
 
 "jedi-vim
