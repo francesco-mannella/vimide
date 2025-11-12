@@ -5,7 +5,7 @@ filetype off
 call plug#begin()
 
 Plug 'vim-latex/vim-latex'
-Plug 'gauteh/vim-evince-synctex'
+Plug 'lervag:vimtex'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'python -m pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
@@ -26,6 +26,7 @@ Plug 'vim-scripts/loremipsum'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mzlogin/vim-markdown-toc'
 Plug 'eranfrie/gitgrep.vim'
+Plug 'lervag:vimtex'
 
 call plug#end()            
 
@@ -58,7 +59,11 @@ let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_CompileRule_pdf = 'latexmk -pdf -pdflatex="pdflatex -synctex=1 -interaction=nonstopmode --shell-escape" -f $*; latexmk -c'
 set iskeyword+=:
 
-noremap <Leader>f VimtexForwardSearch<CR>
+# vimtex
+let g:vimtex_view_general_viewer = 'okular'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+let g:tex_flavor = 'latex'
+
 "jedi-vim
 let g:jedi#popup_select_first = 0
 autocmd FileType python setlocal completeopt-=preview 
