@@ -4,7 +4,7 @@ filetype off
 " open vim-plug
 call plug#begin()
 
-Plug 'lervag:vimtex'
+Plug 'lervag/vimtex'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'python -m pip install python-lsp-server'}
 Plug 'majutsushi/tagbar'
