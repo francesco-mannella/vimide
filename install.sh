@@ -21,6 +21,10 @@ echo "installing vide"
 if [[ -z $(echo $PATH| grep ":${HOME}/bin:") ]]; then
     echo 'export PATH=$PATH:${HOME}/bin' >> ${HOME}/.bashrc
 fi
+if [[ -z $(cat ${HOME}/.bashrc | grep "--servername vim") ]]; then
+   echo 'alias vim="vim --servername vim"' >> ${HOME}/.bashrc
+fi
+
 mkdir -p ${HOME}/bin
 cp ${SRC_DIR}/vide ${HOME}/bin/vide
 
