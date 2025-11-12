@@ -62,6 +62,15 @@ nnoremap <leader>t :call GitGrepBack()<CR>
 let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 let g:tex_flavor = 'latex'
+let g:vimtex_compiler_latexmk = {
+      \ 'build_dir' : 'out',
+      \ 'options' : [
+      \   '-shell-escape',
+      \   '-file-line-error',
+      \   '-synctex=1',
+      \   '-interaction=nonstopmode',
+      \ ],
+      \}
 
 "jedi-vim
 let g:jedi#popup_select_first = 0
