@@ -80,6 +80,8 @@ let g:vimtex_quickfix_ignore_filters = [
       \ 'Difference',
       \]
 
+let g:vimtex_quickfix_mode = 0
+
 "jedi-vim
 let g:jedi#popup_select_first = 0
 autocmd FileType python setlocal completeopt-=preview 
