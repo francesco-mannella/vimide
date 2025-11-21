@@ -95,7 +95,7 @@ let g:ale_python_pylsp_config={'pylsp': {
   \   'pylsp_mypy': {'dmypy': v:true},
   \ },
   \ }}
-let g:ale_python_black_options='-l 79'
+let g:ale_python_black_options='-l 90'
 let g:ale_sign_column_always = 1
 let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 1
