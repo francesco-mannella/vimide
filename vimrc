@@ -4,6 +4,7 @@ filetype off
 " open vim-plug
 call plug#begin()
 
+Plug 'tpope/vim-vinegar'
 Plug 'lervag/vimtex'
 Plug 'davidhalter/jedi-vim'
 Plug 'dense-analysis/ale', {'do': 'python -m pip install python-lsp-server'}
