@@ -88,7 +88,7 @@ let g:ale_fixers = {
 let g:ale_python_pylsp_config={'pylsp': {
   \ 'configurationSources': ['flake8'],
   \ 'plugins': {
-  \   'flake8': {'enabled': v:true,  'ignore': "E203,W503"  },
+  \   'flake8': {'enabled': v:true,  'ignore': "E203,E501,W503"  },
   \   'pycodestyle': {'enabled': v:false},
   \   'pyflakes': {'enabled': v:false},
   \   'pydocstyle': {'enabled': v:false},
