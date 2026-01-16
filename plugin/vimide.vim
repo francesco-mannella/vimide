@@ -111,7 +111,7 @@ function! FindOccurrence(atom)
     :e! /tmp/replace 
     :1,$d
 
-    let findstring = 'silent r! find '.g:cwd.'/ | grep "\.\(cpp\|h\|hpp\|py\)$"'
+    let findstring = 'silent r! find '.g:cwd.'/ | grep "\.\(cpp\|h\|hpp\|py\|tex\)$"'
     let findstring .= '| xargs grep -Hn "\<'.a:atom.'\>" | '
     let findstring .= 'sed -e"s/^\([^:]\+\/\([^\/^:]\+\)\):\([^:]\+\):\(.*\)/\2'.g:separator.'\3'.g:separator.'\4'.g:separator.'\1/"' 
 
@@ -197,7 +197,7 @@ function! RunPyIDE()
         execute ":cd ".g:cwd 
     endif
     
-    let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.py$"`'),'\n')    
+    let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')    
 
     wincmd o
     bwipeout
@@ -232,12 +232,6 @@ function! UpdateView()
         wincmd l        
         wincmd l        
         call CreatePyView()
-    elseif g:IDE == "CppIDE"
-        wincmd t        
-        wincmd t
-        call CreateHView()
-        wincmd j
-        call CreateCppView()
     endif
 endfunction
 
