@@ -39,6 +39,7 @@ let g:vimtex_compiler_latexmk = {
       \   '-bibtex',
       \   '-shell-escape',
       \   '-file-line-error',
+      \   '-verbose',
       \   '-synctex=1',
       \   '-interaction=nonstopmode',
       \ ],
