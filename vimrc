@@ -262,6 +262,7 @@ hi IndentGuidesOdd  ctermbg=236
 hi IndentGuidesEven ctermbg=234
 hi MatchParen ctermfg=black ctermbg=white
 hi SpellLocal ctermfg=black ctermbg=white
+
 " vim-ai
 let g:vim_ai_roles_config_file = '~/.config/ai/roles.ini'
 
