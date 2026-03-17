@@ -138,7 +138,7 @@ autocmd FileType tex,matlab       let b:comment_leader = '% '
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 
-
+:let b:is_bash = 1 | set filetype=sh
 
 " Comment text
 function! Comment() range "Step through each line in the range...
