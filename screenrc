@@ -1,9 +1,6 @@
  #####
- # Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E>
- # (This fixes the "Aborted because of window size change" konsole symptoms found
- #  in bug #134198)
- termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
- 
+term xterm-256color 
+termcapinfo linux|xterm|rxvt|xterm-color ti@:te@:XT 
  # Remove message delay
  msgwait 0
  msgminwait 0
