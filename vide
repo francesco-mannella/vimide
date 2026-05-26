@@ -122,7 +122,7 @@ windows="$(echo "$winstr" | awk '{print $2}')"
 [[ ! "$( echo "${ids[@]}" | grep 1)" ]] && screen -S $NAME -X screen
 [[ "${windows[1]}" != "console" ]] && screen -S $NAME -p 1 -X title console 
 
-# Rin vimide in the `code` buffer and link it to a terminal in the `console` buffer
+# Run vimide in the `code` buffer and link it to a terminal in the `console` buffer
 if [[ -z "$(pstree $SCREEN_PID| grep vim)" ]]; then
     screen -S $NAME -p code -X width 110
     screen -S $NAME -p code -X stuff "vim .\n"
@@ -136,6 +136,7 @@ fi
 # Open a bash shell and attach to the vide `screen` session.
 bash -c "
 sleep 0.01
+export DISPLAY=\$(tr '\0' '\n' < /proc/\$\$/environ | grep ^DISPLAY= | cut -d= -f2-)
 screen -S $NAME -X select code
 screen -S $NAME -X split
 screen -S $NAME -X focus
