@@ -13,9 +13,9 @@ echo "updating ~/.vimrc"
 cp ${HOME}/.vimrc ${HOME}/.vimrc.orig
 cp ${SRC_DIR}/vimrc ${HOME}/.vimrc  
 
-echo "updating ~/.screenrc"
-[[ -f ${HOME}/.screenrc ]] && cp ${HOME}/.screenrc ${HOME}/.screenrc.orig
-cp ${SRC_DIR}/screenrc ${HOME}/.screenrc  
+echo "updating ~/.tmux.conf"
+[[ -f ${HOME}/.tmux.conf ]] && cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.orig
+cp ${SRC_DIR}/tmux.conf ${HOME}/.tmux.conf
 
 echo "installing vide"
 if [[ -z $(echo $PATH| grep ":${HOME}/bin:") ]]; then
@@ -44,8 +44,8 @@ echo "Installing python modules"
 uv pip install ipynb-py-convert
 uv pip install notedown
 
-echo "Installing gnu screen ..."
-sudo apt install -y screen
+echo "Installing tmux ..."
+sudo apt install -y tmux
 
 echo "Installing ctags ..."
 sudo apt install -y  universal-ctags
