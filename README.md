@@ -41,9 +41,23 @@ vide -h             Show help
 ```
 
 On first launch, `vide`:
-1. Creates a detached tmux session with a single window `code`, split into two panes: top (Vim) and bottom (console, 25% height).
-2. Starts Vim in the top pane, calls `RunPyIDE()` to set up the layout, and configures vim-slime to target the bottom pane.
-3. Attaches to the session with the cursor in the top pane.
+1. Creates a detached tmux session with a single window `code`, split into two panes: top (Vim, 75%) and bottom (console, 25%).
+2. Starts Vim in the top pane, calls `RunPyIDE()` to set up the three-panel IDE layout, and configures vim-slime to target the bottom pane.
+3. Attaches to the session with focus on the top pane.
+
+```
+tmux session: vide_NAME
+└── window: code
+    ├── pane 0 (top, 75%) ─────────────────────────────────────
+    │   ┌─────────────┬───────────────────┬───────────────────┐
+    │   │   Tagbar    │      Editor       │   File Explorer   │
+    │   │             │                   │                   │
+    │   └─────────────┴───────────────────┴───────────────────┘
+    └── pane 1 (bottom, 25%) ──────────────────────────────────
+        ┌───────────────────────────────────────────────────────┐
+        │                      console                          │
+        └───────────────────────────────────────────────────────┘
+```
 
 ---
 
