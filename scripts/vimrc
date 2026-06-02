@@ -18,7 +18,6 @@ Plug 'hanschen/vim-ipython-cell'
 Plug 'kshenoy/vim-signature'
 Plug 'acarapetis/vim-sh-heredoc-highlighting'
 Plug 'madox2/vim-ai'
-Plug 'madox2/vim-ai-provider-google'
 Plug 'arzg/vim-sh'
 Plug 'markonm/traces.vim'
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}

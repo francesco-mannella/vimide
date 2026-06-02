@@ -250,7 +250,6 @@ Live markdown preview with MathJax support via vim-instant-markdown.
 | vim-signature | Visual mark management |
 | vim-sh-heredoc-highlighting | Heredoc syntax highlighting in shell files |
 | vim-ai | AI text and code assistance |
-| vim-ai-provider-google | Google provider for vim-ai |
 | vim-sh | Improved shell script syntax |
 | traces.vim | Live preview of substitution commands |
 | vim-instant-markdown | Live Markdown preview in browser |
