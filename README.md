@@ -28,6 +28,16 @@ The Tagbar and file explorer panels collapse when not focused and expand on entr
 
 ---
 
+## tmux Configuration
+
+VimIDE ships a `scripts/tmux.conf` installed to `~/.tmux.conf`. It sets:
+
+- **Terminal**: `screen-256color` with true-color overrides for xterm-compatible terminals.
+- **Prefix key**: `Ctrl-a` (replaces the default `Ctrl-b`).
+- **Message display time**: 0 ms (messages dismissed immediately).
+
+---
+
 ## The `vide` Launcher
 
 `vide` manages named tmux sessions containing the IDE. It is installed to `~/bin/vide`.
