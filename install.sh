@@ -11,11 +11,11 @@ fi
 
 echo "updating ~/.vimrc"
 cp ${HOME}/.vimrc ${HOME}/.vimrc.orig
-cp ${SRC_DIR}/vimrc ${HOME}/.vimrc  
+cp ${SRC_DIR}/scripts/vimrc ${HOME}/.vimrc
 
 echo "updating ~/.screenrc"
 [[ -f ${HOME}/.screenrc ]] && cp ${HOME}/.screenrc ${HOME}/.screenrc.orig
-cp ${SRC_DIR}/screenrc ${HOME}/.screenrc  
+cp ${SRC_DIR}/scripts/screenrc ${HOME}/.screenrc
 
 echo "Updating plugins"
 vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugUpdate\nqall")
@@ -26,11 +26,11 @@ vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugInstall\nqall")
 # -- you must also export your GEMINI_KEY in bashrc
 echo "Updating ai roles into .config/ai directory"
 mkdir -p "${HOME}/.config/ai"
-cp "${SRC_DIR}/roles.ini" "${HOME}/.config/ai/roles.ini"
+cp "${SRC_DIR}/scripts/roles.ini" "${HOME}/.config/ai/roles.ini"
 
 echo "Updating ~/.claude/CLAUDE.md"
 mkdir -p "${HOME}/.claude"
-cp "${SRC_DIR}/CLAUDE.md" "${HOME}/.claude/CLAUDE.md"
+cp "${SRC_DIR}/scripts/CLAUDE.md" "${HOME}/.claude/CLAUDE.md"
 
 echo "Installing python modules"
 uv pip install ipynb-py-convert
@@ -63,6 +63,6 @@ fi
 
 
 mkdir -p ${HOME}/bin
-cp ${SRC_DIR}/vide ${HOME}/bin/vide
+cp ${SRC_DIR}/scripts/vide ${HOME}/bin/vide
 
 
