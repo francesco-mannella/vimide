@@ -1,6 +1,6 @@
 # VimIDE
 
-A lightweight Python IDE built on Vim and GNU Screen. VimIDE turns Vim into a multi-panel development environment with integrated IPython, AI assistance, LaTeX support, and a terminal console — all inside a persistent Screen session.
+A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into a multi-panel development environment with integrated IPython, AI assistance, LaTeX support, and a terminal console — all inside a persistent tmux session.
 
 ---
 
@@ -8,8 +8,8 @@ A lightweight Python IDE built on Vim and GNU Screen. VimIDE turns Vim into a mu
 
 VimIDE is a Vim plugin plus a launcher script (`vide`) that sets up a full development environment:
 
-- **Vim** runs in a Screen window called `code` with a three-panel layout: tag browser, editor, file explorer.
-- **IPython** runs in a sibling Screen window called `console`, linked to the editor via vim-slime.
+- **Vim** runs in the top pane of a tmux window called `code`, with a three-panel layout: tag browser, editor, file explorer.
+- **IPython** runs in the bottom pane (`console`), linked to the editor via vim-slime.
 - Code cells, selections, or full scripts can be sent from the editor to IPython with single keystrokes.
 
 ---
@@ -30,7 +30,7 @@ The Tagbar and file explorer panels collapse when not focused and expand on entr
 
 ## The `vide` Launcher
 
-`vide` manages named Screen sessions containing the IDE. It is installed to `~/bin/vide`.
+`vide` manages named tmux sessions containing the IDE. It is installed to `~/bin/vide`.
 
 ```
 vide -n NAME        Start or reattach a session named NAME
@@ -41,9 +41,9 @@ vide -h             Show help
 ```
 
 On first launch, `vide`:
-1. Creates a detached Screen session with two windows: `code` and `console`.
-2. Starts Vim in `code`, calls `RunPyIDE()` to set up the layout, and configures vim-slime to send output to `console`.
-3. Splits the terminal — `code` on top, `console` below — and attaches.
+1. Creates a detached tmux session with a single window `code`, split into two panes: top (Vim) and bottom (console, 25% height).
+2. Starts Vim in the top pane, calls `RunPyIDE()` to set up the layout, and configures vim-slime to target the bottom pane.
+3. Attaches to the session with the cursor in the top pane.
 
 ---
 
@@ -70,7 +70,7 @@ Provided by `after/ftplugin/python.vim` via vim-slime and vim-ipython-cell.
 
 | Key         | Action |
 |-------------|--------|
-| `\ss`       | Start IPython (Qt backend) in the console window |
+| `\ss`       | Start IPython (Qt backend) in the bottom pane |
 | `\as`       | Start IPython (Agg backend, non-interactive) |
 | `\hh`       | Send current line to IPython (normal mode) |
 | `\hh`       | Send selection to IPython (visual mode) |
@@ -246,7 +246,7 @@ The installer:
 - Installs system packages: `tmux`, `universal-ctags`.
 - Copies `scripts/vide` to `~/bin/vide` and adds `~/bin` to `PATH`.
 - Adds a `vim --servername vim` alias to `.bashrc`.
-- Adds SSH auth and DISPLAY tracking fix for Screen/Tmux sessions.
+- Adds SSH auth and DISPLAY tracking fix for tmux sessions.
 
 ---
 
