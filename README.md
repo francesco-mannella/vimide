@@ -174,9 +174,24 @@ Available roles:
 | `enhance-comments` | Add and improve inline comments and docstrings |
 | `reformat-comments` | Reformat comments to fit within 79 characters |
 
-API tokens are plain-text files expected at `~/.config/ai/` and are never stored in the repository:
+All roles route through [OpenRouter](https://openrouter.ai). A single token file is required:
 
-- `~/.config/ai/openrouter.token`
+```
+~/.config/ai/openrouter.token
+```
+
+To provision it:
+
+1. Create an account at [openrouter.ai](https://openrouter.ai) and generate an API key.
+2. Write the key to the expected path:
+
+```bash
+mkdir -p ~/.config/ai
+echo "sk-or-..." > ~/.config/ai/openrouter.token
+chmod 600 ~/.config/ai/openrouter.token
+```
+
+The token file is plain text containing only the API key. It is never stored in this repository.
 
 ---
 
