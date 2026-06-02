@@ -28,6 +28,10 @@ echo "Updating ai roles into .config/ai directory"
 mkdir -p "${HOME}/.config/ai"
 cp "${SRC_DIR}/roles.ini" "${HOME}/.config/ai/roles.ini"
 
+echo "Updating ~/.claude/CLAUDE.md"
+mkdir -p "${HOME}/.claude"
+cp "${SRC_DIR}/CLAUDE.md" "${HOME}/.claude/CLAUDE.md"
+
 echo "Installing python modules"
 uv pip install ipynb-py-convert
 uv pip install notedown
