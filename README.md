@@ -273,6 +273,16 @@ Live markdown preview with MathJax support via vim-instant-markdown.
 
 ## Installation
 
+Before running the installer, provision the OpenRouter token (see [AI Integration](#ai-integration)):
+
+```bash
+mkdir -p ~/.config/ai
+echo "sk-or-..." > ~/.config/ai/openrouter.token
+chmod 600 ~/.config/ai/openrouter.token
+```
+
+Then run:
+
 ```bash
 ./install.sh
 ```
