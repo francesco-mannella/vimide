@@ -153,14 +153,14 @@ Provided by vim-ai with a custom roles file at `~/.config/ai/roles.ini`.
 
 Available roles:
 
-| Role | Purpose |
-|------|---------|
-| `default` | General assistant via OpenRouter (Gemma 4) |
-| `gemini` | Google Gemini via OpenAI-compatible endpoint |
-| `gpt` | GPT-4o |
-| `gpt5` | GPT-5 via OpenRouter |
-| `claude` | Claude 3.5 Sonnet via OpenRouter |
-| `opus` | Claude Opus 4.6 via OpenRouter |
+| Role | Model | Purpose |
+|------|-------|---------|
+| `default` | `meta-llama/llama-3.3-70b-instruct:free` | General assistant (free tier) |
+| `gemini` | `google/gemini-3-flash-preview` | Google Gemini Flash |
+| `gpt` | `openai/gpt-4o` | OpenAI GPT-4o |
+| `gpt5` | `gpt-5.4` | OpenAI GPT-5 |
+| `claude` | `anthropic/claude-3.5-sonnet` | Anthropic Claude 3.5 Sonnet |
+| `opus` | `anthropic/claude-opus-4.6` | Anthropic Claude Opus 4.6 |
 | `refine` | Rewrite and improve text for clarity and flow |
 | `translate` | Translate text to English |
 | `professional` | Rewrite text in a professional, expert tone |
