@@ -153,14 +153,21 @@ Provided by vim-ai with a custom roles file at `~/.config/ai/roles.ini`. All rol
 
 Available roles:
 
-| Role | Model | Purpose |
-|------|-------|---------|
-| `default` | `meta-llama/llama-3.3-70b-instruct:free` | General assistant (free tier) |
-| `gemini` | `google/gemini-3-flash-preview` | Google Gemini Flash |
-| `gpt` | `openai/gpt-4o` | OpenAI GPT-4o |
-| `gpt5` | `gpt-5.4` | OpenAI GPT-5 |
-| `claude` | `anthropic/claude-3.5-sonnet` | Anthropic Claude 3.5 Sonnet |
-| `opus` | `anthropic/claude-opus-4.6` | Anthropic Claude Opus 4.6 |
+**Model roles** — select a backend explicitly:
+
+| Role | Model |
+|------|-------|
+| `default` | `meta-llama/llama-3.3-70b-instruct:free` |
+| `gemini` | `google/gemini-3-flash-preview` |
+| `gpt` | `openai/gpt-4o` |
+| `gpt5` | `gpt-5.4` |
+| `claude` | `anthropic/claude-3.5-sonnet` |
+| `opus` | `anthropic/claude-opus-4.6` |
+
+**Prompt roles** — text and code transforms using the default model:
+
+| Role | Purpose |
+|------|---------|
 | `refine` | Rewrite and improve text for clarity and flow |
 | `translate` | Translate text to English |
 | `professional` | Rewrite text in a professional, expert tone |
@@ -174,24 +181,7 @@ Available roles:
 | `enhance-comments` | Add and improve inline comments and docstrings |
 | `reformat-comments` | Reformat comments to fit within 79 characters |
 
-All roles route through [OpenRouter](https://openrouter.ai). A single token file is required:
-
-```
-~/.config/ai/openrouter.token
-```
-
-To provision it:
-
-1. Create an account at [openrouter.ai](https://openrouter.ai) and generate an API key.
-2. Write the key to the expected path:
-
-```bash
-mkdir -p ~/.config/ai
-echo "sk-or-..." > ~/.config/ai/openrouter.token
-chmod 600 ~/.config/ai/openrouter.token
-```
-
-The token file is plain text containing only the API key. It is never stored in this repository.
+To provision the OpenRouter token, see [Installation](#installation).
 
 ---
 
