@@ -239,12 +239,11 @@ Live markdown preview with MathJax support via vim-instant-markdown.
 The installer:
 - Installs vim-plug if absent.
 - Copies `scripts/vimrc` to `~/.vimrc`.
-- Copies `scripts/screenrc` to `~/.screenrc`.
 - Installs and updates all Vim plugins.
 - Copies `scripts/roles.ini` to `~/.config/ai/roles.ini`.
 - Copies `scripts/CLAUDE.md` to `~/.claude/CLAUDE.md`.
 - Installs Python tools: `ipynb-py-convert`, `notedown` (via uv).
-- Installs system packages: `screen`, `universal-ctags`.
+- Installs system packages: `tmux`, `universal-ctags`.
 - Copies `scripts/vide` to `~/bin/vide` and adds `~/bin` to `PATH`.
 - Adds a `vim --servername vim` alias to `.bashrc`.
 - Adds SSH auth and DISPLAY tracking fix for Screen/Tmux sessions.
@@ -264,7 +263,6 @@ The installer:
 │   └── vimide.vim       # Core IDE plugin
 ├── scripts/             # Files installed to the system
 │   ├── vimrc            # Vim configuration
-│   ├── screenrc         # GNU Screen configuration
 │   ├── roles.ini        # vim-ai role definitions
 │   ├── CLAUDE.md        # Claude Code project instructions
 │   └── vide             # IDE launcher script

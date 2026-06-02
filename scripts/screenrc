@@ -1,7 +1,0 @@
- #####
-term xterm-256color 
-termcapinfo linux|xterm|rxvt|xterm-color ti@:te@:XT 
- # Remove message delay
- msgwait 0
- msgminwait 0
- 

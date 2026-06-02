@@ -13,10 +13,6 @@ echo "updating ~/.vimrc"
 cp ${HOME}/.vimrc ${HOME}/.vimrc.orig
 cp ${SRC_DIR}/scripts/vimrc ${HOME}/.vimrc
 
-echo "updating ~/.screenrc"
-[[ -f ${HOME}/.screenrc ]] && cp ${HOME}/.screenrc ${HOME}/.screenrc.orig
-cp ${SRC_DIR}/scripts/screenrc ${HOME}/.screenrc
-
 echo "Updating plugins"
 vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugUpdate\nqall")
 echo "Installing plugins"
@@ -36,8 +32,8 @@ echo "Installing python modules"
 uv pip install ipynb-py-convert
 uv pip install notedown
 
-echo "Installing gnu screen ..."
-sudo apt install -y screen
+echo "Installing tmux ..."
+sudo apt install -y tmux
 
 echo "Installing ctags ..."
 sudo apt install -y  universal-ctags
@@ -50,17 +46,16 @@ if [[ -z $(cat ${HOME}/.bashrc | grep "servername vim") ]]; then
    echo 'alias vim="vim --servername vim"' >> ${HOME}/.bashrc
 fi
 
-SNIPPET='##### Fix SSH auth and DISPLAY inside Screen/Tmux'
+SNIPPET='##### Fix SSH auth and DISPLAY inside Tmux'
 if ! grep -qF "$SNIPPET" ~/.bashrc; then
     cat << 'EOF' >> ~/.bashrc
-##### Fix SSH auth and DISPLAY inside Screen/Tmux
+##### Fix SSH auth and DISPLAY inside Tmux
 if [ -n "$TRACK_SSH" ]; then
-    export DISPLAY=$(screen -X echo '$DISPLAY')
+    export DISPLAY=$(tmux show-environment DISPLAY 2>/dev/null | cut -d= -f2-)
 fi
 #####
 EOF
 fi
-
 
 mkdir -p ${HOME}/bin
 cp ${SRC_DIR}/scripts/vide ${HOME}/bin/vide
