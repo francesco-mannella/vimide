@@ -174,7 +174,9 @@ Available roles:
 | `enhance-comments` | Add and improve inline comments and docstrings |
 | `reformat-comments` | Reformat comments to fit within 79 characters |
 
-API tokens are stored as GPG-encrypted files in `tokens/`.
+API tokens are plain-text files expected at `~/.config/ai/` and are never stored in the repository:
+
+- `~/.config/ai/openrouter.token`
 
 ---
 
@@ -293,6 +295,5 @@ The installer:
 │   ├── CLAUDE.md        # Claude Code project instructions
 │   └── vide             # IDE launcher script
 ├── spell/               # Custom spell-check word list
-├── tokens/              # GPG-encrypted API tokens
 └── install.sh           # Installer
 ```
