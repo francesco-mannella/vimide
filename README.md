@@ -149,7 +149,7 @@ Provided by `after/ftplugin/tex.vim` via vimtex.
 
 ## AI Integration
 
-Provided by vim-ai with a custom roles file at `~/.config/ai/roles.ini`.
+Provided by vim-ai with a custom roles file at `~/.config/ai/roles.ini`. All roles route through OpenRouter using a single token at `~/.config/ai/openrouter.token`.
 
 Available roles:
 
