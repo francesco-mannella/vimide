@@ -241,6 +241,8 @@ let g:DirDiffExcludes = "CVS,*.class,*.o,*.pyc,.py_sources,.tags,*.jpg,*.png,.av
 
 
 
+let g:slime_target = "tmux"
+
 autocmd FileType bash nmap <Leader>hh <Plug>SlimeLineSend
 autocmd FileType bash xmap <Leader>hh <Plug>SlimeRegionSend
 autocmd FileType bash nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>

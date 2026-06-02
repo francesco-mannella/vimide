@@ -253,6 +253,7 @@ Live markdown preview with MathJax support via vim-instant-markdown.
 The installer:
 - Installs vim-plug if absent.
 - Copies `scripts/vimrc` to `~/.vimrc`.
+- Copies `scripts/tmux.conf` to `~/.tmux.conf`.
 - Installs and updates all Vim plugins.
 - Copies `scripts/roles.ini` to `~/.config/ai/roles.ini`.
 - Copies `scripts/CLAUDE.md` to `~/.claude/CLAUDE.md`.
@@ -277,6 +278,7 @@ The installer:
 │   └── vimide.vim       # Core IDE plugin
 ├── scripts/             # Files installed to the system
 │   ├── vimrc            # Vim configuration
+│   ├── tmux.conf        # tmux configuration
 │   ├── roles.ini        # vim-ai role definitions
 │   ├── CLAUDE.md        # Claude Code project instructions
 │   └── vide             # IDE launcher script

@@ -13,6 +13,10 @@ echo "updating ~/.vimrc"
 cp ${HOME}/.vimrc ${HOME}/.vimrc.orig
 cp ${SRC_DIR}/scripts/vimrc ${HOME}/.vimrc
 
+echo "updating ~/.tmux.conf"
+[[ -f ${HOME}/.tmux.conf ]] && cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.orig
+cp ${SRC_DIR}/scripts/tmux.conf ${HOME}/.tmux.conf
+
 echo "Updating plugins"
 vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugUpdate\nqall")
 echo "Installing plugins"
