@@ -82,6 +82,7 @@ These are provided by the `vimide` plugin (`plugin/vimide.vim`):
 | `,cg` | Jump to the file and line of the occurrence under cursor (use inside find list) |
 | `,cr` | Write back any edits made in the find list to their source files |
 | `,cu` | Refresh the file explorer |
+| `,cm` | Fetch currently available free models from OpenRouter and select one as default |
 | `,f`  | Open the file path under cursor in the editor window |
 
 ---
@@ -157,7 +158,7 @@ Available roles:
 
 | Role | Model |
 |------|-------|
-| `default` | `meta-llama/llama-3.3-70b-instruct:free` |
+| `default` | `openrouter/free` (dynamically resolved by OpenRouter) |
 | `gemini` | `google/gemini-3-flash-preview` |
 | `gpt` | `openai/gpt-4o` |
 | `gpt5` | `gpt-5.4` |

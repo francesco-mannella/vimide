@@ -256,3 +256,64 @@ augroup vimide
 
 augroup END
 au VimResized * call FormatPyIDE()
+
+" Select a currently available free model from OpenRouter and set it as default
+function! SelectOpenRouterFreeModel() abort
+    let l:token_file = expand('~/.config/ai/openrouter.token')
+    if !filereadable(l:token_file)
+        echo "Token file not found: " . l:token_file
+        return
+    endif
+    let l:token = trim(join(readfile(l:token_file), ''))
+
+    let l:py_file = tempname() . '.py'
+    call writefile([
+        \ 'import json, sys',
+        \ 'd = json.load(sys.stdin)',
+        \ 'models = [m["id"] for m in d["data"] if str(m.get("pricing", {}).get("prompt", "1")) == "0"]',
+        \ 'for m in sorted(models): print(m)',
+    \ ], l:py_file)
+
+    redraw | echo "Fetching free models from OpenRouter..."
+    let l:cmd = printf('curl -s -H %s https://openrouter.ai/api/v1/models | python3 %s',
+        \ shellescape('Authorization: Bearer ' . l:token),
+        \ shellescape(l:py_file))
+    let l:output = system(l:cmd)
+    call delete(l:py_file)
+
+    if v:shell_error || empty(trim(l:output))
+        echo "Failed to fetch models or no free models available"
+        return
+    endif
+
+    let l:models = sort(split(trim(l:output), "\n"))
+    let l:prompt = ['Select free model:'] + map(copy(l:models), {i, v -> printf('%d. %s', i+1, v)})
+    let l:choice = inputlist(l:prompt)
+
+    if l:choice < 1 || l:choice > len(l:models)
+        return
+    endif
+
+    let l:selected = l:models[l:choice - 1]
+    let l:roles_file = expand('~/.config/ai/roles.ini')
+    let l:lines = readfile(l:roles_file)
+
+    let l:in_default = 0
+    let l:updated = []
+    for l:line in l:lines
+        if l:line =~ '^\[default\]'
+            let l:in_default = 1
+        elseif l:line =~ '^\['
+            let l:in_default = 0
+        endif
+        if l:in_default && l:line =~ '^options\.model\s*='
+            let l:line = 'options.model = ' . l:selected
+        endif
+        call add(l:updated, l:line)
+    endfor
+
+    call writefile(l:updated, l:roles_file)
+    redraw | echo "Default model set to: " . l:selected
+endfunction
+
+nmap ,cm :call SelectOpenRouterFreeModel()<CR>
