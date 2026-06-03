@@ -44,11 +44,48 @@ autocmd FileType python nnoremap <Leader>xx :IPythonCellClose<CR>
 autocmd FileType python nnoremap [c :IPythonCellPrevCell<CR>
 autocmd FileType python nnoremap ]c :IPythonCellNextCell<CR>
 
-" map <Leader>1h to send the current line or current selection to IPython
-autocmd FileType python nmap <Leader>hh <Plug>SlimeLineSend
-autocmd FileType python xmap <Leader>hh <Plug>SlimeRegionSend
-autocmd FileType python nmap <silent> <Leader>aa <Plug>SlimeLineSend :norm! j<CR>
-autocmd FileType python xmap <silent> <Leader>aa <Plug>SlimeRegionSend :norm! `><CR>:norm! j<CR>
+" map <Leader>hh and <Leader>aa to send line/region to IPython with prompt guard
+function! s:IPythonAtEmptyPrompt() abort
+    let l:cfg = exists('b:slime_config') ? b:slime_config :
+              \ (exists('g:slime_config') ? g:slime_config : {})
+    if empty(l:cfg) || !has_key(l:cfg, 'target_pane')
+        return 1
+    endif
+    let l:output = system('tmux capture-pane -p -t ' . shellescape(l:cfg['target_pane']))
+    let l:lines = filter(split(l:output, "\n"), 'v:val !~ "^\\s*$"')
+    if empty(l:lines)
+        return 0
+    endif
+    return trim(l:lines[-1]) =~# '^In \[\d\+\]:\s*$'
+endfunction
+
+function! s:SendLineChecked(advance) abort
+    if !s:IPythonAtEmptyPrompt()
+        echohl WarningMsg | echo "IPython: not at empty prompt" | echohl None
+        return
+    endif
+    call slime#send_lines(1)
+    if a:advance
+        normal! j
+    endif
+endfunction
+
+function! s:SendRegionChecked(advance) abort
+    if !s:IPythonAtEmptyPrompt()
+        echohl WarningMsg | echo "IPython: not at empty prompt" | echohl None
+        return
+    endif
+    call slime#send_op(visualmode(), 1)
+    if a:advance
+        normal! `>
+        normal! j
+    endif
+endfunction
+
+autocmd FileType python nnoremap <silent> <Leader>hh :call <SID>SendLineChecked(0)<CR>
+autocmd FileType python xnoremap <silent> <Leader>hh :<C-u>call <SID>SendRegionChecked(0)<CR>
+autocmd FileType python nnoremap <silent> <Leader>aa :call <SID>SendLineChecked(1)<CR>
+autocmd FileType python xnoremap <silent> <Leader>aa :<C-u>call <SID>SendRegionChecked(1)<CR>
 
 
 " map <Leader>Q to restart ipython
