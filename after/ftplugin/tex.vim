@@ -11,7 +11,7 @@ hi SpellBad cterm=underline
 autocmd FileType tex set foldlevelstart=99
 
 :set wrap
-:ALEDisable
+let b:ale_enabled = 0
 
 
 

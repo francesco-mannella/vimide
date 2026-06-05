@@ -153,8 +153,9 @@ function! ALEPreviewWindowClose()
     endfor
 endfunction
 
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
-nmap <silent> <C-f> <Plug>(ale_fix)
-nmap <silent> <C-h> <Plug>(ale_hover)
-nmap <silent> <C-x> :call ALEPreviewWindowClose()<CR>
+nnoremap <silent> <buffer> <C-k> :ALEPreviousWrap<CR>
+nnoremap <silent> <buffer> <C-j> :ALENextWrap<CR>
+nnoremap <silent> <buffer> <C-f> :ALEFix<CR>
+nnoremap <silent> <buffer> <C-h> :ALEHover<CR>
+nnoremap <silent> <buffer> <BS> :ALEHover<CR>
+nnoremap <silent> <buffer> <C-x> :call ALEPreviewWindowClose()<CR>
