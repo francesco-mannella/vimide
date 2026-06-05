@@ -35,13 +35,18 @@ scriptencoding utf-8
 " Location of tags file
 let g:tags=trim(system("mktemp"))
 
+" g:vimide_mode: 'silent' (no output), 'debug' (file only), 'verbose' (file + Vim command line)
+let g:vimide_mode = get(g:, 'vimide_mode', 'silent')
 let g:vimide_log = '/tmp/vimide_debug.log'
 call writefile(['=== vimide session ' . strftime('%Y-%m-%d %H:%M:%S') . ' ==='], g:vimide_log, 'a')
 
 function! s:log(level, msg)
+    if g:vimide_mode ==# 'silent'
+        return
+    endif
     let l:line = strftime('%H:%M:%S') . ' [' . a:level . '] ' . a:msg
     call writefile([l:line], g:vimide_log, 'a')
-    if a:level ==# 'ERROR' || a:level ==# 'WARN'
+    if g:vimide_mode ==# 'verbose' && (a:level ==# 'ERROR' || a:level ==# 'WARN')
         echohl WarningMsg | echom l:line | echohl None
     endif
 endfunction
@@ -62,7 +67,8 @@ endfunction
 " ResetCtags: Reset the ctags database
 " Description: Executes ctags over all subdirectories to rebuild the tag database
 function! ResetCtags()
-    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q --exclude=node_modules --exclude=.git --exclude=docs -f ".g:tags." . 2>>".g:vimide_log
+    let l:redir = g:vimide_mode ==# 'silent' ? ' 2>/dev/null' : ' 2>>'.g:vimide_log
+    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q --exclude=node_modules --exclude=.git --exclude=docs -f ".g:tags." ." . l:redir
     if v:shell_error
         call s:log('ERROR', 'ctags failed with exit code ' . v:shell_error)
     endif
