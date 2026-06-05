@@ -91,6 +91,22 @@ The installer:
 10. Adds a `vim --servername vim` alias to `.bashrc`.
 11. Adds SSH auth and DISPLAY tracking fix for tmux sessions.
 
+Each replaced file is saved as `<file>.orig` before overwriting, so the original can be restored.
+
+### Uninstall
+
+```bash
+./install.sh -u
+```
+
+The uninstaller:
+
+- Restores each `.orig` backup (`~/.vimrc`, `~/.tmux.conf`, `~/.config/ai/roles.ini`, `~/.claude/CLAUDE.md`, `~/.claude/settings.json`) if it exists, otherwise removes the installed file.
+- Removes `~/bin/vide`.
+- Removes the three additions made to `~/.bashrc`: the `PATH` entry, the `alias vim` line, and the SSH/DISPLAY snippet.
+
+Vim plugins and system packages (`tmux`, `universal-ctags`) are not removed.
+
 ---
 
 ## The `vide` Launcher
