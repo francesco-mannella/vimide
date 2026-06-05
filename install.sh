@@ -3,14 +3,14 @@
 SRC_DIR="$(realpath "$(dirname -- "$0")")"
 
 # install vim-plug
-if [ -z "${HOME}/.vim/autoload/plug.vim" ]; then
+if [ ! -f "${HOME}/.vim/autoload/plug.vim" ]; then
     echo "Installing vim-plug"
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
 echo "updating ~/.vimrc"
-cp ${HOME}/.vimrc ${HOME}/.vimrc.orig
+[[ -f ${HOME}/.vimrc ]] && cp ${HOME}/.vimrc ${HOME}/.vimrc.orig
 cp ${SRC_DIR}/scripts/vimrc ${HOME}/.vimrc
 
 echo "updating ~/.tmux.conf"
@@ -26,10 +26,13 @@ vim -T dumb -n -i NONE -e -S <(echo -e "silent! PlugInstall\nqall")
 # -- you must also export your GEMINI_KEY in bashrc
 echo "Updating ai roles into .config/ai directory"
 mkdir -p "${HOME}/.config/ai"
+[[ -f "${HOME}/.config/ai/roles.ini" ]] && cp "${HOME}/.config/ai/roles.ini" "${HOME}/.config/ai/roles.ini.orig"
 cp "${SRC_DIR}/scripts/roles.ini" "${HOME}/.config/ai/roles.ini"
 
 echo "Updating claude general settings"
 mkdir -p "${HOME}/.claude"
+[[ -f "${HOME}/.claude/CLAUDE.md" ]] && cp "${HOME}/.claude/CLAUDE.md" "${HOME}/.claude/CLAUDE.md.orig"
+[[ -f "${HOME}/.claude/settings.json" ]] && cp "${HOME}/.claude/settings.json" "${HOME}/.claude/settings.json.orig"
 cp "${SRC_DIR}/scripts/CLAUDE.md" "${HOME}/.claude/CLAUDE.md"
 cp "${SRC_DIR}/scripts/settings.json" "${HOME}/.claude/settings.json"
 
