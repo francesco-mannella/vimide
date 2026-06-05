@@ -4,6 +4,8 @@ A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into a multi-pa
 
 **Documentation**: https://francesco-mannella.github.io/vimide/
 
+![VimIDE demo](docs/demo.gif)
+
 ---
 
 ## Table of Contents
