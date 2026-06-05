@@ -34,6 +34,17 @@ scriptencoding utf-8
 
 " Location of tags file
 let g:tags=trim(system("mktemp"))
+
+let g:vimide_log = '/tmp/vimide_debug.log'
+call writefile(['=== vimide session ' . strftime('%Y-%m-%d %H:%M:%S') . ' ==='], g:vimide_log, 'a')
+
+function! s:log(level, msg)
+    let l:line = strftime('%H:%M:%S') . ' [' . a:level . '] ' . a:msg
+    call writefile([l:line], g:vimide_log, 'a')
+    if a:level ==# 'ERROR' || a:level ==# 'WARN'
+        echohl WarningMsg | echom l:line | echohl None
+    endif
+endfunction
 " Case-insensitive search
 set noci 
 " Avoid 'object::object' tokens
@@ -51,7 +62,10 @@ endfunction
 " ResetCtags: Reset the ctags database
 " Description: Executes ctags over all subdirectories to rebuild the tag database
 function! ResetCtags()
-    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q -f ".g:tags." ."
+    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q -f ".g:tags." . 2>>".g:vimide_log
+    if v:shell_error
+        call s:log('ERROR', 'ctags failed with exit code ' . v:shell_error)
+    endif
 endfunction
 
 " GotoMainWindow: Go to the source window
@@ -104,42 +118,55 @@ let g:replacebuffer = -1
 " FindOccurrence: Find occurrences of a pattern
 " Description: Searches for occurrences of the specified pattern in source files, displaying results in a temporary buffer
 function! FindOccurrence(atom)
-    call GotoMainWindow()
-    let g:replacebuffer = bufnr(bufname('%'))
+    try
+        call GotoMainWindow()
+        let g:replacebuffer = bufnr(bufname('%'))
 
-    :silent !rm -fr /tmp/replace
-    :e! /tmp/replace 
-    :1,$d
+        :silent !rm -fr /tmp/replace
+        :e! /tmp/replace
+        :1,$d
 
-    let findstring = 'silent r! find '.g:cwd.'/ | grep "\.\(cpp\|h\|hpp\|py\|tex\)$"'
-    let findstring .= '| xargs grep -Hn "\<'.a:atom.'\>" | '
-    let findstring .= 'sed -e"s/^\([^:]\+\/\([^\/^:]\+\)\):\([^:]\+\):\(.*\)/\2'.g:separator.'\3'.g:separator.'\4'.g:separator.'\1/"' 
+        let findstring = 'silent r! find '.g:cwd.'/ | grep "\.\(cpp\|h\|hpp\|py\|tex\)$"'
+        let findstring .= '| xargs grep -Hn "\<'.a:atom.'\>" | '
+        let findstring .= 'sed -e"s/^\([^:]\+\/\([^\/^:]\+\)\):\([^:]\+\):\(.*\)/\2'.g:separator.'\3'.g:separator.'\4'.g:separator.'\1/"'
 
-    execute findstring
+        execute findstring
+        if v:shell_error
+            call s:log('WARN', 'find/grep for "' . a:atom . '" exited with code ' . v:shell_error)
+        endif
+    catch
+        call s:log('ERROR', v:exception . ' at ' . v:throwpoint)
+        echohl ErrorMsg | echom 'vimide: ' . v:exception | echohl None
+    endtry
 endfunction
 
 " Replace: Replace modified lines in corresponding files
 " Description: If a replacement list is displayed, commits changes to corresponding files
 function! Replace()
-    call GotoMainWindow()
-    if bufname("%") == 'replace'
-        wa
-        let lines = readfile('/tmp/replace')
-        for line in lines 
-            if match(line,'^\s*$') == -1
-                let replist = split(line,g:separator)
-                let remotelines = readfile(replist[3])
-                let remotelines[replist[1]-1] = replist[2]
-                echo remotelines[replist[1]-1]
-                set autoread
-                call writefile(remotelines, replist[3] )
-            endif
-        endfor
-        call input("Press Enter to return to buffer")
-        execute ":b".g:replacebuffer
-        :e! 
-        :silent !rm -fr /tmp/replace    
-    endif
+    try
+        call GotoMainWindow()
+        if bufname("%") == 'replace'
+            wa
+            let lines = readfile('/tmp/replace')
+            for line in lines
+                if match(line,'^\s*$') == -1
+                    let replist = split(line,g:separator)
+                    let remotelines = readfile(replist[3])
+                    let remotelines[replist[1]-1] = replist[2]
+                    echo remotelines[replist[1]-1]
+                    set autoread
+                    call writefile(remotelines, replist[3])
+                endif
+            endfor
+            call input("Press Enter to return to buffer")
+            execute ":b".g:replacebuffer
+            :e!
+            :silent !rm -fr /tmp/replace
+        endif
+    catch
+        call s:log('ERROR', v:exception . ' at ' . v:throwpoint)
+        echohl ErrorMsg | echom 'vimide: ' . v:exception | echohl None
+    endtry
 endfunction
 
 " FindUnderCursor: Find occurrences of the word under cursor
@@ -188,39 +215,48 @@ endfunction
 " RunPyIDE: Set up IDE for Python development
 " Description: Initializes the IDE layout for managing Python projects
 function! RunPyIDE()
-    let g:IDE = "PyIDE"
+    try
+        let g:IDE = "PyIDE"
 
-    if g:cwd == ""
-        let g:cwd = GetCurrDir()
-    else
-        bwipeout
-        execute ":cd ".g:cwd 
-    endif
-    
-    let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')    
-
-    wincmd o
-    bwipeout
-    let has_main = 0
-    for py in pys 
-        if py =~ "main"
-            silent execute ":e ".py 
-            let has_main = 1
+        if g:cwd == ""
+            let g:cwd = GetCurrDir()
+        else
+            bwipeout
+            execute ":cd ".g:cwd
         endif
-    endfor
-    if has_main == 0  
-        silent execute ":e ".pys[0] 
-    endif
-    call LeftTagbarToggle()
-    wincmd t
-    wincmd l
-    vsplit 
-    call CreatePyView() 
-    wincmd t
-    wincmd l    
-    wincmd l    
-    call FormatPyIDE()
-    call ResetCtags()
+
+        let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
+
+        if empty(pys)
+            call s:log('WARN', 'RunPyIDE: no .py/.tex files found under ' . g:cwd)
+        endif
+
+        wincmd o
+        bwipeout
+        let has_main = 0
+        for py in pys
+            if py =~ "main"
+                silent execute ":e ".py
+                let has_main = 1
+            endif
+        endfor
+        if has_main == 0
+            silent execute ":e ".pys[0]
+        endif
+        call LeftTagbarToggle()
+        wincmd t
+        wincmd l
+        vsplit
+        call CreatePyView()
+        wincmd t
+        wincmd l
+        wincmd l
+        call FormatPyIDE()
+        call ResetCtags()
+    catch
+        call s:log('ERROR', v:exception . ' at ' . v:throwpoint)
+        echohl ErrorMsg | echom 'vimide: ' . v:exception | echohl None
+    endtry
 endfunction
 
 " =================================================================================================
@@ -261,7 +297,7 @@ au VimResized * call FormatPyIDE()
 function! SelectOpenRouterFreeModel() abort
     let l:token_file = expand('~/.config/ai/openrouter.token')
     if !filereadable(l:token_file)
-        echo "Token file not found: " . l:token_file
+        call s:log('ERROR', 'SelectOpenRouterFreeModel: token file not found: ' . l:token_file)
         return
     endif
     let l:token = trim(join(readfile(l:token_file), ''))
@@ -282,7 +318,7 @@ function! SelectOpenRouterFreeModel() abort
     call delete(l:py_file)
 
     if v:shell_error || empty(trim(l:output))
-        echo "Failed to fetch models or no free models available"
+        call s:log('ERROR', 'SelectOpenRouterFreeModel: failed to fetch models (shell_error=' . v:shell_error . ')')
         return
     endif
 
