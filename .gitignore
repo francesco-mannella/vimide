@@ -3,3 +3,4 @@ doc/tags
 node_modules/
 package.json
 package-lock.json
+mkdocs_src/
