@@ -4,13 +4,37 @@ A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into a multi-pa
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Layout](#layout)
+- [Installation](#installation)
+- [The `vide` Launcher](#the-vide-launcher)
+- [tmux Configuration](#tmux-configuration)
+- [IDE Shortcuts](#ide-shortcuts)
+- [Python Features](#python-features)
+  - [IPython Integration](#ipython-integration)
+  - [Code Cells](#code-cells)
+  - [Linting and Fixing (ALE)](#linting-and-fixing-ale)
+  - [Jupyter Notebook Support](#jupyter-notebook-support)
+- [LaTeX Features](#latex-features)
+- [AI Integration](#ai-integration)
+- [General Editor Features](#general-editor-features)
+- [Color Schemes](#color-schemes)
+- [Installed Plugins](#installed-plugins)
+- [Repository Structure](#repository-structure)
+
+---
+
 ## Overview
 
 VimIDE is a Vim plugin plus a launcher script (`vide`) that sets up a full development environment:
 
-- **Vim** runs in the top pane of a tmux window called `code`, with a three-panel layout: tag browser, editor, file explorer.
-- **IPython** runs in the bottom pane (`console`), linked to the editor via vim-slime.
+- **Vim** runs in the top pane of a tmux window named `code`, with a three-panel layout: tag browser, editor, file explorer.
+- **IPython** runs in the bottom pane, linked to the editor via vim-slime.
 - Code cells, selections, or full scripts can be sent from the editor to IPython with single keystrokes.
+- ALE provides async linting (flake8 + mypy via pylsp) and auto-fixing (black, isort, autoimport).
+- vim-ai provides AI text and code assistance through OpenRouter.
 
 ---
 
@@ -22,19 +46,46 @@ VimIDE is a Vim plugin plus a launcher script (`vide`) that sets up a full devel
 |    Tagbar      |      Editor          |      File Explorer       |
 |                |                      |                          |
 --------------------------------------------------------------------
+|                    IPython console (bottom pane)                 |
+--------------------------------------------------------------------
 ```
 
-The Tagbar and file explorer panels collapse when not focused and expand on entry, keeping the editor at maximum width during editing.
+The Tagbar and file explorer panels collapse to minimal width when unfocused and expand on entry, keeping the editor at maximum width during editing.
+
+Within the Tagbar:
+- **Double-click** or **`<Return>`**: jump to the function/class/method definition.
 
 ---
 
-## tmux Configuration
+## Installation
 
-VimIDE ships a `scripts/tmux.conf` installed to `~/.tmux.conf`. It sets:
+Before running the installer, provision the OpenRouter token:
 
-- **Terminal**: `screen-256color` with true-color overrides for xterm-compatible terminals.
-- **Prefix key**: `Ctrl-a` (replaces the default `Ctrl-b`).
-- **Message display time**: 0 ms (messages dismissed immediately).
+```bash
+mkdir -p ~/.config/ai
+echo "sk-or-..." > ~/.config/ai/openrouter.token
+chmod 600 ~/.config/ai/openrouter.token
+```
+
+Then run:
+
+```bash
+./install.sh
+```
+
+The installer:
+
+1. Installs vim-plug if absent.
+2. Backs up and replaces `~/.vimrc` with `scripts/vimrc`.
+3. Backs up and replaces `~/.tmux.conf` with `scripts/tmux.conf`.
+4. Installs/updates all Vim plugins via vim-plug.
+5. Copies `scripts/roles.ini` to `~/.config/ai/roles.ini`.
+6. Copies `scripts/CLAUDE.md` to `~/.claude/CLAUDE.md`.
+7. Installs Python tools: `ipynb-py-convert`, `notedown` (via uv).
+8. Installs system packages: `tmux`, `universal-ctags`.
+9. Copies `scripts/vide` to `~/bin/vide` and adds `~/bin` to `PATH`.
+10. Adds a `vim --servername vim` alias to `.bashrc`.
+11. Adds SSH auth and DISPLAY tracking fix for tmux sessions.
 
 ---
 
@@ -51,88 +102,121 @@ vide -h             Show help
 ```
 
 On first launch, `vide`:
-1. Creates a detached tmux session with a single window `code`, split into two panes: top (Vim, 75%) and bottom (console, 25%).
-2. Starts Vim in the top pane, calls `RunPyIDE()` to set up the three-panel IDE layout, and configures vim-slime to target the bottom pane.
+
+1. Creates a detached tmux session `vide_NAME` with window `code`, split into two panes: top (Vim, 75%) and bottom (console, 25%).
+2. Starts Vim in the top pane, calls `RunPyIDE()` to initialize the three-panel layout, and configures vim-slime to target the bottom console pane.
 3. Attaches to the session with focus on the top pane.
 
 ```
 tmux session: vide_NAME
 └── window: code
-    ├── pane 0 (top, 75%) ─────────────────────────────────────
+    ├── pane 0 (top, 75%)
     │   ┌─────────────┬───────────────────┬───────────────────┐
     │   │   Tagbar    │      Editor       │   File Explorer   │
-    │   │             │                   │                   │
     │   └─────────────┴───────────────────┴───────────────────┘
-    └── pane 1 (bottom, 25%) ──────────────────────────────────
+    └── pane 1 (bottom, 25%)
         ┌───────────────────────────────────────────────────────┐
-        │                      console                          │
+        │                   IPython console                     │
         └───────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## IDE Shortcuts (Normal Mode)
+## tmux Configuration
 
-These are provided by the `vimide` plugin (`plugin/vimide.vim`):
+`scripts/tmux.conf` (installed to `~/.tmux.conf`) sets:
+
+- **Terminal**: `screen-256color` with true-color overrides for xterm-compatible terminals.
+- **Prefix key**: `Ctrl-a` (replaces the default `Ctrl-b`).
+- **Message display time**: 0 ms (messages dismissed immediately).
+- **Mouse**: enabled.
+
+---
+
+## IDE Shortcuts
+
+Provided by `plugin/vimide.vim`. Active in all buffers (normal mode).
 
 | Key   | Action |
 |-------|--------|
 | `,cp` | Open or reset the IDE layout (Tagbar + Editor + File Explorer) |
-| `,cf` | Find all occurrences of the word under cursor; display results in the editor |
+| `,cf` | Find all occurrences of the word under cursor; display in editor |
 | `,cg` | Jump to the file and line of the occurrence under cursor (use inside find list) |
-| `,cr` | Write back any edits made in the find list to their source files |
+| `,cr` | Write back edits made in the find list to their source files |
 | `,cu` | Refresh the file explorer |
-| `,cm` | Fetch currently available free models from OpenRouter and select one as default |
+| `,cm` | Fetch available free models from OpenRouter and select one as default |
 | `,f`  | Open the file path under cursor in the editor window |
+
+### Find and replace workflow
+
+1. `,cf` — searches `.py`, `.tex`, `.cpp`, `.h`, `.hpp` files under the working directory for the word under cursor. Results appear in the editor in a structured list.
+2. Edit lines in the list to change text in-place.
+3. `,cr` — writes the modified lines back to their source files.
+4. `,cg` — jump directly to the file and line of the result under cursor.
 
 ---
 
 ## Python Features
 
-Provided by `after/ftplugin/python.vim` via vim-slime and vim-ipython-cell.
+Provided by `after/ftplugin/python.vim`. Active in Python buffers only.
 
-### IPython integration
+### IPython Integration
 
-| Key         | Action |
-|-------------|--------|
-| `\ss`       | Start IPython (Qt backend) in the bottom pane |
-| `\as`       | Start IPython (Agg backend, non-interactive) |
-| `\hh`       | Send current line to IPython (normal mode) |
-| `\hh`       | Send selection to IPython (visual mode) |
-| `\aa`       | Send current line to IPython and advance cursor |
-| `\aa`       | Send selection to IPython and advance cursor (visual mode) |
-| `\rr`       | Run the entire script (`%run`) |
-| `\RR`       | Run the entire script and report execution time |
-| `\cc`       | Execute the current cell |
-| `\vv`       | Execute the current cell verbosely, then jump to next cell |
-| `\ll`       | Clear console, execute current cell, jump to next cell |
-| `\LL`       | Clear the IPython console |
-| `\xx`       | Close all Matplotlib figure windows |
-| `\dd`       | Start the debugger (`%run -d`) on the current script |
-| `\qq`       | Exit debug mode or IPython |
-| `\QQ`       | Restart IPython |
-| `[c`        | Jump to previous cell header (`# %%`) |
-| `]c`        | Jump to next cell header (`# %%`) |
-| `F9`        | Insert a new cell header above |
-| `F10`       | Insert a new cell header below |
+Requires vim-slime configured to target the bottom console pane (done automatically by `vide`).
 
-Cells are delimited by `# %%` or `#%%` markers (Jupyter-style percent format).
+| Key    | Mode   | Action |
+|--------|--------|--------|
+| `\ss`  | normal | Start IPython (Qt backend) in the console pane |
+| `\as`  | normal | Start IPython (Agg backend, non-interactive) |
+| `\hh`  | normal | Send current line to IPython |
+| `\hh`  | visual | Send selection to IPython |
+| `\aa`  | normal | Send current line to IPython and advance cursor |
+| `\aa`  | visual | Send selection to IPython and advance cursor |
+| `\rr`  | normal | Run the entire script (`%run`) |
+| `\RR`  | normal | Run the entire script and report execution time |
+| `\dd`  | normal | Start debugger (`%run -d`) on the current script |
+| `\qq`  | normal | Exit debug mode or IPython |
+| `\QQ`  | normal | Restart IPython |
 
-### Linting and fixing (ALE)
+`\hh` and `\aa` include a guard: if IPython is not at an empty prompt (i.e., currently executing something), the send is blocked and a warning is shown. This prevents accidentally queueing input into a running computation.
 
-| Key     | Action |
-|---------|--------|
-| `Ctrl-k` | Jump to previous lint error |
-| `Ctrl-j` | Jump to next lint error |
+### Code Cells
+
+Cells are delimited by `# %%` or `#%%` markers (Jupyter percent format).
+
+| Key    | Mode          | Action |
+|--------|---------------|--------|
+| `\cc`  | normal        | Execute the current cell |
+| `\vv`  | normal        | Execute the current cell verbosely, then jump to next cell |
+| `\ll`  | normal        | Clear console, execute current cell, jump to next cell |
+| `\LL`  | normal        | Clear the IPython console |
+| `\xx`  | normal        | Close all Matplotlib figure windows |
+| `[c`   | normal        | Jump to previous cell header |
+| `]c`   | normal        | Jump to next cell header |
+| `F9`   | normal/insert | Insert a new cell header above, enter insert mode |
+| `F10`  | normal/insert | Insert a new cell header below, enter insert mode |
+
+### Linting and Fixing (ALE)
+
+Active in Python buffers (buffer-local mappings).
+
+| Key      | Action |
+|----------|--------|
+| `Ctrl-k` | Jump to previous lint error (wrapping) |
+| `Ctrl-j` | Jump to next lint error (wrapping) |
 | `Ctrl-f` | Auto-fix the file (black, isort, autoimport) |
-| `Ctrl-h` | Show hover documentation |
-| `Ctrl-x` | Close the ALE preview window |
+| `Ctrl-h` | Show hover documentation at cursor |
+| `Ctrl-x` | Close the ALE hover/preview window |
 
-Linters: `pylsp` (flake8 backend) and `jedils`. Fixers: `black` (line length 90), `isort`, `autoimport`.
+**Linters**: `pylsp` (flake8 backend, ignoring E203/E501/W503; mypy with dmypy) and `jedils`.
 
-### Jupyter notebook support
+**Fixers**: `black` (line length 90), `isort`, `autoimport`.
 
-Python files are treated as Jupytext percent-format notebooks. Saving a `.py` file updates the paired `.ipynb` automatically.
+**Note on terminal key handling**: with `screen-256color`, `Ctrl-h` and `<BS>` share the same byte (0x08). Both keys are mapped to hover to ensure the binding fires regardless of how the terminal encodes the keypress.
+
+### Jupyter Notebook Support
+
+Python files are treated as Jupytext percent-format notebooks (`py:percent`). Saving a `.py` file automatically updates the paired `.ipynb` via jupytext.
 
 ---
 
@@ -140,49 +224,54 @@ Python files are treated as Jupytext percent-format notebooks. Saving a `.py` fi
 
 Provided by `after/ftplugin/tex.vim` via vimtex.
 
-- Compiler: `latexmk` with bibtex, synctex, and shell-escape.
-- PDF viewer: Okular with forward/inverse search via synctex.
-- Spell checking enabled (en_us), with a custom word list at `spell/dict.utf-8.add`.
-- `§` reformats indentation of selected LaTeX comment blocks.
-- ALE is disabled for tex files to avoid interference with vimtex.
+- **Compiler**: `latexmk` with bibtex, synctex, shell-escape, and non-stop mode.
+- **PDF viewer**: Okular with forward/inverse search via synctex.
+- **Spell checking**: enabled (en_us), with a custom word list at `spell/dict.utf-8.add`.
+- **`§`**: reformats indentation of selected LaTeX comment blocks.
+- **ALE**: disabled per-buffer (`b:ale_enabled = 0`) to avoid interference with vimtex.
+- **`F9`** (insert mode): trigger LaTeX completion.
+- Quickfix suppresses: Underfull, Overfull, Font, Float, Difference warnings.
+- All folds open by default (`foldlevelstart=99`).
 
 ---
 
 ## AI Integration
 
-Provided by vim-ai with a custom roles file at `~/.config/ai/roles.ini`. All roles route through OpenRouter using a single token at `~/.config/ai/openrouter.token`.
+Provided by vim-ai with roles defined in `~/.config/ai/roles.ini`. All roles route through OpenRouter using a token at `~/.config/ai/openrouter.token`.
 
-Available roles:
+Use `,cm` to dynamically fetch currently available free models from OpenRouter and set one as the default.
 
-**Model roles** — select a backend explicitly:
+### Model Roles
 
-| Role | Model |
-|------|-------|
+Select a specific backend by passing the role name to vim-ai commands.
+
+| Role      | Model |
+|-----------|-------|
 | `default` | `openrouter/free` (dynamically resolved by OpenRouter) |
-| `gemini` | `google/gemini-3-flash-preview` |
-| `gpt` | `openai/gpt-4o` |
-| `gpt5` | `gpt-5.4` |
-| `claude` | `anthropic/claude-3.5-sonnet` |
-| `opus` | `anthropic/claude-opus-4.6` |
+| `gemini`  | `google/gemini-3-flash-preview` |
+| `gpt`     | `openai/gpt-4o` |
+| `gpt5`    | `gpt-5.4` |
+| `claude`  | `anthropic/claude-3.5-sonnet` |
+| `opus`    | `anthropic/claude-opus-4.6` |
 
-**Prompt roles** — text and code transforms using the default model:
+### Prompt Roles
 
-| Role | Purpose |
-|------|---------|
-| `refine` | Rewrite and improve text for clarity and flow |
-| `translate` | Translate text to English |
-| `professional` | Rewrite text in a professional, expert tone |
-| `simplify` | Simplify language, avoid jargon |
-| `clarity` | Make text direct and unambiguous |
-| `code` | Code expert: improve and format code |
-| `refactor` | Refactor code for clarity and maintainability |
-| `optimize` | Optimize code for speed and memory |
-| `comment` | Add comments and docstrings |
+Text and code transforms applied to the current selection using the default model.
+
+| Role                | Purpose |
+|---------------------|---------|
+| `refine`            | Rewrite and improve text for clarity and flow |
+| `translate`         | Translate text to English |
+| `professional`      | Rewrite in a professional, expert tone |
+| `simplify`          | Simplify language, avoid jargon |
+| `clarity`           | Make text direct and unambiguous |
+| `code`              | Improve and format code (79-char line limit) |
+| `refactor`          | Refactor for clarity and maintainability |
+| `optimize`          | Optimize for speed and memory |
+| `comment`           | Add comments and docstrings |
 | `enhance-docstring` | Rewrite docstrings in Google format |
-| `enhance-comments` | Add and improve inline comments and docstrings |
+| `enhance-comments`  | Add and improve inline comments and docstrings |
 | `reformat-comments` | Reformat comments to fit within 79 characters |
-
-To provision the OpenRouter token, see [Installation](#installation).
 
 ---
 
@@ -197,40 +286,61 @@ Works across file types (Python, Bash, C/C++, TeX, Vim, etc.).
 | `zc` | Comment selected lines |
 | `zv` | Uncomment selected lines |
 
-### Git grep
+### Git Grep
 
-| Key        | Action |
-|------------|--------|
-| `\g`       | Git grep for the word under cursor |
-| `\t`       | Return to previous location after a grep jump |
-| `:GG`      | Git grep (arbitrary pattern) |
-| `:GGw`     | Git grep whole-word |
-| `:GGi`     | Git grep case-insensitive |
+| Key   | Action |
+|-------|--------|
+| `\g`  | Git grep whole-word for the word under cursor |
+| `\t`  | Return to previous location after a grep jump |
+| `:GG`  | Git grep (arbitrary pattern) |
+| `:GGw` | Git grep whole-word |
+| `:GGi` | Git grep case-insensitive |
 
 ### Clipboard
 
+Requires `xclip`.
+
 | Key  | Action |
 |------|--------|
-| `ay` | Yank selection to system clipboard (xclip) |
+| `ay` | Yank selection to system clipboard |
 | `ap` | Paste from system clipboard |
 
 ### Markdown
 
-| Key    | Action |
-|--------|--------|
-| `\mm`  | Add HTML anchor tags to headings in the selected range |
+| Key   | Action |
+|-------|--------|
+| `\mm` | Add HTML anchor tags to headings in the selected range (visual mode) |
 
-Live markdown preview with MathJax support via vim-instant-markdown.
+Live preview with MathJax support via vim-instant-markdown (opens in browser on save).
 
-### Other
+### Miscellaneous
 
-- `Bdi` command: close all hidden (non-visible) buffers.
-- Indent guides: alternating dark background stripes every 4 spaces.
-- Mark visualization: visible marks in the sign column (vim-signature).
-- Directory diff: `:DirDiff` via vim-dirdiff.
-- Auto-save on focus lost.
-- Line numbers always on.
-- Smart case-insensitive search.
+| Feature | Detail |
+|---------|--------|
+| `:Bdi` | Close all hidden (non-visible) buffers |
+| Auto-save | Saves all buffers on focus lost |
+| Indent guides | Alternating dark stripes every 4 spaces |
+| Mark visualization | Marks shown in sign column (vim-signature) |
+| Directory diff | `:DirDiff` via vim-dirdiff |
+| Line numbers | Always on |
+| Search | Smart case-insensitive (`ignorecase` + `smartcase`) |
+| Indentation | 4 spaces, expandtab, for all files |
+| Wrap navigation | `Up`/`Down` move by display lines (`gk`/`gj`) |
+| Shell slime | `\hh`/`\aa` send lines/regions to console in bash buffers too |
+
+---
+
+## Color Schemes
+
+Bundled in `colors/`:
+
+| Scheme | Description |
+|--------|-------------|
+| `late_evening` | Default dark scheme (active) |
+| `blackdust` | Dark with subtle tones |
+| `calmar256-dark` | 256-color dark |
+| `calmar256-light` | 256-color light |
+| `corporation` | High-contrast dark |
 
 ---
 
@@ -241,54 +351,23 @@ Live markdown preview with MathJax support via vim-instant-markdown.
 | vim-vinegar | Enhanced netrw file explorer |
 | vimtex | LaTeX editing and compilation |
 | jedi-vim | Python autocompletion |
-| ale | Asynchronous linting and fixing |
+| ale | Async linting and fixing |
 | tagbar | Tag/symbol browser |
 | jupytext.vim | Jupyter notebook / percent-format sync |
-| vim-dirdiff | Directory diff tool |
+| vim-dirdiff | Directory diff |
 | vim-ipynb | Jupyter notebook support |
 | vim-slime | Send code to a terminal multiplexer pane |
 | vim-ipython-cell | Cell-based IPython execution |
 | vim-signature | Visual mark management |
-| vim-sh-heredoc-highlighting | Heredoc syntax highlighting in shell files |
+| vim-sh-heredoc-highlighting | Heredoc syntax in shell files |
 | vim-ai | AI text and code assistance |
 | vim-sh | Improved shell script syntax |
-| traces.vim | Live preview of substitution commands |
+| traces.vim | Live preview of `:s` substitutions |
 | vim-instant-markdown | Live Markdown preview in browser |
-| loremipsum | Lorem ipsum text generator |
+| loremipsum | Lorem ipsum generator |
 | vim-indent-guides | Visual indentation guides |
-| vim-markdown-toc | Table of contents generator for Markdown |
+| vim-markdown-toc | Table of contents for Markdown |
 | gitgrep.vim | Git grep integration |
-
----
-
-## Installation
-
-Before running the installer, provision the OpenRouter token (see [AI Integration](#ai-integration)):
-
-```bash
-mkdir -p ~/.config/ai
-echo "sk-or-..." > ~/.config/ai/openrouter.token
-chmod 600 ~/.config/ai/openrouter.token
-```
-
-Then run:
-
-```bash
-./install.sh
-```
-
-The installer:
-- Installs vim-plug if absent.
-- Copies `scripts/vimrc` to `~/.vimrc`.
-- Copies `scripts/tmux.conf` to `~/.tmux.conf`.
-- Installs and updates all Vim plugins.
-- Copies `scripts/roles.ini` to `~/.config/ai/roles.ini`.
-- Copies `scripts/CLAUDE.md` to `~/.claude/CLAUDE.md`.
-- Installs Python tools: `ipynb-py-convert`, `notedown` (via uv).
-- Installs system packages: `tmux`, `universal-ctags`.
-- Copies `scripts/vide` to `~/bin/vide` and adds `~/bin` to `PATH`.
-- Adds a `vim --servername vim` alias to `.bashrc`.
-- Adds SSH auth and DISPLAY tracking fix for tmux sessions.
 
 ---
 
@@ -297,18 +376,20 @@ The installer:
 ```
 .
 ├── after/ftplugin/
-│   ├── python.vim       # Python-specific settings and keymaps
-│   └── tex.vim          # LaTeX-specific settings
-├── colors/              # Color schemes
-├── doc/                 # Vim help documentation
+│   ├── python.vim       # Python: IPython, ALE, cell navigation, Jupytext
+│   └── tex.vim          # LaTeX: vimtex, spell, ALE disabled per-buffer
+├── colors/              # Bundled color schemes
+├── doc/
+│   └── vimide.txt       # Vim help file
 ├── plugin/
-│   └── vimide.vim       # Core IDE plugin
-├── scripts/             # Files installed to the system
-│   ├── vimrc            # Vim configuration
-│   ├── tmux.conf        # tmux configuration
+│   └── vimide.vim       # Core IDE: layout, find/replace, ctags, OpenRouter
+├── scripts/
+│   ├── vimrc            # Vim configuration (installed to ~/.vimrc)
+│   ├── tmux.conf        # tmux configuration (installed to ~/.tmux.conf)
 │   ├── roles.ini        # vim-ai role definitions
 │   ├── CLAUDE.md        # Claude Code project instructions
-│   └── vide             # IDE launcher script
-├── spell/               # Custom spell-check word list
+│   └── vide             # IDE launcher script (installed to ~/bin/vide)
+├── spell/
+│   └── dict.utf-8.add   # Custom spell-check word list
 └── install.sh           # Installer
 ```
