@@ -1,0 +1,15 @@
+site_name: VimIDE
+site_url: https://francesco-mannella.github.io/vimide/
+site_description: A lightweight Python IDE built on Vim and tmux
+site_author: Francesco Mannella
+repo_url: https://github.com/francesco-mannella/vimide
+repo_name: vimide
+
+docs_dir: mkdocs_src
+site_dir: docs
+
+theme:
+  name: cinder
+
+nav:
+  - Home: index.md

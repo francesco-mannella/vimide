@@ -1,132 +1,138 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>VimIDE</title>
-  <style>
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-    /* CSS for syntax highlighting */
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A lightweight Python IDE built on Vim and tmux">
+    <meta name="author" content="Francesco Mannella">
+    <link rel="canonical" href="https://francesco-mannella.github.io/vimide/">
+    <link rel="shortcut icon" href="img/favicon.ico">
+
+    
+    <title>Home - VimIDE</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="css/base.min.css" rel="stylesheet">
+    <link href="css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
 </head>
-<body>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#vimide" id="toc-vimide">VimIDE</a>
-<ul>
-<li><a href="#table-of-contents" id="toc-table-of-contents">Table of
-Contents</a></li>
-<li><a href="#overview" id="toc-overview">Overview</a></li>
-<li><a href="#layout" id="toc-layout">Layout</a></li>
-<li><a href="#installation" id="toc-installation">Installation</a></li>
-<li><a href="#the-vide-launcher" id="toc-the-vide-launcher">The
-<code>vide</code> Launcher</a></li>
-<li><a href="#tmux-configuration" id="toc-tmux-configuration">tmux
-Configuration</a></li>
-<li><a href="#ide-shortcuts" id="toc-ide-shortcuts">IDE
-Shortcuts</a></li>
-<li><a href="#python-features" id="toc-python-features">Python
-Features</a></li>
-<li><a href="#latex-features" id="toc-latex-features">LaTeX
-Features</a></li>
-<li><a href="#ai-integration" id="toc-ai-integration">AI
-Integration</a></li>
-<li><a href="#general-editor-features"
-id="toc-general-editor-features">General Editor Features</a></li>
-<li><a href="#color-schemes" id="toc-color-schemes">Color
-Schemes</a></li>
-<li><a href="#installed-plugins" id="toc-installed-plugins">Installed
-Plugins</a></li>
-<li><a href="#repository-structure"
-id="toc-repository-structure">Repository Structure</a></li>
-</ul></li>
-</ul>
-</nav>
-<main>
+
+<body class="homepage" >
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href=".">VimIDE</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/francesco-mannella/vimide/edit/master/docs/index.md">Edit on vimide</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#vimide">VimIDE</a></li>
+            <li class="second-level"><a href="#table-of-contents">Table of Contents</a></li>
+                
+            <li class="second-level"><a href="#overview">Overview</a></li>
+                
+            <li class="second-level"><a href="#layout">Layout</a></li>
+                
+            <li class="second-level"><a href="#installation">Installation</a></li>
+                
+            <li class="second-level"><a href="#the-vide-launcher">The vide Launcher</a></li>
+                
+            <li class="second-level"><a href="#tmux-configuration">tmux Configuration</a></li>
+                
+            <li class="second-level"><a href="#ide-shortcuts">IDE Shortcuts</a></li>
+                
+                <li class="third-level"><a href="#find-and-replace-workflow">Find and replace workflow</a></li>
+            <li class="second-level"><a href="#python-features">Python Features</a></li>
+                
+                <li class="third-level"><a href="#ipython-integration">IPython Integration</a></li>
+                <li class="third-level"><a href="#code-cells">Code Cells</a></li>
+                <li class="third-level"><a href="#linting-and-fixing-ale">Linting and Fixing (ALE)</a></li>
+                <li class="third-level"><a href="#jupyter-notebook-support">Jupyter Notebook Support</a></li>
+            <li class="second-level"><a href="#latex-features">LaTeX Features</a></li>
+                
+            <li class="second-level"><a href="#ai-integration">AI Integration</a></li>
+                
+                <li class="third-level"><a href="#model-roles">Model Roles</a></li>
+                <li class="third-level"><a href="#prompt-roles">Prompt Roles</a></li>
+            <li class="second-level"><a href="#general-editor-features">General Editor Features</a></li>
+                
+                <li class="third-level"><a href="#commenting">Commenting</a></li>
+                <li class="third-level"><a href="#git-grep">Git Grep</a></li>
+                <li class="third-level"><a href="#clipboard">Clipboard</a></li>
+                <li class="third-level"><a href="#markdown">Markdown</a></li>
+                <li class="third-level"><a href="#miscellaneous">Miscellaneous</a></li>
+            <li class="second-level"><a href="#color-schemes">Color Schemes</a></li>
+                
+            <li class="second-level"><a href="#installed-plugins">Installed Plugins</a></li>
+                
+            <li class="second-level"><a href="#repository-structure">Repository Structure</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
 <h1 id="vimide">VimIDE</h1>
-<p>A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into
-a multi-panel development environment with integrated IPython, AI
-assistance, LaTeX support, and a terminal console — all inside a
-persistent tmux session.</p>
+<p>A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into a multi-panel development environment with integrated IPython, AI assistance, LaTeX support, and a terminal console — all inside a persistent tmux session.</p>
+<p><strong>Documentation</strong>: https://francesco-mannella.github.io/vimide/</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
@@ -136,14 +142,11 @@ persistent tmux session.</p>
 <li><a href="#the-vide-launcher">The <code>vide</code> Launcher</a></li>
 <li><a href="#tmux-configuration">tmux Configuration</a></li>
 <li><a href="#ide-shortcuts">IDE Shortcuts</a></li>
-<li><a href="#python-features">Python Features</a>
-<ul>
+<li><a href="#python-features">Python Features</a></li>
 <li><a href="#ipython-integration">IPython Integration</a></li>
 <li><a href="#code-cells">Code Cells</a></li>
 <li><a href="#linting-and-fixing-ale">Linting and Fixing (ALE)</a></li>
-<li><a href="#jupyter-notebook-support">Jupyter Notebook
-Support</a></li>
-</ul></li>
+<li><a href="#jupyter-notebook-support">Jupyter Notebook Support</a></li>
 <li><a href="#latex-features">LaTeX Features</a></li>
 <li><a href="#ai-integration">AI Integration</a></li>
 <li><a href="#general-editor-features">General Editor Features</a></li>
@@ -153,18 +156,12 @@ Support</a></li>
 </ul>
 <hr />
 <h2 id="overview">Overview</h2>
-<p>VimIDE is a Vim plugin plus a launcher script (<code>vide</code>)
-that sets up a full development environment:</p>
+<p>VimIDE is a Vim plugin plus a launcher script (<code>vide</code>) that sets up a full development environment:</p>
 <ul>
-<li><strong>Vim</strong> runs in the top pane of a tmux window named
-<code>code</code>, with a three-panel layout: tag browser, editor, file
-explorer.</li>
-<li><strong>IPython</strong> runs in the bottom pane, linked to the
-editor via vim-slime.</li>
-<li>Code cells, selections, or full scripts can be sent from the editor
-to IPython with single keystrokes.</li>
-<li>ALE provides async linting (flake8 + mypy via pylsp) and auto-fixing
-(black, isort, autoimport).</li>
+<li><strong>Vim</strong> runs in the top pane of a tmux window named <code>code</code>, with a three-panel layout: tag browser, editor, file explorer.</li>
+<li><strong>IPython</strong> runs in the bottom pane, linked to the editor via vim-slime.</li>
+<li>Code cells, selections, or full scripts can be sent from the editor to IPython with single keystrokes.</li>
+<li>ALE provides async linting (flake8 + mypy via pylsp) and auto-fixing (black, isort, autoimport).</li>
 <li>vim-ai provides AI text and code assistance through OpenRouter.</li>
 </ul>
 <hr />
@@ -175,65 +172,48 @@ to IPython with single keystrokes.</li>
 |                |                      |                          |
 --------------------------------------------------------------------
 |                    IPython console (bottom pane)                 |
---------------------------------------------------------------------</code></pre>
-<p>The Tagbar and file explorer panels collapse to minimal width when
-unfocused and expand on entry, keeping the editor at maximum width
-during editing.</p>
-<p>Within the Tagbar:</p>
-<ul>
-<li><strong>Double-click</strong> or
-<strong><code>&lt;Return&gt;</code></strong>: jump to the
-function/class/method definition.</li>
-</ul>
+--------------------------------------------------------------------
+</code></pre>
+<p>The Tagbar and file explorer panels collapse to minimal width when unfocused and expand on entry, keeping the editor at maximum width during editing.</p>
+<p>Within the Tagbar:
+- <strong>Double-click</strong> or <strong><code>&lt;Return&gt;</code></strong>: jump to the function/class/method definition.</p>
 <hr />
 <h2 id="installation">Installation</h2>
 <p>Before running the installer, provision the OpenRouter token:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.config/ai</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;sk-or-...&quot;</span> <span class="op">&gt;</span> ~/.config/ai/openrouter.token</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 600 ~/.config/ai/openrouter.token</span></code></pre></div>
+<pre><code class="language-bash">mkdir -p ~/.config/ai
+echo &quot;sk-or-...&quot; &gt; ~/.config/ai/openrouter.token
+chmod 600 ~/.config/ai/openrouter.token
+</code></pre>
 <p>Then run:</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./install.sh</span></span></code></pre></div>
+<pre><code class="language-bash">./install.sh
+</code></pre>
 <p>The installer:</p>
-<ol type="1">
+<ol>
 <li>Installs vim-plug if absent.</li>
-<li>Backs up and replaces <code>~/.vimrc</code> with
-<code>scripts/vimrc</code>.</li>
-<li>Backs up and replaces <code>~/.tmux.conf</code> with
-<code>scripts/tmux.conf</code>.</li>
+<li>Backs up and replaces <code>~/.vimrc</code> with <code>scripts/vimrc</code>.</li>
+<li>Backs up and replaces <code>~/.tmux.conf</code> with <code>scripts/tmux.conf</code>.</li>
 <li>Installs/updates all Vim plugins via vim-plug.</li>
-<li>Copies <code>scripts/roles.ini</code> to
-<code>~/.config/ai/roles.ini</code>.</li>
-<li>Copies <code>scripts/CLAUDE.md</code> to
-<code>~/.claude/CLAUDE.md</code>.</li>
-<li>Installs Python tools: <code>ipynb-py-convert</code>,
-<code>notedown</code> (via uv).</li>
-<li>Installs system packages: <code>tmux</code>,
-<code>universal-ctags</code>.</li>
-<li>Copies <code>scripts/vide</code> to <code>~/bin/vide</code> and adds
-<code>~/bin</code> to <code>PATH</code>.</li>
-<li>Adds a <code>vim --servername vim</code> alias to
-<code>.bashrc</code>.</li>
+<li>Copies <code>scripts/roles.ini</code> to <code>~/.config/ai/roles.ini</code>.</li>
+<li>Copies <code>scripts/CLAUDE.md</code> to <code>~/.claude/CLAUDE.md</code>.</li>
+<li>Installs Python tools: <code>ipynb-py-convert</code>, <code>notedown</code> (via uv).</li>
+<li>Installs system packages: <code>tmux</code>, <code>universal-ctags</code>.</li>
+<li>Copies <code>scripts/vide</code> to <code>~/bin/vide</code> and adds <code>~/bin</code> to <code>PATH</code>.</li>
+<li>Adds a <code>vim --servername vim</code> alias to <code>.bashrc</code>.</li>
 <li>Adds SSH auth and DISPLAY tracking fix for tmux sessions.</li>
 </ol>
 <hr />
 <h2 id="the-vide-launcher">The <code>vide</code> Launcher</h2>
-<p><code>vide</code> manages named tmux sessions containing the IDE. It
-is installed to <code>~/bin/vide</code>.</p>
+<p><code>vide</code> manages named tmux sessions containing the IDE. It is installed to <code>~/bin/vide</code>.</p>
 <pre><code>vide -n NAME        Start or reattach a session named NAME
 vide -q NAME        Terminate the session named NAME
 vide -l             List all active vide sessions
 vide -d DIR         Set the working directory (default: current directory)
-vide -h             Show help</code></pre>
+vide -h             Show help
+</code></pre>
 <p>On first launch, <code>vide</code>:</p>
-<ol type="1">
-<li>Creates a detached tmux session <code>vide_NAME</code> with window
-<code>code</code>, split into two panes: top (Vim, 75%) and bottom
-(console, 25%).</li>
-<li>Starts Vim in the top pane, calls <code>RunPyIDE()</code> to
-initialize the three-panel layout, and configures vim-slime to target
-the bottom console pane.</li>
+<ol>
+<li>Creates a detached tmux session <code>vide_NAME</code> with window <code>code</code>, split into two panes: top (Vim, 75%) and bottom (console, 25%).</li>
+<li>Starts Vim in the top pane, calls <code>RunPyIDE()</code> to initialize the three-panel layout, and configures vim-slime to target the bottom console pane.</li>
 <li>Attaches to the session with focus on the top pane.</li>
 </ol>
 <pre><code>tmux session: vide_NAME
@@ -245,207 +225,189 @@ the bottom console pane.</li>
     └── pane 1 (bottom, 25%)
         ┌───────────────────────────────────────────────────────┐
         │                   IPython console                     │
-        └───────────────────────────────────────────────────────┘</code></pre>
+        └───────────────────────────────────────────────────────┘
+</code></pre>
 <hr />
 <h2 id="tmux-configuration">tmux Configuration</h2>
-<p><code>scripts/tmux.conf</code> (installed to
-<code>~/.tmux.conf</code>) sets:</p>
+<p><code>scripts/tmux.conf</code> (installed to <code>~/.tmux.conf</code>) sets:</p>
 <ul>
-<li><strong>Terminal</strong>: <code>screen-256color</code> with
-true-color overrides for xterm-compatible terminals.</li>
-<li><strong>Prefix key</strong>: <code>Ctrl-a</code> (replaces the
-default <code>Ctrl-b</code>).</li>
-<li><strong>Message display time</strong>: 0 ms (messages dismissed
-immediately).</li>
+<li><strong>Terminal</strong>: <code>screen-256color</code> with true-color overrides for xterm-compatible terminals.</li>
+<li><strong>Prefix key</strong>: <code>Ctrl-a</code> (replaces the default <code>Ctrl-b</code>).</li>
+<li><strong>Message display time</strong>: 0 ms (messages dismissed immediately).</li>
 <li><strong>Mouse</strong>: enabled.</li>
 </ul>
 <hr />
 <h2 id="ide-shortcuts">IDE Shortcuts</h2>
-<p>Provided by <code>plugin/vimide.vim</code>. Active in all buffers
-(normal mode).</p>
+<p>Provided by <code>plugin/vimide.vim</code>. Active in all buffers (normal mode).</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>,cp</code></td>
 <td>Open or reset the IDE layout (Tagbar + Editor + File Explorer)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>,cf</code></td>
-<td>Find all occurrences of the word under cursor; display in
-editor</td>
+<td>Find all occurrences of the word under cursor; display in editor</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>,cg</code></td>
-<td>Jump to the file and line of the occurrence under cursor (use inside
-find list)</td>
+<td>Jump to the file and line of the occurrence under cursor (use inside find list)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>,cr</code></td>
 <td>Write back edits made in the find list to their source files</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>,cu</code></td>
 <td>Refresh the file explorer</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>,cm</code></td>
-<td>Fetch available free models from OpenRouter and select one as
-default</td>
+<td>Fetch available free models from OpenRouter and select one as default</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>,f</code></td>
 <td>Open the file path under cursor in the editor window</td>
 </tr>
 </tbody>
 </table>
 <h3 id="find-and-replace-workflow">Find and replace workflow</h3>
-<ol type="1">
-<li><code>,cf</code> — searches <code>.py</code>, <code>.tex</code>,
-<code>.cpp</code>, <code>.h</code>, <code>.hpp</code> files under the
-working directory for the word under cursor. Results appear in the
-editor in a structured list.</li>
+<ol>
+<li><code>,cf</code> — searches <code>.py</code>, <code>.tex</code>, <code>.cpp</code>, <code>.h</code>, <code>.hpp</code> files under the working directory for the word under cursor. Results appear in the editor in a structured list.</li>
 <li>Edit lines in the list to change text in-place.</li>
-<li><code>,cr</code> — writes the modified lines back to their source
-files.</li>
-<li><code>,cg</code> — jump directly to the file and line of the result
-under cursor.</li>
+<li><code>,cr</code> — writes the modified lines back to their source files.</li>
+<li><code>,cg</code> — jump directly to the file and line of the result under cursor.</li>
 </ol>
 <hr />
 <h2 id="python-features">Python Features</h2>
-<p>Provided by <code>after/ftplugin/python.vim</code>. Active in Python
-buffers only.</p>
+<p>Provided by <code>after/ftplugin/python.vim</code>. Active in Python buffers only.</p>
 <h3 id="ipython-integration">IPython Integration</h3>
-<p>Requires vim-slime configured to target the bottom console pane (done
-automatically by <code>vide</code>).</p>
+<p>Requires vim-slime configured to target the bottom console pane (done automatically by <code>vide</code>).</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Mode</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>\ss</code></td>
 <td>normal</td>
 <td>Start IPython (Qt backend) in the console pane</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\as</code></td>
 <td>normal</td>
 <td>Start IPython (Agg backend, non-interactive)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\hh</code></td>
 <td>normal</td>
 <td>Send current line to IPython</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\hh</code></td>
 <td>visual</td>
 <td>Send selection to IPython</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\aa</code></td>
 <td>normal</td>
 <td>Send current line to IPython and advance cursor</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\aa</code></td>
 <td>visual</td>
 <td>Send selection to IPython and advance cursor</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\rr</code></td>
 <td>normal</td>
 <td>Run the entire script (<code>%run</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\RR</code></td>
 <td>normal</td>
 <td>Run the entire script and report execution time</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\dd</code></td>
 <td>normal</td>
 <td>Start debugger (<code>%run -d</code>) on the current script</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\qq</code></td>
 <td>normal</td>
 <td>Exit debug mode or IPython</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\QQ</code></td>
 <td>normal</td>
 <td>Restart IPython</td>
 </tr>
 </tbody>
 </table>
-<p><code>\hh</code> and <code>\aa</code> include a guard: if IPython is
-not at an empty prompt (i.e., currently executing something), the send
-is blocked and a warning is shown. This prevents accidentally queueing
-input into a running computation.</p>
+<p><code>\hh</code> and <code>\aa</code> include a guard: if IPython is not at an empty prompt (i.e., currently executing something), the send is blocked and a warning is shown. This prevents accidentally queueing input into a running computation.</p>
 <h3 id="code-cells">Code Cells</h3>
-<p>Cells are delimited by <code># %%</code> or <code>#%%</code> markers
-(Jupyter percent format).</p>
+<p>Cells are delimited by <code># %%</code> or <code>#%%</code> markers (Jupyter percent format).</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Mode</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>\cc</code></td>
 <td>normal</td>
 <td>Execute the current cell</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\vv</code></td>
 <td>normal</td>
 <td>Execute the current cell verbosely, then jump to next cell</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\ll</code></td>
 <td>normal</td>
 <td>Clear console, execute current cell, jump to next cell</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\LL</code></td>
 <td>normal</td>
 <td>Clear the IPython console</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>\xx</code></td>
 <td>normal</td>
 <td>Close all Matplotlib figure windows</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>[c</code></td>
 <td>normal</td>
 <td>Jump to previous cell header</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>]c</code></td>
 <td>normal</td>
 <td>Jump to next cell header</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>F9</code></td>
 <td>normal/insert</td>
 <td>Insert a new cell header above, enter insert mode</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>F10</code></td>
 <td>normal/insert</td>
 <td>Insert a new cell header below, enter insert mode</td>
@@ -456,168 +418,147 @@ input into a running computation.</p>
 <p>Active in Python buffers (buffer-local mappings).</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>Ctrl-k</code></td>
 <td>Jump to previous lint error (wrapping)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>Ctrl-j</code></td>
 <td>Jump to next lint error (wrapping)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>Ctrl-f</code></td>
 <td>Auto-fix the file (black, isort, autoimport)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>Ctrl-h</code></td>
 <td>Show hover documentation at cursor</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>Ctrl-x</code></td>
 <td>Close the ALE hover/preview window</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Linters</strong>: <code>pylsp</code> (flake8 backend,
-ignoring E203/E501/W503; mypy with dmypy) and <code>jedils</code>.</p>
-<p><strong>Fixers</strong>: <code>black</code> (line length 90),
-<code>isort</code>, <code>autoimport</code>.</p>
-<p><strong>Note on terminal key handling</strong>: with
-<code>screen-256color</code>, <code>Ctrl-h</code> and
-<code>&lt;BS&gt;</code> share the same byte (0x08). Both keys are mapped
-to hover to ensure the binding fires regardless of how the terminal
-encodes the keypress.</p>
+<p><strong>Linters</strong>: <code>pylsp</code> (flake8 backend, ignoring E203/E501/W503; mypy with dmypy) and <code>jedils</code>.</p>
+<p><strong>Fixers</strong>: <code>black</code> (line length 90), <code>isort</code>, <code>autoimport</code>.</p>
+<p><strong>Note on terminal key handling</strong>: with <code>screen-256color</code>, <code>Ctrl-h</code> and <code>&lt;BS&gt;</code> share the same byte (0x08). Both keys are mapped to hover to ensure the binding fires regardless of how the terminal encodes the keypress.</p>
 <h3 id="jupyter-notebook-support">Jupyter Notebook Support</h3>
-<p>Python files are treated as Jupytext percent-format notebooks
-(<code>py:percent</code>). Saving a <code>.py</code> file automatically
-updates the paired <code>.ipynb</code> via jupytext.</p>
+<p>Python files are treated as Jupytext percent-format notebooks (<code>py:percent</code>). Saving a <code>.py</code> file automatically updates the paired <code>.ipynb</code> via jupytext.</p>
 <hr />
 <h2 id="latex-features">LaTeX Features</h2>
 <p>Provided by <code>after/ftplugin/tex.vim</code> via vimtex.</p>
 <ul>
-<li><strong>Compiler</strong>: <code>latexmk</code> with bibtex,
-synctex, shell-escape, and non-stop mode.</li>
-<li><strong>PDF viewer</strong>: Okular with forward/inverse search via
-synctex.</li>
-<li><strong>Spell checking</strong>: enabled (en_us), with a custom word
-list at <code>spell/dict.utf-8.add</code>.</li>
-<li><strong><code>§</code></strong>: reformats indentation of selected
-LaTeX comment blocks.</li>
-<li><strong>ALE</strong>: disabled per-buffer
-(<code>b:ale_enabled = 0</code>) to avoid interference with vimtex.</li>
-<li><strong><code>F9</code></strong> (insert mode): trigger LaTeX
-completion.</li>
-<li>Quickfix suppresses: Underfull, Overfull, Font, Float, Difference
-warnings.</li>
+<li><strong>Compiler</strong>: <code>latexmk</code> with bibtex, synctex, shell-escape, and non-stop mode.</li>
+<li><strong>PDF viewer</strong>: Okular with forward/inverse search via synctex.</li>
+<li><strong>Spell checking</strong>: enabled (en_us), with a custom word list at <code>spell/dict.utf-8.add</code>.</li>
+<li><strong><code>§</code></strong>: reformats indentation of selected LaTeX comment blocks.</li>
+<li><strong>ALE</strong>: disabled per-buffer (<code>b:ale_enabled = 0</code>) to avoid interference with vimtex.</li>
+<li><strong><code>F9</code></strong> (insert mode): trigger LaTeX completion.</li>
+<li>Quickfix suppresses: Underfull, Overfull, Font, Float, Difference warnings.</li>
 <li>All folds open by default (<code>foldlevelstart=99</code>).</li>
 </ul>
 <hr />
 <h2 id="ai-integration">AI Integration</h2>
-<p>Provided by vim-ai with roles defined in
-<code>~/.config/ai/roles.ini</code>. All roles route through OpenRouter
-using a token at <code>~/.config/ai/openrouter.token</code>.</p>
-<p>Use <code>,cm</code> to dynamically fetch currently available free
-models from OpenRouter and set one as the default.</p>
+<p>Provided by vim-ai with roles defined in <code>~/.config/ai/roles.ini</code>. All roles route through OpenRouter using a token at <code>~/.config/ai/openrouter.token</code>.</p>
+<p>Use <code>,cm</code> to dynamically fetch currently available free models from OpenRouter and set one as the default.</p>
 <h3 id="model-roles">Model Roles</h3>
-<p>Select a specific backend by passing the role name to vim-ai
-commands.</p>
+<p>Select a specific backend by passing the role name to vim-ai commands.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Role</th>
 <th>Model</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>default</code></td>
-<td><code>openrouter/free</code> (dynamically resolved by
-OpenRouter)</td>
+<td><code>openrouter/free</code> (dynamically resolved by OpenRouter)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>gemini</code></td>
 <td><code>google/gemini-3-flash-preview</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>gpt</code></td>
 <td><code>openai/gpt-4o</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>gpt5</code></td>
 <td><code>gpt-5.4</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>claude</code></td>
 <td><code>anthropic/claude-3.5-sonnet</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>opus</code></td>
 <td><code>anthropic/claude-opus-4.6</code></td>
 </tr>
 </tbody>
 </table>
 <h3 id="prompt-roles">Prompt Roles</h3>
-<p>Text and code transforms applied to the current selection using the
-default model.</p>
+<p>Text and code transforms applied to the current selection using the default model.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Role</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>refine</code></td>
 <td>Rewrite and improve text for clarity and flow</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>translate</code></td>
 <td>Translate text to English</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>professional</code></td>
 <td>Rewrite in a professional, expert tone</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>simplify</code></td>
 <td>Simplify language, avoid jargon</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>clarity</code></td>
 <td>Make text direct and unambiguous</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>code</code></td>
 <td>Improve and format code (79-char line limit)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>refactor</code></td>
 <td>Refactor for clarity and maintainability</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>optimize</code></td>
 <td>Optimize for speed and memory</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>comment</code></td>
 <td>Add comments and docstrings</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>enhance-docstring</code></td>
 <td>Rewrite docstrings in Google format</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>enhance-comments</code></td>
 <td>Add and improve inline comments and docstrings</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>reformat-comments</code></td>
 <td>Reformat comments to fit within 79 characters</td>
 </tr>
@@ -629,17 +570,17 @@ default model.</p>
 <p>Works across file types (Python, Bash, C/C++, TeX, Vim, etc.).</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>zc</code></td>
 <td>Comment selected lines</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>zv</code></td>
 <td>Uncomment selected lines</td>
 </tr>
@@ -648,29 +589,29 @@ default model.</p>
 <h3 id="git-grep">Git Grep</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>\g</code></td>
 <td>Git grep whole-word for the word under cursor</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>\t</code></td>
 <td>Return to previous location after a grep jump</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>:GG</code></td>
 <td>Git grep (arbitrary pattern)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>:GGw</code></td>
 <td>Git grep whole-word</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>:GGi</code></td>
 <td>Git grep case-insensitive</td>
 </tr>
@@ -680,17 +621,17 @@ default model.</p>
 <p>Requires <code>xclip</code>.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>ay</code></td>
 <td>Yank selection to system clipboard</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>ap</code></td>
 <td>Paste from system clipboard</td>
 </tr>
@@ -699,72 +640,67 @@ default model.</p>
 <h3 id="markdown">Markdown</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Key</th>
 <th>Action</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>\mm</code></td>
-<td>Add HTML anchor tags to headings in the selected range (visual
-mode)</td>
+<td>Add HTML anchor tags to headings in the selected range (visual mode)</td>
 </tr>
 </tbody>
 </table>
-<p>Live preview with MathJax support via vim-instant-markdown (opens in
-browser on save).</p>
+<p>Live preview with MathJax support via vim-instant-markdown (opens in browser on save).</p>
 <h3 id="miscellaneous">Miscellaneous</h3>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Feature</th>
 <th>Detail</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>:Bdi</code></td>
 <td>Close all hidden (non-visible) buffers</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Auto-save</td>
 <td>Saves all buffers on focus lost</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Indent guides</td>
 <td>Alternating dark stripes every 4 spaces</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Mark visualization</td>
 <td>Marks shown in sign column (vim-signature)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Directory diff</td>
 <td><code>:DirDiff</code> via vim-dirdiff</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Line numbers</td>
 <td>Always on</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Search</td>
-<td>Smart case-insensitive (<code>ignorecase</code> +
-<code>smartcase</code>)</td>
+<td>Smart case-insensitive (<code>ignorecase</code> + <code>smartcase</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Indentation</td>
 <td>4 spaces, expandtab, for all files</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Wrap navigation</td>
-<td><code>Up</code>/<code>Down</code> move by display lines
-(<code>gk</code>/<code>gj</code>)</td>
+<td><code>Up</code>/<code>Down</code> move by display lines (<code>gk</code>/<code>gj</code>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Shell slime</td>
-<td><code>\hh</code>/<code>\aa</code> send lines/regions to console in
-bash buffers too</td>
+<td><code>\hh</code>/<code>\aa</code> send lines/regions to console in bash buffers too</td>
 </tr>
 </tbody>
 </table>
@@ -773,29 +709,29 @@ bash buffers too</td>
 <p>Bundled in <code>colors/</code>:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Scheme</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>late_evening</code></td>
 <td>Default dark scheme (active)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>blackdust</code></td>
 <td>Dark with subtle tones</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>calmar256-dark</code></td>
 <td>256-color dark</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>calmar256-light</code></td>
 <td>256-color light</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>corporation</code></td>
 <td>High-contrast dark</td>
 </tr>
@@ -805,89 +741,89 @@ bash buffers too</td>
 <h2 id="installed-plugins">Installed Plugins</h2>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Plugin</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>vim-vinegar</td>
 <td>Enhanced netrw file explorer</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vimtex</td>
 <td>LaTeX editing and compilation</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>jedi-vim</td>
 <td>Python autocompletion</td>
 </tr>
-<tr class="even">
+<tr>
 <td>ale</td>
 <td>Async linting and fixing</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>tagbar</td>
 <td>Tag/symbol browser</td>
 </tr>
-<tr class="even">
+<tr>
 <td>jupytext.vim</td>
 <td>Jupyter notebook / percent-format sync</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>vim-dirdiff</td>
 <td>Directory diff</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vim-ipynb</td>
 <td>Jupyter notebook support</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>vim-slime</td>
 <td>Send code to a terminal multiplexer pane</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vim-ipython-cell</td>
 <td>Cell-based IPython execution</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>vim-signature</td>
 <td>Visual mark management</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vim-sh-heredoc-highlighting</td>
 <td>Heredoc syntax in shell files</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>vim-ai</td>
 <td>AI text and code assistance</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vim-sh</td>
 <td>Improved shell script syntax</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>traces.vim</td>
 <td>Live preview of <code>:s</code> substitutions</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vim-instant-markdown</td>
 <td>Live Markdown preview in browser</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>loremipsum</td>
 <td>Lorem ipsum generator</td>
 </tr>
-<tr class="even">
+<tr>
 <td>vim-indent-guides</td>
 <td>Visual indentation guides</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>vim-markdown-toc</td>
 <td>Table of contents for Markdown</td>
 </tr>
-<tr class="even">
+<tr>
 <td>gitgrep.vim</td>
 <td>Git grep integration</td>
 </tr>
@@ -912,7 +848,111 @@ bash buffers too</td>
 │   └── vide             # IDE launcher script (installed to ~/bin/vide)
 ├── spell/
 │   └── dict.utf-8.add   # Custom spell-check word list
-└── install.sh           # Installer</code></pre>
-</main>
-</body>
+└── install.sh           # Installer
+</code></pre></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "."</script>
+    
+    <script src="js/base.js"></script>
+    <script src="search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
 </html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-06-05 09:43:47.080003+00:00
+-->
