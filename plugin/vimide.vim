@@ -62,7 +62,7 @@ endfunction
 " ResetCtags: Reset the ctags database
 " Description: Executes ctags over all subdirectories to rebuild the tag database
 function! ResetCtags()
-    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q -f ".g:tags." . 2>>".g:vimide_log
+    execute "silent !ctags -R --c-types=+l --python-kinds=-i --sort=yes --fields=+imatS --extra=+q --exclude=node_modules --exclude=.git --exclude=docs -f ".g:tags." . 2>>".g:vimide_log
     if v:shell_error
         call s:log('ERROR', 'ctags failed with exit code ' . v:shell_error)
     endif
@@ -215,48 +215,43 @@ endfunction
 " RunPyIDE: Set up IDE for Python development
 " Description: Initializes the IDE layout for managing Python projects
 function! RunPyIDE()
-    try
-        let g:IDE = "PyIDE"
+    let g:IDE = "PyIDE"
 
-        if g:cwd == ""
-            let g:cwd = GetCurrDir()
-        else
-            bwipeout
-            execute ":cd ".g:cwd
-        endif
-
-        let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
-
-        if empty(pys)
-            call s:log('WARN', 'RunPyIDE: no .py/.tex files found under ' . g:cwd)
-        endif
-
-        wincmd o
+    if g:cwd == ""
+        let g:cwd = GetCurrDir()
+    else
         bwipeout
-        let has_main = 0
-        for py in pys
-            if py =~ "main"
-                silent execute ":e ".py
-                let has_main = 1
-            endif
-        endfor
-        if has_main == 0
-            silent execute ":e ".pys[0]
+        execute ":cd ".g:cwd
+    endif
+
+    let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
+
+    if empty(pys)
+        call s:log('WARN', 'RunPyIDE: no .py/.tex files found under ' . g:cwd)
+    endif
+
+    wincmd o
+    bwipeout
+    let has_main = 0
+    for py in pys
+        if py =~ "main"
+            silent execute ":e ".py
+            let has_main = 1
         endif
-        call LeftTagbarToggle()
-        wincmd t
-        wincmd l
-        vsplit
-        call CreatePyView()
-        wincmd t
-        wincmd l
-        wincmd l
-        call FormatPyIDE()
-        call ResetCtags()
-    catch
-        call s:log('ERROR', v:exception . ' at ' . v:throwpoint)
-        echohl ErrorMsg | echom 'vimide: ' . v:exception | echohl None
-    endtry
+    endfor
+    if has_main == 0 && !empty(pys)
+        silent execute ":e ".pys[0]
+    endif
+    call LeftTagbarToggle()
+    wincmd t
+    wincmd l
+    vsplit
+    call CreatePyView()
+    wincmd t
+    wincmd l
+    wincmd l
+    call FormatPyIDE()
+    call ResetCtags()
 endfunction
 
 " =================================================================================================
