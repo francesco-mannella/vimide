@@ -2,6 +2,8 @@
 
 A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into a multi-panel development environment with integrated IPython, AI assistance, LaTeX support, and a terminal console — all inside a persistent tmux session.
 
+**Documentation**: https://francesco-mannella.github.io/vimide/
+
 ---
 
 ## Table of Contents
