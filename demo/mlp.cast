@@ -1,0 +1,7 @@
+{"version": 2, "width": 72, "height": 14, "timestamp": 1780736737, "idle_time_limit": 1.0, "env": {"SHELL": "/bin/bash", "TERM": "screen-256color"}}
+[1.117049, "o", "=== MLP  make_moons  2-16-16-1 ===\r\n"]
+[1.916512, "o", "epoch  50  loss 0.2745\r\n"]
+[2.752584, "o", "epoch 100  loss 0.1742\r\n"]
+[3.592991, "o", "epoch 150  loss 0.0970\r\n"]
+[4.429944, "o", "epoch 200  loss 0.0830\r\n"]
+[5.231629, "o", "Accuracy: 97.00%\r\n"]
