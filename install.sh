@@ -3,9 +3,10 @@
 SRC_DIR="$(realpath "$(dirname -- "$0")")"
 
 usage() {
-    echo "Usage: $0 [-u]"
+    echo "Usage: $0 [-u] [-l]"
     echo "  (no flag)  Install vimide"
     echo "  -u         Uninstall vimide and restore previous settings"
+    echo "  -l         Also install LaTeX support (texlive + latexmk + okular)"
     exit 1
 }
 
@@ -52,9 +53,12 @@ uninstall() {
 
 # ── argument parsing ──────────────────────────────────────────────────────────
 
-while getopts "u" opt; do
+INSTALL_LATEX=0
+
+while getopts "ul" opt; do
     case $opt in
         u) uninstall; exit 0 ;;
+        l) INSTALL_LATEX=1 ;;
         *) usage ;;
     esac
 done
@@ -104,6 +108,15 @@ sudo apt install -y tmux
 
 echo "Installing ctags..."
 sudo apt install -y universal-ctags
+
+if [[ $INSTALL_LATEX -eq 1 ]]; then
+    echo "Installing LaTeX support..."
+    sudo apt install -y \
+        texlive-latex-base \
+        texlive-latex-recommended \
+        latexmk \
+        okular
+fi
 
 echo "Installing vide"
 if [[ -z $(echo $PATH | grep ":${HOME}/bin:") ]]; then

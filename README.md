@@ -107,6 +107,18 @@ The uninstaller:
 
 Vim plugins and system packages (`tmux`, `universal-ctags`) are not removed.
 
+### LaTeX support
+
+To also install system-level LaTeX dependencies:
+
+```bash
+./install.sh -l
+```
+
+Installs: `texlive-latex-base`, `texlive-latex-recommended`, `latexmk`, `okular`.
+
+The Vim side (vimtex plugin, `after/ftplugin/tex.vim`) is always included in the base install.
+
 ---
 
 ## The `vide` Launcher

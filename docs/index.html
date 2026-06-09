@@ -202,6 +202,12 @@ chmod 600 ~/.config/ai/openrouter.token
 <li>Adds a <code>vim --servername vim</code> alias to <code>.bashrc</code>.</li>
 <li>Adds SSH auth and DISPLAY tracking fix for tmux sessions.</li>
 </ol>
+<h3 id="latex-support">LaTeX support</h3>
+<p>To also install system-level LaTeX dependencies:</p>
+<pre><code class="language-bash">./install.sh -l
+</code></pre>
+<p>Installs: <code>texlive-latex-base</code>, <code>texlive-latex-recommended</code>, <code>latexmk</code>, <code>okular</code>.</p>
+<p>The Vim side (vimtex plugin, <code>after/ftplugin/tex.vim</code>) is always included in the base install.</p>
 <hr />
 <h2 id="the-vide-launcher">The <code>vide</code> Launcher</h2>
 <p><code>vide</code> manages named tmux sessions containing the IDE. It is installed to <code>~/bin/vide</code>.</p>
