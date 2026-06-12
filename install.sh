@@ -102,6 +102,7 @@ cp "${SRC_DIR}/scripts/settings.json" "${HOME}/.claude/settings.json"
 echo "Installing Python modules"
 uv pip install ipynb-py-convert
 uv pip install notedown
+uv pip install jupytext 
 
 echo "Installing tmux..."
 sudo apt install -y tmux
