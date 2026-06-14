@@ -15,34 +15,33 @@ hi IPythonCell ctermbg=6 ctermfg=0
 let g:slime_python_ipython = 1
 
 " map <Leader>s to start IPython
-autocmd FileType sh nnoremap <Leader>ss :SlimeSend1 echo "connect"<CR>
-autocmd FileType python nnoremap <Leader>ss :SlimeSend1 ipython --pylab qt <CR>
-autocmd FileType python nnoremap <Leader>as :SlimeSend1 ipython --pylab agg<CR>
+nnoremap <buffer> <Leader>ss :SlimeSend1 ipython --pylab qt <CR>
+nnoremap <buffer> <Leader>as :SlimeSend1 ipython --pylab agg<CR>
 
 " map <Leader>1r to run script
-autocmd FileType python nnoremap <Leader>rr :IPythonCellRun<CR>
+nnoremap <buffer> <Leader>rr :IPythonCellRun<CR>
 
 " map <Leader>1R to run script and time the execution
-autocmd FileType python nnoremap <Leader>RR :IPythonCellRunTime<CR>
+nnoremap <buffer> <Leader>RR :IPythonCellRunTime<CR>
 
 " map <Leader>lc to execute the current cell
-autocmd FileType python nnoremap <Leader>cc :IPythonCellExecuteCell<CR>
+nnoremap <buffer> <Leader>cc :IPythonCellExecuteCell<CR>
 
 " map <Leader>lv to execute the current cell
-autocmd FileType python nnoremap <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
+nnoremap <buffer> <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
 
 " map <Leader>ll to execute the current cell and jump to the next cell
-autocmd FileType python nnoremap <Leader>ll :IPythonCellClear<CR>:IPythonCellExecuteCellJump<CR>
+nnoremap <buffer> <Leader>ll :IPythonCellClear<CR>:IPythonCellExecuteCellJump<CR>
 
 " map <Leader>LL to clear IPython screen
-autocmd FileType python nnoremap <Leader>LL :IPythonCellClear<CR>
+nnoremap <buffer> <Leader>LL :IPythonCellClear<CR>
 
 " map <Leader>x to close all Matplotlib figure windows
-autocmd FileType python nnoremap <Leader>xx :IPythonCellClose<CR>
+nnoremap <buffer> <Leader>xx :IPythonCellClose<CR>
 
 " map [c and ]c to jump to the previous and next cell header
-autocmd FileType python nnoremap [c :IPythonCellPrevCell<CR>
-autocmd FileType python nnoremap ]c :IPythonCellNextCell<CR>
+nnoremap <buffer> [c :IPythonCellPrevCell<CR>
+nnoremap <buffer> ]c :IPythonCellNextCell<CR>
 
 " map <Leader>hh and <Leader>aa to send line/region to IPython with prompt guard
 function! s:IPythonAtEmptyPrompt() abort
@@ -82,28 +81,28 @@ function! s:SendRegionChecked(advance) abort
     endif
 endfunction
 
-autocmd FileType python nnoremap <silent> <Leader>hh :call <SID>SendLineChecked(0)<CR>
-autocmd FileType python xnoremap <silent> <Leader>hh :<C-u>call <SID>SendRegionChecked(0)<CR>
-autocmd FileType python nnoremap <silent> <Leader>aa :call <SID>SendLineChecked(1)<CR>
-autocmd FileType python xnoremap <silent> <Leader>aa :<C-u>call <SID>SendRegionChecked(1)<CR>
+nnoremap <buffer> <silent> <Leader>hh :call <SID>SendLineChecked(0)<CR>
+xnoremap <buffer> <silent> <Leader>hh :<C-u>call <SID>SendRegionChecked(0)<CR>
+nnoremap <buffer> <silent> <Leader>aa :call <SID>SendLineChecked(1)<CR>
+xnoremap <buffer> <silent> <Leader>aa :<C-u>call <SID>SendRegionChecked(1)<CR>
 
 
 " map <Leader>Q to restart ipython
-autocmd FileType python nnoremap <Leader>QQ :IPythonCellRestart<CR>
+nnoremap <buffer> <Leader>QQ :IPythonCellRestart<CR>
 
 " map <Leader>d to start debug mode
-autocmd FileType python nnoremap <Leader>dd :execute 'SlimeSend1 %run -d' expand('%:p')  <CR>
+nnoremap <buffer> <Leader>dd :execute 'SlimeSend1 %run -d' expand('%:p')  <CR>
 
 " map <Leader>q to exit debug mode or IPython
-autocmd FileType python nnoremap <Leader>qq :SlimeSend1 exit<CR>
+nnoremap <buffer> <Leader>qq :SlimeSend1 exit<CR>
 
 " map <F9> and <F10> to insert a cell header tag above/below and enter insert mode
-autocmd FileType python nmap <F9> :IPythonCellInsertAbove<CR>a
-autocmd FileType python nmap <F10> :IPythonCellInsertBelow<CR>a
+nmap <buffer> <F9> :IPythonCellInsertAbove<CR>a
+nmap <buffer> <F10> :IPythonCellInsertBelow<CR>a
 
 " also make <F9> and <F10> work in insert mode
-autocmd FileType python imap <F9> <C-o>:IPythonCellInsertAbove<CR>
-autocmd FileType python imap <F10> <C-o>:IPythonCellInsertBelow<CR>
+imap <buffer> <F9> <C-o>:IPythonCellInsertAbove<CR>
+imap <buffer> <F10> <C-o>:IPythonCellInsertBelow<CR>
 
 let g:ipython_cell_cell_command = '%paste'
 let g:ipython_cell_tag = ['# %%', '#%%']
