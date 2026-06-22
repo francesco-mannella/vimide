@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
-"""Print a columnar git branch tree with colors and unicode graphics.
-
-Usage: bin/gitlog.sh [col_width [desc_width]]   (defaults: 14  60)
-"""
-import subprocess, sys, textwrap
+import subprocess, sys, textwrap, curses
 
 col_w  = int(sys.argv[1]) if len(sys.argv) > 1 else 14
 desc_w = int(sys.argv[2]) if len(sys.argv) > 2 else 60
 
-R   = "\033[0m"
-B   = "\033[1m"
-DIM = "\033[2m"
-PALETTE = ["\033[36m", "\033[33m", "\033[32m", "\033[35m", "\033[34m", "\033[31m"]
-
-# ── branches (oldest first = leftmost) ────────────────────────────────────────
+# ── git data ───────────────────────────────────────────────────────────────────
 raw_refs = subprocess.check_output(
     ["git", "for-each-ref",
-     "--format=%(refname:short)\t%(committerdate:unix)", "refs/heads/"],
+     "--format=%(refname:short)\t%(committerdate:unix)",
+     "refs/heads/", "refs/remotes/"],
     text=True,
 ).strip().splitlines()
+raw_refs = [ln for ln in raw_refs if not ln.startswith("origin/HEAD\t")]
 branches = [
     ln.split("\t")[0]
     for ln in sorted(raw_refs, key=lambda l: int(l.split("\t")[1]))
 ]
-col = {b: PALETTE[i % len(PALETTE)] for i, b in enumerate(branches)}
+
+PAIRS = [1, 2, 3, 4, 5, 6]
+col_pair = {b: PAIRS[i % len(PAIRS)] for i, b in enumerate(branches)}
 
 def git_log(ref, fmt):
     out = subprocess.check_output(
@@ -46,7 +41,6 @@ for line in subprocess.check_output(
     h, _, s = line.partition("\t")
     subjects[h.strip()] = s.strip()
 
-# ── ownership: oldest branch containing each commit ───────────────────────────
 commit_branch = {}
 for b in branches:
     for h in branch_commits[b]:
@@ -59,7 +53,6 @@ for line in subprocess.check_output(
     h, _, p = line.partition("\t")
     parents[h.strip()] = p.strip().split() if p.strip() else []
 
-# ── annotations: (is_merge, origin_branch) ────────────────────────────────────
 annotations = {}
 for b in branches:
     for h in branch_commits[b]:
@@ -77,45 +70,104 @@ for h, ps in parents.items():
         if orig and orig != commit_branch.get(h):
             annotations[h] = (True, orig)
 
-# ── column widths: fit branch name + 2 padding minimum ────────────────────────
-widths = [max(col_w, len(b) + 2) for b in branches]
-total_w = sum(widths)
+widths   = [max(col_w, len(b) + 2) for b in branches]
+total_w  = sum(widths)
 
-# ── header ────────────────────────────────────────────────────────────────────
-hdr = "".join(f"{B}{col[b]}{b:<{w}}{R}" for b, w in zip(branches, widths))
-hdr += f"{B}{'description':<{desc_w}}{R}"
-print(hdr)
-sep = "┬".join("─" * w for w in widths) + "┬" + "─" * desc_w
-print(sep)
+# ── curses ─────────────────────────────────────────────────────────────────────
+def draw_segs(win, y, segments, sx):
+    _, win_w = win.getmaxyx()
+    xpos = screen_x = 0
+    for text, attr in segments:
+        for ch in text:
+            if xpos >= sx:
+                if screen_x >= win_w - 1:
+                    return
+                try:
+                    win.addch(y, screen_x, ch, attr)
+                except curses.error:
+                    pass
+                screen_x += 1
+            xpos += 1
 
-# ── commit rows ───────────────────────────────────────────────────────────────
-blank = " " * total_w
+def main(stdscr):
+    curses.start_color()
+    curses.use_default_colors()
+    curses.init_pair(1, curses.COLOR_CYAN,    -1)
+    curses.init_pair(2, curses.COLOR_YELLOW,  -1)
+    curses.init_pair(3, curses.COLOR_GREEN,   -1)
+    curses.init_pair(4, curses.COLOR_MAGENTA, -1)
+    curses.init_pair(5, curses.COLOR_BLUE,    -1)
+    curses.init_pair(6, curses.COLOR_RED,     -1)
+    curses.curs_set(0)
+    stdscr.keypad(True)
 
-for h in all_commits:
-    owner = commit_branch.get(h)
-    if owner is None:
-        continue
-    bc = col[owner]
+    # header segments (pinned)
+    hdr = [(f"{b:<{w}}", curses.color_pair(col_pair[b]) | curses.A_BOLD)
+           for b, w in zip(branches, widths)]
+    hdr.append(("description", curses.A_BOLD))
 
-    # branch columns: colored "● hash" in owner slot, spaces elsewhere
-    row = "".join(
-        f"{bc}{'● ' + h:<{w}}{R}" if b == owner else " " * w
-        for b, w in zip(branches, widths)
-    )
-    # annotation: "╭─ ← origin" in the same column, above the first commit
-    ann = annotations.get(h)
-    if ann:
-        is_merge, orig = ann
-        prefix = ""
+    sep_text = "┬".join("─" * w for w in widths) + "┬" + "─" * desc_w
+    sep = [(sep_text, 0)]
+
+    # content rows
+    rows = []
+    for h in all_commits:
+        owner = commit_branch.get(h)
+        if owner is None:
+            continue
+        pair = curses.color_pair(col_pair[owner])
+
+        ann = annotations.get(h)
+        if ann:
+            is_merge, orig = ann
+            ann_segs = []
+            for b, w in zip(branches, widths):
+                if b == owner:
+                    break
+                ann_segs.append((" " * w, 0))
+            arrow = "╭─ merge ← " if is_merge else "╭─ ← "
+            orig_attr = curses.color_pair(col_pair[orig]) | curses.A_BOLD if orig in col_pair else curses.A_BOLD
+            ann_segs.append((arrow, curses.A_DIM | pair))
+            ann_segs.append((orig,  orig_attr))
+            rows.append(ann_segs)
+
+        row = []
         for b, w in zip(branches, widths):
             if b == owner:
-                break
-            prefix += " " * w
-        arrow = "╭─ merge ← " if is_merge else "╭─ ← "
-        origin_col = col.get(orig, "")
-        print(f"{prefix}{DIM}{bc}{arrow}{R}{B}{origin_col}{orig}{R}")
+                row.append((f"{'● ' + h:<{w}}", pair))
+            else:
+                row.append((" " * w, 0))
+        wrapped = textwrap.wrap(subjects.get(h, ""), desc_w) or [""]
+        row.append((wrapped[0], 0))
+        rows.append(row)
+        for cont in wrapped[1:]:
+            rows.append([(" " * total_w, 0), (cont, 0)])
 
-    lines = textwrap.wrap(subjects.get(h, ""), desc_w) or [""]
-    print(row + lines[0])
-    for cont in lines[1:]:
-        print(blank + cont)
+    sy = sx = 0
+
+    while True:
+        win_h, _ = stdscr.getmaxyx()
+        visible  = win_h - 2
+        max_sy   = max(0, len(rows) - visible)
+        stdscr.erase()
+
+        draw_segs(stdscr, 0, hdr, sx)
+        draw_segs(stdscr, 1, sep, sx)
+        for i, segs in enumerate(rows[sy:sy + visible]):
+            draw_segs(stdscr, i + 2, segs, sx)
+
+        stdscr.refresh()
+
+        key = stdscr.getch()
+        if key in (ord('q'), ord('Q'), 27):
+            break
+        elif key in (curses.KEY_DOWN,  ord('j')): sy = min(sy + 1,       max_sy)
+        elif key in (curses.KEY_UP,    ord('k')): sy = max(sy - 1,       0)
+        elif key == curses.KEY_NPAGE:             sy = min(sy + visible,  max_sy)
+        elif key == curses.KEY_PPAGE:             sy = max(sy - visible,  0)
+        elif key in (curses.KEY_HOME,  ord('g')): sy = 0
+        elif key in (curses.KEY_END,   ord('G')): sy = max_sy
+        elif key in (curses.KEY_RIGHT, ord('l')): sx += 4
+        elif key in (curses.KEY_LEFT,  ord('h')): sx = max(sx - 4, 0)
+
+curses.wrapper(main)
