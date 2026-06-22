@@ -149,6 +149,8 @@ fi
 
 mkdir -p ${HOME}/bin
 cp ${SRC_DIR}/scripts/vide ${HOME}/bin/vide
-cp ${SRC_DIR}/scripts/gitlog.sh ${HOME}/bin/gitlog.sh
+cp ${SRC_DIR}/scripts/glg ${HOME}/bin/glg
+
+chmod +x ${HOME}/bin/{vide,glg}
 
 echo "=== Installation complete ==="
