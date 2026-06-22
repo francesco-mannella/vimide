@@ -1,68 +1,270 @@
 #!/usr/bin/env python3
-import subprocess, sys, textwrap, curses
+import argparse
+import curses
+import json
+import os
+import sqlite3
+import subprocess
+import sys
+import textwrap
 
-col_w  = int(sys.argv[1]) if len(sys.argv) > 1 else 14
-desc_w = int(sys.argv[2]) if len(sys.argv) > 2 else 60
-
-# ── git data ───────────────────────────────────────────────────────────────────
-raw_refs = subprocess.check_output(
-    ["git", "for-each-ref",
-     "--format=%(refname:short)\t%(committerdate:unix)",
-     "refs/heads/", "refs/remotes/"],
-    text=True,
-).strip().splitlines()
-raw_refs = [ln for ln in raw_refs if not ln.startswith("origin/HEAD\t")]
-branches = [
-    ln.split("\t")[0]
-    for ln in sorted(raw_refs, key=lambda l: int(l.split("\t")[1]))
-]
+parser = argparse.ArgumentParser(
+    prog="glg",
+    description="Interactive curses git log viewer across branches.",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    epilog=(
+        "Navigation keys:\n"
+        "  j / DOWN       scroll down one line\n"
+        "  k / UP         scroll up one line\n"
+        "  PgDn / PgUp    scroll one page\n"
+        "  g / Home       jump to top\n"
+        "  G / End        jump to bottom\n"
+        "  l / RIGHT      scroll right\n"
+        "  h / LEFT       scroll left\n"
+        "  q / Q / Esc    quit"
+    ),
+)
+parser.add_argument(
+    "-c", "--col-width",
+    metavar="N",
+    type=int,
+    default=14,
+    dest="col_w",
+    help="minimum width of each branch column (default: 14)",
+)
+parser.add_argument(
+    "-d", "--desc-width",
+    metavar="N",
+    type=int,
+    default=60,
+    dest="desc_w",
+    help="width of the commit description column (default: 60)",
+)
+parser.add_argument(
+    "-r", "--rebuild",
+    action="store_true",
+    help="force rebuild of the commit cache (ignore stored DB)",
+)
+args = parser.parse_args()
+col_w = args.col_w
+desc_w = args.desc_w
 
 PAIRS = [1, 2, 3, 4, 5, 6]
-col_pair = {b: PAIRS[i % len(PAIRS)] for i, b in enumerate(branches)}
 
-def git_log(ref, fmt):
-    out = subprocess.check_output(
-        ["git", "log", "--format=" + fmt, ref], text=True
-    ).splitlines()
-    out.reverse()
-    return out
 
-branch_commits = {b: git_log(b, "%h") for b in branches}
+# ── DB helpers ─────────────────────────────────────────────────────────────────
+def get_db_path():
+    git_dir = subprocess.check_output(
+        ["git", "rev-parse", "--absolute-git-dir"], text=True
+    ).strip()
+    return os.path.join(git_dir, "glg.db")
 
-all_commits = subprocess.check_output(
-    ["git", "log", "--format=%h", "--all", "--topo-order"], text=True
-).split()
-all_commits.reverse()
 
-subjects = {}
-for line in subprocess.check_output(
-    ["git", "log", "--format=%h\t%s", "--all"], text=True
-).splitlines():
-    h, _, s = line.partition("\t")
-    subjects[h.strip()] = s.strip()
+def init_db(con):
+    con.executescript("""
+        CREATE TABLE IF NOT EXISTS meta (
+            key   TEXT PRIMARY KEY,
+            value TEXT
+        );
+        CREATE TABLE IF NOT EXISTS branches (
+            name       TEXT PRIMARY KEY,
+            sort_order INTEGER NOT NULL,
+            color_idx  INTEGER NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS commits (
+            hash     TEXT PRIMARY KEY,
+            position INTEGER NOT NULL,
+            branch   TEXT NOT NULL,
+            subject  TEXT NOT NULL DEFAULT '',
+            parents  TEXT NOT NULL DEFAULT ''
+        );
+    """)
 
-commit_branch = {}
-for b in branches:
-    for h in branch_commits[b]:
-        commit_branch.setdefault(h, b)
 
-parents = {}
-for line in subprocess.check_output(
-    ["git", "log", "--format=%h\t%p", "--all"], text=True
-).splitlines():
-    h, _, p = line.partition("\t")
-    parents[h.strip()] = p.strip().split() if p.strip() else []
+def db_is_fresh(con, head_hash, branch_tips):
+    try:
+        stored_head = con.execute("SELECT value FROM meta WHERE key='head'").fetchone()
+        stored_tips = con.execute(
+            "SELECT value FROM meta WHERE key='branch_tips'"
+        ).fetchone()
+        if not stored_head or not stored_tips:
+            return False
+        return stored_head[0] == head_hash and json.loads(stored_tips[0]) == branch_tips
+    except sqlite3.OperationalError:
+        return False
 
+
+def load_from_db(con):
+    rows = con.execute(
+        "SELECT name, sort_order, color_idx FROM branches ORDER BY sort_order"
+    ).fetchall()
+    if not rows:
+        return None
+    branches = [r[0] for r in rows]
+    col_pair = {r[0]: r[2] for r in rows}
+
+    rows = con.execute(
+        "SELECT hash, position, branch, subject, parents FROM commits ORDER BY position"
+    ).fetchall()
+    all_commits = [r[0] for r in rows]
+    commit_branch = {r[0]: r[2] for r in rows}
+    subjects = {r[0]: r[3] for r in rows}
+    parents = {r[0]: r[4].split() if r[4] else [] for r in rows}
+    return branches, col_pair, all_commits, commit_branch, subjects, parents
+
+
+def save_to_db(
+    con,
+    branches,
+    col_pair,
+    all_commits,
+    commit_branch,
+    subjects,
+    parents,
+    head_hash,
+    branch_tips,
+):
+    con.execute("DELETE FROM branches")
+    con.execute("DELETE FROM commits")
+    con.execute("DELETE FROM meta")
+    con.executemany(
+        "INSERT INTO branches(name, sort_order, color_idx) VALUES(?,?,?)",
+        [(b, i, col_pair[b]) for i, b in enumerate(branches)],
+    )
+    con.executemany(
+        "INSERT INTO commits(hash, position, branch, subject, parents) VALUES(?,?,?,?,?)",
+        [
+            (h, i, commit_branch[h], subjects.get(h, ""), " ".join(parents.get(h, [])))
+            for i, h in enumerate(all_commits)
+            if h in commit_branch
+        ],
+    )
+    con.execute("INSERT OR REPLACE INTO meta VALUES('head', ?)", (head_hash,))
+    con.execute(
+        "INSERT OR REPLACE INTO meta VALUES('branch_tips', ?)", (json.dumps(branch_tips),)
+    )
+    con.commit()
+
+
+# ── git state (always queried: needed for display and cache key) ───────────────
+head_hash = subprocess.check_output(
+    ["git", "rev-parse", "--short", "HEAD"], text=True
+).strip()
+
+current_branch = subprocess.check_output(
+    ["git", "rev-parse", "--abbrev-ref", "HEAD"], text=True
+).strip()
+
+raw_refs = (
+    subprocess.check_output(
+        [
+            "git",
+            "for-each-ref",
+            "--format=%(refname:short)\t%(committerdate:unix)\t%(objectname:short)",
+            "refs/heads/",
+            "refs/remotes/",
+        ],
+        text=True,
+    )
+    .strip()
+    .splitlines()
+)
+raw_refs = [ln for ln in raw_refs if not ln.startswith("origin/HEAD\t")]
+
+ref_data = {}
+for ln in raw_refs:
+    parts = ln.split("\t")
+    ref_data[parts[0]] = {"date": int(parts[1]), "tip": parts[2]}
+
+branches_sorted = sorted(ref_data, key=lambda b: ref_data[b]["date"])
+branch_tips = {b: ref_data[b]["tip"] for b in branches_sorted}
+
+# ── load or build commit data ──────────────────────────────────────────────────
+con = sqlite3.connect(get_db_path())
+init_db(con)
+
+if not args.rebuild and db_is_fresh(con, head_hash, branch_tips):
+    result = load_from_db(con)
+else:
+    result = None
+
+if result is not None:
+    branches, col_pair, all_commits, commit_branch, subjects, parents = result
+else:
+    branches = branches_sorted
+    col_pair = {b: PAIRS[i % len(PAIRS)] for i, b in enumerate(branches)}
+
+    def git_log(ref, fmt):
+        out = subprocess.check_output(
+            ["git", "log", "--format=" + fmt, ref], text=True
+        ).splitlines()
+        out.reverse()
+        return out
+
+    branch_commits = {b: git_log(b, "%h") for b in branches}
+
+    all_commits = subprocess.check_output(
+        ["git", "log", "--format=%h", "--all", "--topo-order"], text=True
+    ).split()
+    all_commits.reverse()
+
+    subjects = {}
+    for line in subprocess.check_output(
+        ["git", "log", "--format=%h\t%s", "--all"], text=True
+    ).splitlines():
+        h, _, s = line.partition("\t")
+        subjects[h.strip()] = s.strip()
+
+    commit_branch = {}
+    for b in branches:
+        others = [x for x in branches if x != b]
+        cmd = ["git", "log", "--format=%h", b]
+        if others:
+            cmd += ["--not"] + others
+        for h in subprocess.check_output(cmd, text=True).splitlines():
+            h = h.strip()
+            if h:
+                commit_branch[h] = b
+
+    for b in branches:
+        for h in branch_commits[b]:
+            commit_branch.setdefault(h, b)
+
+    parents = {}
+    for line in subprocess.check_output(
+        ["git", "log", "--format=%h\t%p", "--all"], text=True
+    ).splitlines():
+        h, _, p = line.partition("\t")
+        parents[h.strip()] = p.strip().split() if p.strip() else []
+
+    save_to_db(
+        con,
+        branches,
+        col_pair,
+        all_commits,
+        commit_branch,
+        subjects,
+        parents,
+        head_hash,
+        branch_tips,
+    )
+
+con.close()
+
+# ── annotations (recomputed from parents + commit_branch) ─────────────────────
 annotations = {}
-for b in branches:
-    for h in branch_commits[b]:
-        if commit_branch.get(h) != b:
-            continue
-        for par in parents.get(h, []):
-            orig = commit_branch.get(par)
-            if orig and orig != b:
-                annotations[h] = (False, orig)
-        break
+
+branch_first = {}
+for h in all_commits:
+    b = commit_branch.get(h)
+    if b and b not in branch_first:
+        branch_first[b] = h
+
+for b, h in branch_first.items():
+    for par in parents.get(h, []):
+        orig = commit_branch.get(par)
+        if orig and orig != b:
+            annotations[h] = (False, orig)
 
 for h, ps in parents.items():
     if len(ps) >= 2:
@@ -70,8 +272,9 @@ for h, ps in parents.items():
         if orig and orig != commit_branch.get(h):
             annotations[h] = (True, orig)
 
-widths   = [max(col_w, len(b) + 2) for b in branches]
-total_w  = sum(widths)
+widths = [max(col_w, len(b) + 2) for b in branches]
+total_w = sum(widths)
+
 
 # ── curses ─────────────────────────────────────────────────────────────────────
 def draw_segs(win, y, segments, sx):
@@ -89,21 +292,24 @@ def draw_segs(win, y, segments, sx):
                 screen_x += 1
             xpos += 1
 
+
 def main(stdscr):
     curses.start_color()
     curses.use_default_colors()
-    curses.init_pair(1, curses.COLOR_CYAN,    -1)
-    curses.init_pair(2, curses.COLOR_YELLOW,  -1)
-    curses.init_pair(3, curses.COLOR_GREEN,   -1)
+    curses.init_pair(1, curses.COLOR_CYAN, -1)
+    curses.init_pair(2, curses.COLOR_YELLOW, -1)
+    curses.init_pair(3, curses.COLOR_GREEN, -1)
     curses.init_pair(4, curses.COLOR_MAGENTA, -1)
-    curses.init_pair(5, curses.COLOR_BLUE,    -1)
-    curses.init_pair(6, curses.COLOR_RED,     -1)
+    curses.init_pair(5, curses.COLOR_BLUE, -1)
+    curses.init_pair(6, curses.COLOR_RED, -1)
     curses.curs_set(0)
     stdscr.keypad(True)
 
     # header segments (pinned)
-    hdr = [(f"{b:<{w}}", curses.color_pair(col_pair[b]) | curses.A_BOLD)
-           for b, w in zip(branches, widths)]
+    hdr = []
+    for b, w in zip(branches, widths):
+        label = ("▶ " + b) if b == current_branch else b
+        hdr.append((f"{label:<{w}}", curses.color_pair(col_pair[b]) | curses.A_BOLD))
     hdr.append(("description", curses.A_BOLD))
 
     sep_text = "┬".join("─" * w for w in widths) + "┬" + "─" * desc_w
@@ -126,19 +332,27 @@ def main(stdscr):
                     break
                 ann_segs.append((" " * w, 0))
             arrow = "╭─ merge ← " if is_merge else "╭─ ← "
-            orig_attr = curses.color_pair(col_pair[orig]) | curses.A_BOLD if orig in col_pair else curses.A_BOLD
+            orig_attr = (
+                curses.color_pair(col_pair[orig]) | curses.A_BOLD
+                if orig in col_pair
+                else curses.A_BOLD
+            )
             ann_segs.append((arrow, curses.A_DIM | pair))
-            ann_segs.append((orig,  orig_attr))
+            ann_segs.append((orig, orig_attr))
             rows.append(ann_segs)
 
+        is_head = h == head_hash
         row = []
         for b, w in zip(branches, widths):
             if b == owner:
-                row.append((f"{'● ' + h:<{w}}", pair))
+                bullet = "▶ " if is_head else "● "
+                attr = pair | curses.A_BOLD if is_head else pair
+                row.append((f"{bullet + h:<{w}}", attr))
             else:
                 row.append((" " * w, 0))
         wrapped = textwrap.wrap(subjects.get(h, ""), desc_w) or [""]
-        row.append((wrapped[0], 0))
+        desc_attr = curses.A_BOLD if is_head else 0
+        row.append((wrapped[0], desc_attr))
         rows.append(row)
         for cont in wrapped[1:]:
             rows.append([(" " * total_w, 0), (cont, 0)])
@@ -147,27 +361,36 @@ def main(stdscr):
 
     while True:
         win_h, _ = stdscr.getmaxyx()
-        visible  = win_h - 2
-        max_sy   = max(0, len(rows) - visible)
+        visible = win_h - 2
+        max_sy = max(0, len(rows) - visible)
         stdscr.erase()
 
         draw_segs(stdscr, 0, hdr, sx)
         draw_segs(stdscr, 1, sep, sx)
-        for i, segs in enumerate(rows[sy:sy + visible]):
+        for i, segs in enumerate(rows[sy : sy + visible]):
             draw_segs(stdscr, i + 2, segs, sx)
 
         stdscr.refresh()
 
         key = stdscr.getch()
-        if key in (ord('q'), ord('Q'), 27):
+        if key in (ord("q"), ord("Q"), 27):
             break
-        elif key in (curses.KEY_DOWN,  ord('j')): sy = min(sy + 1,       max_sy)
-        elif key in (curses.KEY_UP,    ord('k')): sy = max(sy - 1,       0)
-        elif key == curses.KEY_NPAGE:             sy = min(sy + visible,  max_sy)
-        elif key == curses.KEY_PPAGE:             sy = max(sy - visible,  0)
-        elif key in (curses.KEY_HOME,  ord('g')): sy = 0
-        elif key in (curses.KEY_END,   ord('G')): sy = max_sy
-        elif key in (curses.KEY_RIGHT, ord('l')): sx += 4
-        elif key in (curses.KEY_LEFT,  ord('h')): sx = max(sx - 4, 0)
+        elif key in (curses.KEY_DOWN, ord("j")):
+            sy = min(sy + 1, max_sy)
+        elif key in (curses.KEY_UP, ord("k")):
+            sy = max(sy - 1, 0)
+        elif key == curses.KEY_NPAGE:
+            sy = min(sy + visible, max_sy)
+        elif key == curses.KEY_PPAGE:
+            sy = max(sy - visible, 0)
+        elif key in (curses.KEY_HOME, ord("g")):
+            sy = 0
+        elif key in (curses.KEY_END, ord("G")):
+            sy = max_sy
+        elif key in (curses.KEY_RIGHT, ord("l")):
+            sx += 4
+        elif key in (curses.KEY_LEFT, ord("h")):
+            sx = max(sx - 4, 0)
+
 
 curses.wrapper(main)
