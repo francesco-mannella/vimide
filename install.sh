@@ -104,20 +104,31 @@ uv pip install ipynb-py-convert
 uv pip install notedown
 uv pip install jupytext 
 
+```
 echo "Installing tmux..."
-sudo apt install -y tmux
+dpkg -s tmux &>/dev/null || sudo apt install -y tmux
 
 echo "Installing ctags..."
-sudo apt install -y universal-ctags
+dpkg -s universal-ctags &>/dev/null \
+    || sudo apt install -y universal-ctags
 
 if [[ $INSTALL_LATEX -eq 1 ]]; then
     echo "Installing LaTeX support..."
-    sudo apt install -y \
-        texlive-latex-base \
-        texlive-latex-recommended \
-        latexmk \
+    latex_pkgs=(
+        texlive-latex-base
+        texlive-latex-recommended
+        latexmk
         okular
+    )
+    missing=()
+    for pkg in "${latex_pkgs[@]}"; do
+        dpkg -s "$pkg" &>/dev/null || missing+=("$pkg")
+    done
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        sudo apt install -y "${missing[@]}"
+    fi
 fi
+```
 
 echo "Installing vide"
 if [[ -z $(echo $PATH | grep ":${HOME}/bin:") ]]; then
@@ -140,5 +151,6 @@ fi
 
 mkdir -p ${HOME}/bin
 cp ${SRC_DIR}/scripts/vide ${HOME}/bin/vide
+cp ${SRC_DIR}/scripts/github.sh ${HOME}/bin/github.sh
 
 echo "=== Installation complete ==="
