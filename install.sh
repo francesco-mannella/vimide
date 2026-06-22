@@ -104,7 +104,6 @@ uv pip install ipynb-py-convert
 uv pip install notedown
 uv pip install jupytext 
 
-```
 echo "Installing tmux..."
 dpkg -s tmux &>/dev/null || sudo apt install -y tmux
 
@@ -128,7 +127,6 @@ if [[ $INSTALL_LATEX -eq 1 ]]; then
         sudo apt install -y "${missing[@]}"
     fi
 fi
-```
 
 echo "Installing vide"
 if [[ -z $(echo $PATH | grep ":${HOME}/bin:") ]]; then
