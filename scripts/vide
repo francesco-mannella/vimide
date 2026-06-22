@@ -99,28 +99,45 @@ if [[ "$QUIT" == true ]]; then
     exit 0
 fi
 
-# Create a new detached tmux session if one does not already exist.
-# The 'code' window is split into two panes: top (vim) and bottom (console).
+# Create a new detached tmux session if one does not already
+# exist. The 'code' window is split into two panes:
+# top (vim) and bottom (console).
 if ! tmux has-session -t "$NAME" 2>/dev/null; then
     tmux new-session -d -s "$NAME" -n code
+    tmux set-environment -t "$NAME" TMUX_SESSION_DIR $(pwd)
+    tmux split-window -v -t "$NAME:code" -l "25%"
+elif ! tmux list-windows -t "$NAME" -F '#{window_name}' \
+      | grep -q '^code$'; then
+    SESSION_DIR=$(tmux show-environment -t "$NAME" TMUX_SESSION_NAME | sed 's/^.*=//' )
+    tmux new-window -t "$NAME" -n code -c $SESSION_DIR
     tmux split-window -v -t "$NAME:code" -l "25%"
 fi
 
-# Run vimide in the top pane (pane 0) if vim is not already running
-if ! tmux list-panes -t "$NAME:code" -F '#{pane_current_command}' | grep -q vim; then
+# Run vimide in the top pane (pane 0) if vim is not running
+if ! tmux list-panes -t "$NAME:code" \
+      -F '#{pane_current_command}' | grep -q vim; then
     tmux send-keys -t "$NAME:code.0" "vim ." Enter
     sleep 0.2
-    tmux send-keys -t "$NAME:code.0" ":call RunPyIDE()" Enter
+    tmux send-keys -t "$NAME:code.0" \
+      ":call RunPyIDE()" Enter
     sleep 0.1
-    tmux send-keys -t "$NAME:code.0" ":let b:slime_config={'socket_name':'default', 'target_pane':'${NAME}:code.1'}" Enter
+    tmux send-keys -t "$NAME:code.0" \
+      ":let b:slime_config={" \
+      "'socket_name':'default', " \
+      "'target_pane':'${NAME}:code.1'}" Enter
     sleep 0.1
-    tmux send-keys -t "$NAME:code.0" ":au BufRead *.py let b:slime_config={'socket_name':'default', 'target_pane':'${NAME}:code.1'}" Enter
+    tmux send-keys -t "$NAME:code.0" \
+      ":au BufRead *.py let b:slime_config={" \
+      "'socket_name':'default', " \
+      "'target_pane':'${NAME}:code.1'}" Enter
     sleep 0.1
-    tmux send-keys -t "$NAME:code.0" ":silent call system('reset')" Enter
+    tmux send-keys -t "$NAME:code.0" \
+      ":silent call system('reset')" Enter
     sleep 0.01
     tmux send-keys -t "$NAME:code.1" "reset" Enter
 fi
 
-echo -ne "\033]0; $(hostname -I | awk '{print $1}'): $(echo "$NAME" | sed -e's/vide_//') \a"
+echo -ne "\033]0; $(hostname -I | awk '{print $1}'): " \
+  "$(echo "$NAME" | sed -e's/vide_//') \a"
 tmux select-pane -t "$NAME:code.0"
 tmux attach-session -t "$NAME"
