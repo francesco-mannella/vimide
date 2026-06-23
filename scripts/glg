@@ -30,7 +30,7 @@ parser.add_argument(
     type=int,
     default=14,
     dest="col_w",
-    help="minimum width of each branch column (default: 14)",
+    help="width of the commit hash column (default: 14)",
 )
 parser.add_argument(
     "-d", "--desc-width",
@@ -50,6 +50,7 @@ col_w = args.col_w
 desc_w = args.desc_w
 
 PAIRS = [1, 2, 3, 4, 5, 6]
+DB_VERSION = "2"
 
 
 # ── DB helpers ─────────────────────────────────────────────────────────────────
@@ -83,6 +84,9 @@ def init_db(con):
 
 def db_is_fresh(con, head_hash, branch_tips):
     try:
+        stored_ver = con.execute("SELECT value FROM meta WHERE key='version'").fetchone()
+        if not stored_ver or stored_ver[0] != DB_VERSION:
+            return False
         stored_head = con.execute("SELECT value FROM meta WHERE key='head'").fetchone()
         stored_tips = con.execute(
             "SELECT value FROM meta WHERE key='branch_tips'"
@@ -139,6 +143,7 @@ def save_to_db(
             if h in commit_branch
         ],
     )
+    con.execute("INSERT OR REPLACE INTO meta VALUES('version', ?)", (DB_VERSION,))
     con.execute("INSERT OR REPLACE INTO meta VALUES('head', ?)", (head_hash,))
     con.execute(
         "INSERT OR REPLACE INTO meta VALUES('branch_tips', ?)", (json.dumps(branch_tips),)
@@ -203,17 +208,20 @@ else:
 
     branch_commits = {b: git_log(b, "%h") for b in branches}
 
-    all_commits = subprocess.check_output(
-        ["git", "log", "--format=%h", "--all", "--topo-order"], text=True
-    ).split()
-    all_commits.reverse()
-
+    # fetch timestamps and subjects together; sort commits by committer time
+    commit_ts = {}
     subjects = {}
     for line in subprocess.check_output(
-        ["git", "log", "--format=%h\t%s", "--all"], text=True
+        ["git", "log", "--format=%h\t%ct\t%s", "--all"], text=True
     ).splitlines():
-        h, _, s = line.partition("\t")
-        subjects[h.strip()] = s.strip()
+        parts = line.split("\t", 2)
+        if not parts[0].strip():
+            continue
+        h = parts[0].strip()
+        commit_ts[h] = int(parts[1])
+        subjects[h] = parts[2].strip() if len(parts) > 2 else ""
+
+    all_commits = sorted(commit_ts, key=lambda h: commit_ts[h])
 
     commit_branch = {}
     for b in branches:
@@ -272,9 +280,6 @@ for h, ps in parents.items():
         if orig and orig != commit_branch.get(h):
             annotations[h] = (True, orig)
 
-widths = [max(col_w, len(b) + 2) for b in branches]
-total_w = sum(widths)
-
 
 # ── curses ─────────────────────────────────────────────────────────────────────
 def draw_segs(win, y, segments, sx):
@@ -305,14 +310,14 @@ def main(stdscr):
     curses.curs_set(0)
     stdscr.keypad(True)
 
-    # header segments (pinned)
+    # header: branch name legend
     hdr = []
-    for b, w in zip(branches, widths):
+    for b in branches:
         label = ("▶ " + b) if b == current_branch else b
-        hdr.append((f"{label:<{w}}", curses.color_pair(col_pair[b]) | curses.A_BOLD))
+        hdr.append((label + "  ", curses.color_pair(col_pair[b]) | curses.A_BOLD))
     hdr.append(("description", curses.A_BOLD))
 
-    sep_text = "┬".join("─" * w for w in widths) + "┬" + "─" * desc_w
+    sep_text = "─" * (col_w + desc_w)
     sep = [(sep_text, 0)]
 
     # content rows
@@ -326,36 +331,23 @@ def main(stdscr):
         ann = annotations.get(h)
         if ann:
             is_merge, orig = ann
-            ann_segs = []
-            for b, w in zip(branches, widths):
-                if b == owner:
-                    break
-                ann_segs.append((" " * w, 0))
             arrow = "╭─ merge ← " if is_merge else "╭─ ← "
             orig_attr = (
                 curses.color_pair(col_pair[orig]) | curses.A_BOLD
                 if orig in col_pair
                 else curses.A_BOLD
             )
-            ann_segs.append((arrow, curses.A_DIM | pair))
-            ann_segs.append((orig, orig_attr))
-            rows.append(ann_segs)
+            rows.append([(arrow, curses.A_DIM | pair), (orig, orig_attr)])
 
         is_head = h == head_hash
-        row = []
-        for b, w in zip(branches, widths):
-            if b == owner:
-                bullet = "▶ " if is_head else "● "
-                attr = pair | curses.A_BOLD if is_head else pair
-                row.append((f"{bullet + h:<{w}}", attr))
-            else:
-                row.append((" " * w, 0))
+        bullet = "▶ " if is_head else "● "
+        attr = pair | curses.A_BOLD if is_head else pair
+        hash_field = f"{bullet + h:<{col_w}}"
         wrapped = textwrap.wrap(subjects.get(h, ""), desc_w) or [""]
         desc_attr = curses.A_BOLD if is_head else 0
-        row.append((wrapped[0], desc_attr))
-        rows.append(row)
+        rows.append([(hash_field, attr), (wrapped[0], desc_attr)])
         for cont in wrapped[1:]:
-            rows.append([(" " * total_w, 0), (cont, 0)])
+            rows.append([(" " * col_w, 0), (cont, 0)])
 
     sy = sx = 0
 
