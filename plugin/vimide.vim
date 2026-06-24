@@ -354,3 +354,4 @@ function! SelectOpenRouterFreeModel() abort
 endfunction
 
 nmap ,cm :call SelectOpenRouterFreeModel()<CR>
+nnoremap <C-a> <Nop>
