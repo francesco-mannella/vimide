@@ -31,7 +31,7 @@ nnoremap <buffer> <Leader>cc :IPythonCellExecuteCell<CR>
 nnoremap <buffer> <Leader>vv :IPythonCellExecuteCellVerbose<CR>:IPythonCellNextCell<CR>
 
 " map <Leader>ll to execute the current cell and jump to the next cell
-nnoremap <buffer> <Leader>ll :IPythonCellClear<CR>:IPythonCellExecuteCellJump<CR>
+nnoremap <buffer> <Leader>ll :IPythonCellClear<CR>:IPythonCellExecuteCellVerboseJump<CR>
 
 " map <Leader>LL to clear IPython screen
 nnoremap <buffer> <Leader>LL :IPythonCellClear<CR>
