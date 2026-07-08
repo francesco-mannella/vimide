@@ -219,8 +219,10 @@ function! CreatePyView()
 endfunction
 
 " RunIDE: Set up IDE for Python development
-" Description: Initializes the IDE layout for managing Python projects
-function! RunIDE()
+" Description: Initializes the IDE layout for managing Python projects.
+"              Takes an optional path to open in the editor window;
+"              if omitted, falls back to the existing main/first-file rules.
+function! RunIDE(...)
     let g:IDE = "IDE"
 
     if g:cwd == ""
@@ -230,23 +232,27 @@ function! RunIDE()
         execute ":cd ".g:cwd
     endif
 
-    let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
-
-    if empty(pys)
-        call s:log('WARN', 'RunIDE: no .py/.tex files found under ' . g:cwd)
-    endif
-
     wincmd o
     bwipeout
-    let has_main = 0
-    for py in pys
-        if py =~ "main"
-            silent execute ":e ".py
-            let has_main = 1
+    if a:0 > 0 && !empty(a:1)
+        silent execute ":e ".a:1
+    else
+        let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
+
+        if empty(pys)
+            call s:log('WARN', 'RunIDE: no .py/.tex files found under ' . g:cwd)
         endif
-    endfor
-    if has_main == 0 && !empty(pys)
-        silent execute ":e ".pys[0]
+
+        let has_main = 0
+        for py in pys
+            if py =~ "main"
+                silent execute ":e ".py
+                let has_main = 1
+            endif
+        endfor
+        if has_main == 0 && !empty(pys)
+            silent execute ":e ".pys[0]
+        endif
     endif
     call LeftTagbarToggle()
     wincmd t

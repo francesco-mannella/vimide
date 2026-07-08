@@ -118,8 +118,15 @@ if ! tmux list-panes -t "$NAME:code" \
       -F '#{pane_current_command}' | grep -q vim; then
     tmux send-keys -t "$NAME:code.0" "vim ." Enter
     sleep 0.2
-    tmux send-keys -t "$NAME:code.0" \
-      ":call RunIDE()" Enter
+    SESSION_NAME="${NAME#vide_}"
+    MATCH=$(find "$CWD" -type f -not -path '*/.git/*' -iname "*${SESSION_NAME}*" 2>/dev/null | head -n1)
+    if [[ -n "$MATCH" ]]; then
+        tmux send-keys -t "$NAME:code.0" \
+          ":call RunIDE('${MATCH}')" Enter
+    else
+        tmux send-keys -t "$NAME:code.0" \
+          ":call RunIDE()" Enter
+    fi
     sleep 0.1
     tmux send-keys -t "$NAME:code.0" \
       ":let b:slime_config={" \
