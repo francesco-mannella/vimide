@@ -119,7 +119,7 @@ if ! tmux list-panes -t "$NAME:code" \
     tmux send-keys -t "$NAME:code.0" "vim ." Enter
     sleep 0.2
     tmux send-keys -t "$NAME:code.0" \
-      ":call RunPyIDE()" Enter
+      ":call RunIDE()" Enter
     sleep 0.1
     tmux send-keys -t "$NAME:code.0" \
       ":let b:slime_config={" \

@@ -201,9 +201,9 @@ endfunction
 
 " =================================================================================================
 
-" FormatPyIDE: Adjust the width of windows
+" FormatIDE: Adjust the width of windows
 " Description: Formats the window layout for the Python IDE
-function! FormatPyIDE()
+function! FormatIDE()
     echo '<format'
     wincmd t
     wincmd l
@@ -218,10 +218,10 @@ function! CreatePyView()
     silent :Ex .
 endfunction
 
-" RunPyIDE: Set up IDE for Python development
+" RunIDE: Set up IDE for Python development
 " Description: Initializes the IDE layout for managing Python projects
-function! RunPyIDE()
-    let g:IDE = "PyIDE"
+function! RunIDE()
+    let g:IDE = "IDE"
 
     if g:cwd == ""
         let g:cwd = GetCurrDir()
@@ -233,7 +233,7 @@ function! RunPyIDE()
     let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
 
     if empty(pys)
-        call s:log('WARN', 'RunPyIDE: no .py/.tex files found under ' . g:cwd)
+        call s:log('WARN', 'RunIDE: no .py/.tex files found under ' . g:cwd)
     endif
 
     wincmd o
@@ -256,7 +256,7 @@ function! RunPyIDE()
     wincmd t
     wincmd l
     wincmd l
-    call FormatPyIDE()
+    call FormatIDE()
     call ResetCtags()
 endfunction
 
@@ -265,7 +265,7 @@ endfunction
 " UpdateView: Update the file explorer
 " Description: Updates the file list based on the current IDE type
 function! UpdateView()
-    if g:IDE == "PyIDE"
+    if g:IDE == "IDE"
         wincmd l        
         wincmd l        
         call CreatePyView()
@@ -275,7 +275,7 @@ endfunction
 " =================================================================================================
 
 " Key mappings for IDE functionality
-nmap ,cp :call RunPyIDE()<CR>
+nmap ,cp :call RunIDE()<CR>
 nmap ,cf :call FindUnderCursor()<CR>
 nmap ,cg :call GotoUnderCursor()<CR>
 nmap ,cr :call Replace()<CR>
@@ -292,7 +292,7 @@ augroup vimide
     au WinEnter *Tagbar* :vertical res 200 
 
 augroup END
-au VimResized * call FormatPyIDE()
+au VimResized * call FormatIDE()
 
 " Select a currently available free model from OpenRouter and set it as default
 function! SelectOpenRouterFreeModel() abort

@@ -136,7 +136,7 @@ vide -h             Show help
 On first launch, `vide`:
 
 1. Creates a detached tmux session `vide_NAME` with window `code`, split into two panes: top (Vim, 75%) and bottom (console, 25%).
-2. Starts Vim in the top pane, calls `RunPyIDE()` to initialize the three-panel layout, and configures vim-slime to target the bottom console pane.
+2. Starts Vim in the top pane, calls `RunIDE()` to initialize the three-panel layout, and configures vim-slime to target the bottom console pane.
 3. Attaches to the session with focus on the top pane.
 
 ```
