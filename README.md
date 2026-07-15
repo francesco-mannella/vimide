@@ -136,7 +136,7 @@ vide -h             Show help
 On first launch, `vide`:
 
 1. Creates a detached tmux session `vide_NAME` with window `code`, split into two panes: top (Vim, 75%) and bottom (console, 25%).
-2. Starts Vim in the top pane, calls `RunIDE()` to initialize the three-panel layout, and configures vim-slime to target the bottom console pane.
+2. Starts Vim in the top pane. If a file under the working directory matches `NAME` (case-insensitive), calls `RunIDE()` with its path to open it directly; otherwise calls `RunIDE()` with no argument, which opens a file named `main` if one exists, or the first `.py`/`.tex` file found. Also configures vim-slime to target the bottom console pane.
 3. Attaches to the session with focus on the top pane.
 
 ```
@@ -425,8 +425,6 @@ Bundled in `colors/`:
 │   ├── python.vim       # Python: IPython, ALE, cell navigation, Jupytext
 │   └── tex.vim          # LaTeX: vimtex, spell, ALE disabled per-buffer
 ├── colors/              # Bundled color schemes
-├── doc/
-│   └── vimide.txt       # Vim help file
 ├── plugin/
 │   └── vimide.vim       # Core IDE: layout, find/replace, ctags, OpenRouter, Claude Code provider
 ├── py/

@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="img/favicon.ico">
 
     
-    <title>Home - Yet Another ... VimIDE</title>
+    <title>Home - VimIDE</title>
     
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -59,7 +59,7 @@
             <!-- Main title -->
 
             
-              <a class="navbar-brand" href=".">Yet Another ... VimIDE</a>
+              <a class="navbar-brand" href=".">VimIDE</a>
             
         </div>
 
@@ -85,7 +85,7 @@
         
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="first-level active"><a href="#vimide">VimIDE</a></li>
+        <li class="first-level active"><a href="#yet-another-vimide">Yet Another ... VimIDE</a></li>
             <li class="second-level"><a href="#table-of-contents">Table of Contents</a></li>
                 
             <li class="second-level"><a href="#overview">Overview</a></li>
@@ -94,6 +94,8 @@
                 
             <li class="second-level"><a href="#installation">Installation</a></li>
                 
+                <li class="third-level"><a href="#uninstall">Uninstall</a></li>
+                <li class="third-level"><a href="#latex-support">LaTeX support</a></li>
             <li class="second-level"><a href="#the-vide-launcher">The vide Launcher</a></li>
                 
             <li class="second-level"><a href="#tmux-configuration">tmux Configuration</a></li>
@@ -112,6 +114,7 @@
             <li class="second-level"><a href="#ai-integration">AI Integration</a></li>
                 
                 <li class="third-level"><a href="#model-roles">Model Roles</a></li>
+                <li class="third-level"><a href="#claude-code-provider">Claude Code Provider</a></li>
                 <li class="third-level"><a href="#prompt-roles">Prompt Roles</a></li>
             <li class="second-level"><a href="#general-editor-features">General Editor Features</a></li>
                 
@@ -130,10 +133,10 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="vimide">Yet Another ... VimIDE</h1>
+<h1 id="yet-another-vimide">Yet Another ... VimIDE</h1>
 <p>A lightweight Python IDE built on Vim and tmux. VimIDE turns Vim into a multi-panel development environment with integrated IPython, AI assistance, LaTeX support, and a terminal console — all inside a persistent tmux session.</p>
 <p><strong>Documentation</strong>: https://francesco-mannella.github.io/vimide/</p>
-<p><img alt="VimIDE demo" src="demo.gif" style="max-width:100%;"></p>
+<p><img alt="VimIDE demo" src="demo.gif" /></p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
@@ -202,6 +205,17 @@ chmod 600 ~/.config/ai/openrouter.token
 <li>Adds a <code>vim --servername vim</code> alias to <code>.bashrc</code>.</li>
 <li>Adds SSH auth and DISPLAY tracking fix for tmux sessions.</li>
 </ol>
+<p>Each replaced file is saved as <code>&lt;file&gt;.orig</code> before overwriting, so the original can be restored.</p>
+<h3 id="uninstall">Uninstall</h3>
+<pre><code class="language-bash">./install.sh -u
+</code></pre>
+<p>The uninstaller:</p>
+<ul>
+<li>Restores each <code>.orig</code> backup (<code>~/.vimrc</code>, <code>~/.tmux.conf</code>, <code>~/.config/ai/roles.ini</code>, <code>~/.claude/CLAUDE.md</code>, <code>~/.claude/settings.json</code>) if it exists, otherwise removes the installed file.</li>
+<li>Removes <code>~/bin/vide</code>.</li>
+<li>Removes the three additions made to <code>~/.bashrc</code>: the <code>PATH</code> entry, the <code>alias vim</code> line, and the SSH/DISPLAY snippet.</li>
+</ul>
+<p>Vim plugins and system packages (<code>tmux</code>, <code>universal-ctags</code>) are not removed.</p>
 <h3 id="latex-support">LaTeX support</h3>
 <p>To also install system-level LaTeX dependencies:</p>
 <pre><code class="language-bash">./install.sh -l
@@ -220,7 +234,7 @@ vide -h             Show help
 <p>On first launch, <code>vide</code>:</p>
 <ol>
 <li>Creates a detached tmux session <code>vide_NAME</code> with window <code>code</code>, split into two panes: top (Vim, 75%) and bottom (console, 25%).</li>
-<li>Starts Vim in the top pane, calls <code>RunIDE()</code> to initialize the three-panel layout, and configures vim-slime to target the bottom console pane.</li>
+<li>Starts Vim in the top pane. If a file under the working directory matches <code>NAME</code> (case-insensitive), calls <code>RunIDE()</code> with its path to open it directly; otherwise calls <code>RunIDE()</code> with no argument, which opens a file named <code>main</code> if one exists, or the first <code>.py</code>/<code>.tex</code> file found. Also configures vim-slime to target the bottom console pane.</li>
 <li>Attaches to the session with focus on the top pane.</li>
 </ol>
 <pre><code>tmux session: vide_NAME
@@ -473,7 +487,7 @@ vide -h             Show help
 </ul>
 <hr />
 <h2 id="ai-integration">AI Integration</h2>
-<p>Provided by vim-ai with roles defined in <code>~/.config/ai/roles.ini</code>. All roles route through OpenRouter using a token at <code>~/.config/ai/openrouter.token</code>.</p>
+<p>Provided by vim-ai with roles defined in <code>~/.config/ai/roles.ini</code>. Most roles route through OpenRouter using a token at <code>~/.config/ai/openrouter.token</code>; <code>claudecode</code>/<code>cc</code> are the exception (see below).</p>
 <p>Use <code>,cm</code> to dynamically fetch currently available free models from OpenRouter and set one as the default.</p>
 <h3 id="model-roles">Model Roles</h3>
 <p>Select a specific backend by passing the role name to vim-ai commands.</p>
@@ -487,7 +501,7 @@ vide -h             Show help
 <tbody>
 <tr>
 <td><code>default</code></td>
-<td><code>openrouter/free</code> (dynamically resolved by OpenRouter)</td>
+<td><code>openrouter/free</code>, or the local <code>claude</code> CLI if detected at install time — see <a href="#claude-code-provider">Claude Code Provider</a></td>
 </tr>
 <tr>
 <td><code>gemini</code></td>
@@ -509,8 +523,19 @@ vide -h             Show help
 <td><code>opus</code></td>
 <td><code>anthropic/claude-opus-4.6</code></td>
 </tr>
+<tr>
+<td><code>claudecode</code>, <code>cc</code></td>
+<td>Local <code>claude</code> CLI, billed to your Claude Pro/Max subscription instead of OpenRouter — see <a href="#claude-code-provider">Claude Code Provider</a></td>
+</tr>
 </tbody>
 </table>
+<h3 id="claude-code-provider">Claude Code Provider</h3>
+<p><code>claudecode</code> (alias <code>cc</code>) shells out to the local, already-authenticated <code>claude</code> CLI (<code>vimide/py/claude_code.py</code>) instead of proxying through OpenRouter, so usage is billed against your Claude Pro/Max subscription rather than metered API tokens.</p>
+<p>Requires the <code>claude</code> CLI installed and logged in (<code>claude auth login</code>) — installing and authenticating the CLI itself is a host-machine prerequisite <code>install.sh</code> doesn't manage, similar to the <a href="#latex-support">LaTeX system dependencies</a> for vimtex.</p>
+<pre><code>:AIChat /cc
+&lt;selection&gt; :AIEdit /cc fix the bug
+</code></pre>
+<p><code>scripts/roles.ini</code> keeps both configs for the <code>default</code> role as alternate section headers, one active and one commented out (<code>[default]</code>/<code>#[free]</code>, and <code>[claudecode]</code>/<code>#[default]</code>). If <code>claude</code> is already installed and logged in at install time, <code>install.sh</code> swaps which header is active in the deployed <code>~/.config/ai/roles.ini</code>, so plain <code>:AIChat</code>/<code>:AIEdit</code>/<code>:AI</code> route through <code>claudecode</code> by default and the OpenRouter config becomes reachable as <code>free</code>. Otherwise <code>default</code> stays on OpenRouter and <code>claudecode</code>/<code>cc</code> remain the explicit opt-in.</p>
 <h3 id="prompt-roles">Prompt Roles</h3>
 <p>Text and code transforms applied to the current selection using the default model.</p>
 <table>
@@ -843,10 +868,10 @@ vide -h             Show help
 │   ├── python.vim       # Python: IPython, ALE, cell navigation, Jupytext
 │   └── tex.vim          # LaTeX: vimtex, spell, ALE disabled per-buffer
 ├── colors/              # Bundled color schemes
-├── doc/
-│   └── vimide.txt       # Vim help file
 ├── plugin/
-│   └── vimide.vim       # Core IDE: layout, find/replace, ctags, OpenRouter
+│   └── vimide.vim       # Core IDE: layout, find/replace, ctags, OpenRouter, Claude Code provider
+├── py/
+│   └── claude_code.py   # vim-ai provider: routes to the local Claude Code CLI
 ├── scripts/
 │   ├── vimrc            # Vim configuration (installed to ~/.vimrc)
 │   ├── tmux.conf        # tmux configuration (installed to ~/.tmux.conf)
@@ -961,5 +986,5 @@ vide -h             Show help
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-06-05 10:50:17.618543+00:00
+Build Date UTC : 2026-07-15 22:34:22.514868+00:00
 -->
