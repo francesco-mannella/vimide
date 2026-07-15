@@ -361,3 +361,12 @@ endfunction
 
 nmap ,cm :call SelectOpenRouterFreeModel()<CR>
 nnoremap <C-a> <Nop>
+
+" Register vim-ai provider that shells out to the local Claude Code CLI
+" (subscription billing) instead of proxying through OpenRouter
+let s:plugin_root = expand('<sfile>:p:h:h')
+
+call vim_ai_provider#Register('claudecode', {
+\  'script_path': s:plugin_root . '/py/claude_code.py',
+\  'class_name': 'ClaudeCodeProvider',
+\})

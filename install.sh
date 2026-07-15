@@ -92,6 +92,21 @@ mkdir -p "${HOME}/.config/ai"
 [[ -f "${HOME}/.config/ai/roles.ini" ]] && cp "${HOME}/.config/ai/roles.ini" "${HOME}/.config/ai/roles.ini.orig"
 cp "${SRC_DIR}/scripts/roles.ini" "${HOME}/.config/ai/roles.ini"
 
+if command -v claude &>/dev/null \
+    && timeout -k 3 5 claude auth status </dev/null 2>/dev/null | grep -Eq '"loggedIn":[[:space:]]*true'; then
+    echo "  claude CLI detected and logged in: routing [default] role through claudecode"
+    sed -i \
+        -e 's/^\[default\]$/@@TOGGLE_A@@/' \
+        -e 's/^#\[free\]$/@@TOGGLE_B@@/' \
+        -e 's/^\[claudecode\]$/@@TOGGLE_C@@/' \
+        -e 's/^#\[default\]$/@@TOGGLE_D@@/' \
+        -e 's/^@@TOGGLE_A@@$/#[default]/' \
+        -e 's/^@@TOGGLE_B@@$/[free]/' \
+        -e 's/^@@TOGGLE_C@@$/#[claudecode]/' \
+        -e 's/^@@TOGGLE_D@@$/[default]/' \
+        "${HOME}/.config/ai/roles.ini"
+fi
+
 echo "Updating Claude settings"
 mkdir -p "${HOME}/.claude"
 [[ -f "${HOME}/.claude/CLAUDE.md" ]] && cp "${HOME}/.claude/CLAUDE.md" "${HOME}/.claude/CLAUDE.md.orig"
@@ -149,8 +164,7 @@ fi
 
 mkdir -p ${HOME}/bin
 cp ${SRC_DIR}/scripts/vide ${HOME}/bin/vide
-cp ${SRC_DIR}/scripts/glg ${HOME}/bin/glg
 
-chmod +x ${HOME}/bin/{vide,glg}
+chmod +x ${HOME}/bin/vide
 
 echo "=== Installation complete ==="

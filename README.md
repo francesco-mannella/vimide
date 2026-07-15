@@ -269,7 +269,7 @@ Provided by `after/ftplugin/tex.vim` via vimtex.
 
 ## AI Integration
 
-Provided by vim-ai with roles defined in `~/.config/ai/roles.ini`. All roles route through OpenRouter using a token at `~/.config/ai/openrouter.token`.
+Provided by vim-ai with roles defined in `~/.config/ai/roles.ini`. Most roles route through OpenRouter using a token at `~/.config/ai/openrouter.token`; `claudecode`/`cc` are the exception (see below).
 
 Use `,cm` to dynamically fetch currently available free models from OpenRouter and set one as the default.
 
@@ -277,14 +277,28 @@ Use `,cm` to dynamically fetch currently available free models from OpenRouter a
 
 Select a specific backend by passing the role name to vim-ai commands.
 
-| Role      | Model |
-|-----------|-------|
-| `default` | `openrouter/free` (dynamically resolved by OpenRouter) |
-| `gemini`  | `google/gemini-3-flash-preview` |
-| `gpt`     | `openai/gpt-4o` |
-| `gpt5`    | `gpt-5.4` |
-| `claude`  | `anthropic/claude-3.5-sonnet` |
-| `opus`    | `anthropic/claude-opus-4.6` |
+| Role         | Model |
+|--------------|-------|
+| `default`    | `openrouter/free`, or the local `claude` CLI if detected at install time — see [Claude Code Provider](#claude-code-provider) |
+| `gemini`     | `google/gemini-3-flash-preview` |
+| `gpt`        | `openai/gpt-4o` |
+| `gpt5`       | `gpt-5.4` |
+| `claude`     | `anthropic/claude-3.5-sonnet` |
+| `opus`       | `anthropic/claude-opus-4.6` |
+| `claudecode`, `cc` | Local `claude` CLI, billed to your Claude Pro/Max subscription instead of OpenRouter — see [Claude Code Provider](#claude-code-provider) |
+
+### Claude Code Provider
+
+`claudecode` (alias `cc`) shells out to the local, already-authenticated `claude` CLI (`vimide/py/claude_code.py`) instead of proxying through OpenRouter, so usage is billed against your Claude Pro/Max subscription rather than metered API tokens.
+
+Requires the `claude` CLI installed and logged in (`claude auth login`) — installing and authenticating the CLI itself is a host-machine prerequisite `install.sh` doesn't manage, similar to the [LaTeX system dependencies](#latex-support) for vimtex.
+
+```
+:AIChat /cc
+<selection> :AIEdit /cc fix the bug
+```
+
+`scripts/roles.ini` keeps both configs for the `default` role as alternate section headers, one active and one commented out (`[default]`/`#[free]`, and `[claudecode]`/`#[default]`). If `claude` is already installed and logged in at install time, `install.sh` swaps which header is active in the deployed `~/.config/ai/roles.ini`, so plain `:AIChat`/`:AIEdit`/`:AI` route through `claudecode` by default and the OpenRouter config becomes reachable as `free`. Otherwise `default` stays on OpenRouter and `claudecode`/`cc` remain the explicit opt-in.
 
 ### Prompt Roles
 
@@ -414,7 +428,9 @@ Bundled in `colors/`:
 ├── doc/
 │   └── vimide.txt       # Vim help file
 ├── plugin/
-│   └── vimide.vim       # Core IDE: layout, find/replace, ctags, OpenRouter
+│   └── vimide.vim       # Core IDE: layout, find/replace, ctags, OpenRouter, Claude Code provider
+├── py/
+│   └── claude_code.py   # vim-ai provider: routes to the local Claude Code CLI
 ├── scripts/
 │   ├── vimrc            # Vim configuration (installed to ~/.vimrc)
 │   ├── tmux.conf        # tmux configuration (installed to ~/.tmux.conf)
