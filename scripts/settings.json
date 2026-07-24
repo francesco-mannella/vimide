@@ -1,5 +1,18 @@
 {
   "theme": "dark",
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "network": {
+      "allowedDomains": [],
+      "allowLocalBinding": false
+    },
+    "filesystem": {
+      "allowWrite": [],
+      "denyWrite": [],
+      "denyRead": []
+    }
+  },
   "allowedTools": [
     "Read",
     "Bash(ls:*)",
