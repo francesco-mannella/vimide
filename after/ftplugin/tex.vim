@@ -8,7 +8,7 @@ hi SpellBad cterm=underline
 
 " mapping '§' to reformat selected code in latex
 :map <silent> § :call IndentComments("%") <CR>
-autocmd FileType tex set foldlevelstart=99
+set foldlevelstart=99
 
 :set wrap
 let b:ale_enabled = 0
