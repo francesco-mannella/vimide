@@ -133,6 +133,7 @@ if [[ $INSTALL_LATEX -eq 1 ]]; then
         texlive-latex-recommended
         latexmk
         okular
+        libkf5config-bin
     )
     missing=()
     for pkg in "${latex_pkgs[@]}"; do
@@ -140,6 +141,14 @@ if [[ $INSTALL_LATEX -eq 1 ]]; then
     done
     if [[ ${#missing[@]} -gt 0 ]]; then
         sudo apt install -y "${missing[@]}"
+    fi
+
+    echo "Configuring Okular inverse search (SyncTeX -> vim --servername vim)"
+    if command -v kwriteconfig5 &>/dev/null; then
+        kwriteconfig5 --file okularpartrc --group "Core General" --key ExternalEditor Custom
+        kwriteconfig5 --file okularpartrc --group "Core General" --key ExternalEditorCommand 'vim --servername vim --remote-silent +%l "%f"'
+    else
+        echo "  kwriteconfig5 not found, skipping Okular editor config"
     fi
 fi
 
