@@ -344,12 +344,7 @@ Works across file types (Python, Bash, C/C++, TeX, Vim, etc.).
 
 ### Clipboard
 
-Requires `xclip`.
-
-| Key  | Action |
-|------|--------|
-| `ay` | Yank selection to system clipboard |
-| `ap` | Paste from system clipboard |
+`y` and `p`/`P` (normal and visual) sync automatically with the system clipboard via `xclip`. If `xclip` isn't installed, they fall back to plain vim yank/paste.
 
 ### Markdown
 

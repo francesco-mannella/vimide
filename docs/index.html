@@ -650,25 +650,7 @@ vide -h             Show help
 </tbody>
 </table>
 <h3 id="clipboard">Clipboard</h3>
-<p>Requires <code>xclip</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Key</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ay</code></td>
-<td>Yank selection to system clipboard</td>
-</tr>
-<tr>
-<td><code>ap</code></td>
-<td>Paste from system clipboard</td>
-</tr>
-</tbody>
-</table>
+<p><code>y</code> and <code>p</code>/<code>P</code> (normal and visual) sync automatically with the system clipboard via <code>xclip</code>. If <code>xclip</code> isn't installed, they fall back to plain vim yank/paste.</p>
 <h3 id="markdown">Markdown</h3>
 <table>
 <thead>
