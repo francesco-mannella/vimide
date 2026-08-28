@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>VimIDE Cheat Sheet</title>
+<style>
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --ink: #1c1e21;
+    --muted: #5b6470;
+    --line: #d7dbe0;
+    --accent: #2f6f4f;
+    --accent2: #1b3a5c;
+    --band: #22303c;
+    --row: #f4f6f8;
+    --kbd-bg: #fbfbfc;
+    --kbd-line: #b9bfc7;
+  }
+
+  * { box-sizing: border-box; }
+
+  code {
+    font-family: "SF Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+    font-size: 0.94em;
+    overflow-wrap: anywhere;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: var(--ink);
+    font-family: "Helvetica Neue", Arial, "Segoe UI", sans-serif;
+    font-size: 8pt;
+    line-height: 1.3;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 8mm 9mm 6mm;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+
+  header.sheet {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--band);
+    padding-bottom: 3px;
+    margin-bottom: 6px;
+  }
+  header.sheet h1 {
+    margin: 0;
+    font-size: 17pt;
+    letter-spacing: 0.3px;
+    color: var(--band);
+  }
+  header.sheet h1 span { color: var(--accent); }
+  header.sheet .sub {
+    font-size: 8pt;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .cols {
+    column-count: 3;
+    column-gap: 5mm;
+    column-fill: balance;
+  }
+
+  section.card {
+    break-inside: avoid;
+    margin: 0 0 9px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  section.card > h2 {
+    margin: 0;
+    padding: 4px 7px;
+    font-size: 9.3pt;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent2);
+    letter-spacing: 0.2px;
+  }
+  section.card.py > h2 { background: var(--accent); }
+  section.card.ai > h2 { background: #6a3d8a; }
+  section.card.sys > h2 { background: var(--band); }
+
+  section.card h3 {
+    margin: 0;
+    padding: 2px 6px;
+    font-size: 7.2pt;
+    font-weight: 700;
+    color: var(--muted);
+    background: #eef1f4;
+    border-top: 1px solid var(--line);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  td {
+    padding: 3px 7px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: var(--row); }
+  td.k {
+    width: 1%;
+    padding-right: 9px;
+    white-space: nowrap;
+  }
+  td.d { color: var(--ink); overflow-wrap: anywhere; }
+
+  kbd {
+    font-family: "SF Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+    font-size: 8pt;
+    background: var(--kbd-bg);
+    border: 1px solid var(--kbd-line);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    padding: 0.5px 3px;
+    white-space: nowrap;
+    color: #12213a;
+  }
+  kbd.cmd { color: var(--accent); border-color: #a9c9b7; background: #f2f8f4; }
+  kbd.role { color: #6a3d8a; border-color: #cbb6dc; background: #f7f2fb; }
+
+  .note {
+    padding: 4px 7px;
+    font-size: 8pt;
+    color: var(--muted);
+    background: #fafbfc;
+  }
+  .note b { color: var(--ink); }
+
+  .steps { padding: 4px 7px 5px 20px; margin: 0; }
+  .steps li { margin: 2px 0; }
+
+  .lead {
+    font-size: 8pt;
+    color: var(--muted);
+    padding: 4px 7px;
+    background: #fafbfc;
+  }
+
+  pre.diagram {
+    margin: 0;
+    padding: 6px 7px;
+    font-family: "SF Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+    font-size: 6.6pt;
+    line-height: 1.15;
+    color: #223;
+    background: #fafbfc;
+    white-space: pre;
+    overflow: hidden;
+  }
+  footer.sheet {
+    margin-top: 2mm;
+    font-size: 6.4pt;
+    color: #7a828c;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PAGE 1 ================= -->
+<div class="page">
+  <header class="sheet">
+    <h1>Vim<span>IDE</span> &nbsp;Cheat Sheet</h1>
+    <div class="sub">
+      Page 1 / 2 &middot; Environment &amp; Editor<br>
+      Leader key = <kbd>,</kbd> (IDE) &middot; localleader = <kbd>\</kbd>
+    </div>
+  </header>
+
+  <div class="cols">
+
+    <section class="card sys">
+      <h2>vide &mdash; session launcher (shell)</h2>
+      <table>
+        <tr><td class="k"><kbd>vide -n NAME</kbd></td><td class="d">Start or reattach the tmux session <code>vide_NAME</code></td></tr>
+        <tr><td class="k"><kbd>vide -q NAME</kbd></td><td class="d">Terminate session NAME</td></tr>
+        <tr><td class="k"><kbd>vide -l</kbd></td><td class="d">List active vide sessions (Attached/Detached)</td></tr>
+        <tr><td class="k"><kbd>vide -d DIR</kbd></td><td class="d">Set working directory (default: cwd)</td></tr>
+        <tr><td class="k"><kbd>vide -h</kbd></td><td class="d">Show help</td></tr>
+      </table>
+      <div class="note">Top pane: Vim (75%). Bottom pane: console (25%). If a file under DIR matches NAME it opens directly, else <code>main</code> or the first <code>.py</code>/<code>.tex</code>.</div>
+    </section>
+
+    <section class="card sys">
+      <h2>tmux &mdash; prefix is <kbd>Ctrl-a</kbd></h2>
+      <table>
+        <tr><td class="k"><kbd>Ctrl-a</kbd></td><td class="d">Prefix key (replaces <kbd>Ctrl-b</kbd>)</td></tr>
+        <tr><td class="k"><kbd>Ctrl-a</kbd> <kbd>Ctrl-a</kbd></td><td class="d">Send a literal <kbd>Ctrl-a</kbd> through</td></tr>
+        <tr><td class="k"><kbd>Ctrl-a</kbd> <kbd>X</kbd></td><td class="d">Kill current session (confirm y/n)</td></tr>
+        <tr><td class="k">mouse</td><td class="d">Enabled: click panes, drag borders, scroll</td></tr>
+        <tr><td class="k"><kbd>v</kbd> / <kbd>y</kbd></td><td class="d">copy-mode-vi: begin selection / yank &amp; cancel</td></tr>
+      </table>
+      <div class="note">Panes collapse when unfocused; Tagbar &amp; file explorer expand on entry.</div>
+    </section>
+
+    <section class="card">
+      <h2>IDE core &mdash; <kbd>,c</kbd> maps (all buffers)</h2>
+      <table>
+        <tr><td class="k"><kbd>,cp</kbd></td><td class="d">Open / reset IDE layout (Tagbar + Editor + Files)</td></tr>
+        <tr><td class="k"><kbd>,cf</kbd></td><td class="d">Find all occurrences of word under cursor</td></tr>
+        <tr><td class="k"><kbd>,cg</kbd></td><td class="d">Jump to file+line of occurrence under cursor</td></tr>
+        <tr><td class="k"><kbd>,cr</kbd></td><td class="d">Write find-list edits back to source files</td></tr>
+        <tr><td class="k"><kbd>,cu</kbd></td><td class="d">Refresh the file explorer</td></tr>
+        <tr><td class="k"><kbd>,cm</kbd></td><td class="d">Fetch OpenRouter free models, pick a default</td></tr>
+        <tr><td class="k"><kbd>,f</kbd></td><td class="d">Open file path under cursor in editor window</td></tr>
+      </table>
+      <div class="note"><b>Tagbar:</b> double-click or <kbd>&crarr;</kbd> jumps to the definition.</div>
+    </section>
+
+    <section class="card">
+      <h2>Find &amp; replace workflow</h2>
+      <ol class="steps">
+        <li><kbd>,cf</kbd> &mdash; grep word under cursor across <code>.py .tex .cpp .h .hpp</code> under cwd; results shown as an editable list.</li>
+        <li>Edit list lines in place to change the text.</li>
+        <li><kbd>,cr</kbd> &mdash; write modified lines back to their files.</li>
+        <li><kbd>,cg</kbd> &mdash; jump to the file/line of the row under cursor.</li>
+      </ol>
+    </section>
+
+    <section class="card sys">
+      <h2>Screen layout</h2>
+      <pre class="diagram">vide_NAME  /  window "code"
++-------+-----------+-------+
+| Tagbar|   Editor  | Files |
+| symbol| main edit | netrw |
++-------+-----------+-------+
+| IPython console (slime)  |
+| or plain bash            |
++--------------------------+</pre>
+      <div class="note">Top = pane 0 (75%), console = pane 1 (25%). Tagbar &amp; Files shrink to 2 cols when unfocused, expand on entry. <kbd>,cp</kbd> rebuilds the layout anytime.</div>
+    </section>
+
+    <section class="card sys">
+      <h2>First run</h2>
+      <table>
+        <tr><td class="k"><kbd>./install.sh</kbd></td><td class="d">Deploy vimrc, tmux.conf, plugins, <code>~/bin/vide</code></td></tr>
+        <tr><td class="k"><kbd>./install.sh -l</kbd></td><td class="d">Also install LaTeX system deps (texlive, okular)</td></tr>
+        <tr><td class="k"><kbd>./install.sh -u</kbd></td><td class="d">Uninstall, restore <code>.orig</code> backups</td></tr>
+        <tr><td class="k"><kbd>vide -n proj</kbd></td><td class="d">Launch / attach the IDE for session <code>proj</code></td></tr>
+      </table>
+      <div class="note">Needs <code>~/.config/ai/openrouter.token</code> for AI features. If <code>claude</code> CLI is logged in, AI routes to it by default.</div>
+    </section>
+
+    <section class="card sys">
+      <h2>Editor &mdash; clipboard &amp; motion</h2>
+      <table>
+        <tr><td class="k"><kbd>y</kbd> <kbd>p</kbd> <kbd>P</kbd></td><td class="d">normal &amp; visual: auto-sync with the system clipboard via <code>xclip</code></td></tr>
+        <tr><td class="k"><kbd>&uarr;</kbd> <kbd>&darr;</kbd></td><td class="d">Move by display line (<code>gk</code>/<code>gj</code>), wrap-aware</td></tr>
+        <tr><td class="k"><kbd>Home</kbd> <kbd>End</kbd></td><td class="d">Display-line start / end</td></tr>
+      </table>
+      <div class="note">No <code>xclip</code> installed: <code>y</code>/<code>p</code> fall back to plain vim yank/paste.</div>
+    </section>
+
+    <section class="card sys">
+      <h2>Commenting (all filetypes)</h2>
+      <table>
+        <tr><td class="k"><kbd>zc</kbd></td><td class="d">Comment selected / current lines</td></tr>
+        <tr><td class="k"><kbd>zv</kbd></td><td class="d">Uncomment selected / current lines</td></tr>
+        <tr><td class="k"><kbd class="cmd">:Comment</kbd></td><td class="d">Comment a <code>:'&lt;,'&gt;</code> range</td></tr>
+        <tr><td class="k"><kbd class="cmd">:Uncomment</kbd></td><td class="d">Uncomment a range</td></tr>
+        <tr><td class="k"><kbd>&sect;</kbd></td><td class="d">TeX: reformat indent of selected comment block</td></tr>
+      </table>
+    </section>
+
+    <section class="card sys">
+      <h2>Git grep</h2>
+      <table>
+        <tr><td class="k"><kbd>\g</kbd></td><td class="d">Git grep whole-word for word under cursor</td></tr>
+        <tr><td class="k"><kbd>\t</kbd></td><td class="d">Return to previous location after a grep jump</td></tr>
+        <tr><td class="k"><kbd class="cmd">:GG</kbd> pat</td><td class="d">Git grep arbitrary pattern</td></tr>
+        <tr><td class="k"><kbd class="cmd">:GGw</kbd> pat</td><td class="d">Git grep whole-word</td></tr>
+        <tr><td class="k"><kbd class="cmd">:GGi</kbd> pat</td><td class="d">Git grep case-insensitive</td></tr>
+      </table>
+    </section>
+
+    <section class="card sys">
+      <h2>Buffers &amp; misc</h2>
+      <table>
+        <tr><td class="k"><kbd class="cmd">:Bdi</kbd></td><td class="d">Close all hidden (non-visible) buffers</td></tr>
+        <tr><td class="k"><kbd class="cmd">:DirDiff</kbd></td><td class="d">Directory diff (vim-dirdiff)</td></tr>
+        <tr><td class="k"><kbd>\mm</kbd></td><td class="d">visual: add HTML anchors to Markdown headings</td></tr>
+        <tr><td class="k">auto-save</td><td class="d">All buffers written on focus lost</td></tr>
+        <tr><td class="k">marks</td><td class="d">Shown in sign column (vim-signature)</td></tr>
+        <tr><td class="k">indent</td><td class="d">4 spaces, expandtab; alternating indent guides</td></tr>
+      </table>
+    </section>
+
+  </div>
+  <footer class="sheet">github.com/francesco-mannella/vimide &mdash; sources: plugin/vimide.vim, scripts/vimrc, scripts/tmux.conf, scripts/vide</footer>
+</div>
+
+<!-- ================= PAGE 2 ================= -->
+<div class="page">
+  <header class="sheet">
+    <h1>Vim<span>IDE</span> &nbsp;Cheat Sheet</h1>
+    <div class="sub">
+      Page 2 / 2 &middot; Languages &amp; AI<br>
+      Python / Shell buffers &middot; localleader = <kbd>\</kbd>
+    </div>
+  </header>
+
+  <div class="cols">
+
+    <section class="card py">
+      <h2>Python &mdash; IPython (vim-slime)</h2>
+      <table>
+        <tr><td class="k"><kbd>\ss</kbd></td><td class="d">Start IPython, Qt backend (<code>--pylab qt</code>)</td></tr>
+        <tr><td class="k"><kbd>\as</kbd></td><td class="d">Start IPython, Agg backend (non-interactive)</td></tr>
+        <tr><td class="k"><kbd>\hh</kbd></td><td class="d">n: send current line &nbsp; x: send selection</td></tr>
+        <tr><td class="k"><kbd>\aa</kbd></td><td class="d">As <kbd>\hh</kbd>, then advance cursor one line</td></tr>
+        <tr><td class="k"><kbd>\rr</kbd></td><td class="d">Run whole script (<code>%run</code>)</td></tr>
+        <tr><td class="k"><kbd>\RR</kbd></td><td class="d">Run whole script and report run time</td></tr>
+        <tr><td class="k"><kbd>\dd</kbd></td><td class="d">Debug current script (<code>%run -d</code>)</td></tr>
+        <tr><td class="k"><kbd>\qq</kbd></td><td class="d">Exit debug mode / IPython (<code>exit</code>)</td></tr>
+        <tr><td class="k"><kbd>\QQ</kbd></td><td class="d">Restart IPython</td></tr>
+      </table>
+      <div class="note"><kbd>\hh</kbd>/<kbd>\aa</kbd> are blocked with a warning unless IPython sits at an empty <code>In&nbsp;[n]:</code> prompt.</div>
+    </section>
+
+    <section class="card py">
+      <h2>Python &mdash; code cells (<code># %%</code>)</h2>
+      <table>
+        <tr><td class="k"><kbd>\cc</kbd></td><td class="d">Execute the current cell</td></tr>
+        <tr><td class="k"><kbd>\vv</kbd></td><td class="d">Execute cell verbosely, jump to next cell</td></tr>
+        <tr><td class="k"><kbd>\ll</kbd></td><td class="d">Clear console, execute cell, jump to next</td></tr>
+        <tr><td class="k"><kbd>\LL</kbd></td><td class="d">Clear the IPython console</td></tr>
+        <tr><td class="k"><kbd>\xx</kbd></td><td class="d">Close all Matplotlib figure windows</td></tr>
+        <tr><td class="k"><kbd>[c</kbd> / <kbd>]c</kbd></td><td class="d">Jump to previous / next cell header</td></tr>
+        <tr><td class="k"><kbd>F9</kbd></td><td class="d">Insert cell header above + insert mode</td></tr>
+        <tr><td class="k"><kbd>F10</kbd></td><td class="d">Insert cell header below + insert mode</td></tr>
+      </table>
+    </section>
+
+    <section class="card py">
+      <h2>Python &mdash; ALE lint / fix</h2>
+      <table>
+        <tr><td class="k"><kbd>Ctrl-k</kbd></td><td class="d">Previous lint error (wrapping)</td></tr>
+        <tr><td class="k"><kbd>Ctrl-j</kbd></td><td class="d">Next lint error (wrapping)</td></tr>
+        <tr><td class="k"><kbd>Ctrl-f</kbd></td><td class="d">Auto-fix file: black &middot; isort &middot; autoimport</td></tr>
+        <tr><td class="k"><kbd>Ctrl-h</kbd> / <kbd>&larr;BS</kbd></td><td class="d">Show hover documentation at cursor</td></tr>
+        <tr><td class="k"><kbd>Ctrl-x</kbd></td><td class="d">Close the ALE hover / preview window</td></tr>
+      </table>
+      <div class="note">Linters: <code>pylsp</code> (flake8, mypy/dmypy) + <code>jedils</code>. black line length 90. Saving a <code>.py</code> updates its paired <code>.ipynb</code> (jupytext).</div>
+    </section>
+
+    <section class="card py">
+      <h2>Shell buffers (filetype sh)</h2>
+      <table>
+        <tr><td class="k"><kbd>\ss</kbd></td><td class="d">Send <code>echo "connect"</code> to the console pane</td></tr>
+        <tr><td class="k"><kbd>\hh</kbd></td><td class="d">n: send line &nbsp; x: send region to console</td></tr>
+        <tr><td class="k"><kbd>\aa</kbd></td><td class="d">Send line / region, then advance one line</td></tr>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>LaTeX (vimtex)</h2>
+      <table>
+        <tr><td class="k"><kbd>&sect;</kbd></td><td class="d">Reformat indent of selected comment block</td></tr>
+        <tr><td class="k"><kbd>F9</kbd></td><td class="d">insert mode: trigger LaTeX completion</td></tr>
+        <tr><td class="k"><kbd>\ll</kbd></td><td class="d">Toggle latexmk continuous compilation</td></tr>
+        <tr><td class="k"><kbd>\lv</kbd></td><td class="d">Forward search: view PDF in Okular</td></tr>
+        <tr><td class="k"><kbd>\lk</kbd> / <kbd>\lc</kbd></td><td class="d">Stop compiler / clean aux files</td></tr>
+        <tr><td class="k"><kbd>\le</kbd> / <kbd>\lt</kbd></td><td class="d">Show errors / toggle table of contents</td></tr>
+      </table>
+      <div class="note">Compiler: latexmk (bibtex, synctex, shell-escape, nonstop). Okular inverse search &rarr; <code>vim --servername vim</code>. All folds open. ALE off per-buffer.</div>
+    </section>
+
+    <section class="card ai">
+      <h2>AI &mdash; vim-ai commands</h2>
+      <table>
+        <tr><td class="k"><kbd class="cmd">:AI</kbd> prompt</td><td class="d">Generate / complete text at cursor</td></tr>
+        <tr><td class="k"><kbd class="cmd">:AIEdit</kbd> instr</td><td class="d">Edit selection / context in place</td></tr>
+        <tr><td class="k"><kbd class="cmd">:AIChat</kbd></td><td class="d">Open the AI chat scratch buffer</td></tr>
+        <tr><td class="k"><kbd class="cmd">:AIRedo</kbd></td><td class="d">Redo the last AI response</td></tr>
+        <tr><td class="k"><kbd>,cm</kbd></td><td class="d">Pick a free OpenRouter model as default</td></tr>
+      </table>
+      <div class="lead">Add a role after the command, e.g. <kbd class="cmd">:AIChat /cc</kbd> or <kbd class="cmd">:AIEdit /cc fix the bug</kbd>.</div>
+    </section>
+
+    <section class="card ai">
+      <h2>AI &mdash; model roles</h2>
+      <table>
+        <tr><td class="k"><kbd class="role">/cc</kbd> <kbd class="role">/claudecode</kbd></td><td class="d">Local <code>claude</code> CLI (Pro/Max billing)</td></tr>
+        <tr><td class="k"><kbd class="role">/free</kbd></td><td class="d"><code>openrouter/free</code> (OpenRouter default)</td></tr>
+        <tr><td class="k"><kbd class="role">/gemini</kbd></td><td class="d"><code>google/gemini-3-flash-preview</code></td></tr>
+        <tr><td class="k"><kbd class="role">/gpt</kbd></td><td class="d"><code>openai/gpt-4o</code></td></tr>
+        <tr><td class="k"><kbd class="role">/gpt5</kbd></td><td class="d"><code>gpt-5.4</code></td></tr>
+        <tr><td class="k"><kbd class="role">/claude</kbd></td><td class="d"><code>anthropic/claude-sonnet-4.6</code></td></tr>
+        <tr><td class="k"><kbd class="role">/opus</kbd></td><td class="d"><code>anthropic/claude-opus-4.6</code></td></tr>
+      </table>
+      <div class="note">If <code>claude</code> is logged in at install, plain <kbd class="cmd">:AI*</kbd> routes to <kbd class="role">/cc</kbd> and OpenRouter becomes <kbd class="role">/free</kbd>.</div>
+    </section>
+
+    <section class="card ai">
+      <h2>AI &mdash; prompt roles (on selection)</h2>
+      <table>
+        <tr><td class="k"><kbd class="role">/refine</kbd></td><td class="d">Rewrite text for clarity and flow</td></tr>
+        <tr><td class="k"><kbd class="role">/translate</kbd></td><td class="d">Translate text to English</td></tr>
+        <tr><td class="k"><kbd class="role">/professional</kbd></td><td class="d">Rewrite in a professional, expert tone</td></tr>
+        <tr><td class="k"><kbd class="role">/simplify</kbd></td><td class="d">Simplify language, drop jargon</td></tr>
+        <tr><td class="k"><kbd class="role">/clarity</kbd></td><td class="d">Make text direct and unambiguous</td></tr>
+        <tr><td class="k"><kbd class="role">/code</kbd></td><td class="d">Improve &amp; format code (79-col)</td></tr>
+        <tr><td class="k"><kbd class="role">/refactor</kbd></td><td class="d">Refactor for clarity &amp; maintainability</td></tr>
+        <tr><td class="k"><kbd class="role">/optimize</kbd></td><td class="d">Optimize for speed &amp; memory</td></tr>
+        <tr><td class="k"><kbd class="role">/comment</kbd></td><td class="d">Add comments and docstrings</td></tr>
+        <tr><td class="k"><kbd class="role">/enhance-docstring</kbd></td><td class="d">Rewrite docstrings, Google format</td></tr>
+        <tr><td class="k"><kbd class="role">/enhance-comments</kbd></td><td class="d">Add &amp; improve inline comments + docstrings</td></tr>
+        <tr><td class="k"><kbd class="role">/reformat-comments</kbd></td><td class="d">Reflow comments to 79 chars</td></tr>
+      </table>
+    </section>
+
+  </div>
+  <footer class="sheet">github.com/francesco-mannella/vimide &mdash; sources: after/ftplugin/{python,tex,sh}.vim, scripts/roles.ini</footer>
+</div>
+
+</body>
+</html>
