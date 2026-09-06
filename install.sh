@@ -37,6 +37,7 @@ uninstall() {
 
     echo "Removing ~/bin/vide..."
     rm -f "${HOME}/bin/vide"
+    rm -f "${HOME}/bin/vimide-inverse-search"
 
     echo "Cleaning ~/.bashrc..."
     # Remove alias vim line
@@ -143,10 +144,15 @@ if [[ $INSTALL_LATEX -eq 1 ]]; then
         sudo apt install -y "${missing[@]}"
     fi
 
-    echo "Configuring Okular inverse search (SyncTeX -> vim --servername vim)"
+    echo "Installing vimide-inverse-search"
+    mkdir -p "${HOME}/bin"
+    cp "${SRC_DIR}/scripts/vimide-inverse-search" "${HOME}/bin/vimide-inverse-search"
+    chmod +x "${HOME}/bin/vimide-inverse-search"
+
+    echo "Configuring Okular inverse search (SyncTeX -> tmux/vim, SSH-safe)"
     if command -v kwriteconfig5 &>/dev/null; then
         kwriteconfig5 --file okularpartrc --group "Core General" --key ExternalEditor Custom
-        kwriteconfig5 --file okularpartrc --group "Core General" --key ExternalEditorCommand 'vim --servername vim --remote-silent +%l "%f"'
+        kwriteconfig5 --file okularpartrc --group "Core General" --key ExternalEditorCommand "${HOME}/bin/vimide-inverse-search %l \"%f\""
     else
         echo "  kwriteconfig5 not found, skipping Okular editor config"
     fi

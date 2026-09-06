@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# SyncTeX inverse search from Okular to the Vim instance running inside a
+# vide/tmux session. Uses tmux rather than Vim's X11 clientserver, which goes
+# stale across SSH reconnects and breaks inverse search on remote sessions.
+#
+# Usage: vimide-inverse-search LINE FILE
+
+line=$1
+file=$2
+
+if [[ -z "$line" || -z "$file" ]]; then
+    echo "usage: $(basename "$0") LINE FILE" >&2
+    exit 1
+fi
+
+filedir=$(cd "$(dirname "$file")" && pwd)
+
+# Pick the Vim pane whose vide session directory contains the source file;
+# otherwise the first Vim pane in an attached session.
+find_vim_pane() {
+    local attached cmd target session sdir fallback=
+    while read -r attached cmd target session; do
+        [[ "$cmd" == *vim ]] || continue
+        sdir=$(tmux show-environment -t "$session" TMUX_SESSION_DIR 2>/dev/null | sed 's/^[^=]*=//')
+        if [[ -n "$sdir" && "${filedir}/" == "${sdir%/}/"* ]]; then
+            echo "$target"
+            return
+        fi
+        [[ -z "$fallback" && "$attached" == 1 ]] && fallback=$target
+    done < <(tmux list-panes -a -F \
+      '#{session_attached} #{pane_current_command} #{session_name}:#{window_index}.#{pane_index} #{session_name}' \
+      2>/dev/null)
+    echo "$fallback"
+}
+
+pane=$(find_vim_pane)
+
+if [[ -n "$pane" ]]; then
+    esc_file=${file// /\\ }
+    tmux send-keys -t "$pane" Escape
+    tmux send-keys -t "$pane" -l ":drop ${esc_file}"
+    tmux send-keys -t "$pane" Enter
+    tmux send-keys -t "$pane" -l "${line}Gzz"
+    exit 0
+fi
+
+exec vim --servername vim --remote-silent "+${line}" "$file"

@@ -257,7 +257,7 @@ Python files are treated as Jupytext percent-format notebooks (`py:percent`). Sa
 Provided by `after/ftplugin/tex.vim` via vimtex.
 
 - **Compiler**: `latexmk` with bibtex, synctex, shell-escape, and non-stop mode.
-- **PDF viewer**: Okular with forward/inverse search via synctex.
+- **PDF viewer**: Okular with forward/inverse search via synctex. Inverse search jumps back to Vim through tmux (`~/bin/vimide-inverse-search`), so it keeps working on SSH sessions where Vim's X11 clientserver registration goes stale.
 - **Spell checking**: enabled (en_us), with a custom word list at `spell/dict.utf-8.add`.
 - **`§`**: reformats indentation of selected LaTeX comment blocks.
 - **ALE**: disabled per-buffer (`b:ale_enabled = 0`) to avoid interference with vimtex.
