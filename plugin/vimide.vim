@@ -218,6 +218,38 @@ function! CreatePyView()
     silent :Ex .
 endfunction
 
+" FindIDEFile: Locate the file to open in the editor window
+" Description: Searches cwd for a file to open, preferring in order .py,
+"              .sh, .tex, then any other file whose content looks like code
+"              (shebang line or common code keywords). Within the first
+"              non-empty tier, prefers a file with 'main' in its name.
+function! s:FindIDEFile(cwd)
+    let l:exclude = ' -not -path "*/.git/*" -not -path "*/build/*"'
+    let l:tiers = []
+    for l:ext in ['py', 'sh', 'tex']
+        call add(l:tiers, split(system('find '.a:cwd.'/ -type f -iname "*.'.l:ext.'"'.l:exclude), '\n'))
+    endfor
+
+    let l:others = split(system('find '.a:cwd.'/ -type f'.l:exclude.
+                \ ' -not -iname "*.py" -not -iname "*.sh" -not -iname "*.tex"'), '\n')
+    let l:code_pattern = '^#!|\<(def|function|class|import|#include|package|public|private|void|return|module|namespace)\>'
+    call add(l:tiers, empty(l:others) ? [] :
+                \ split(system('grep -lE '''.l:code_pattern.''' '.join(l:others, ' ').' 2>/dev/null'), '\n'))
+
+    for l:files in l:tiers
+        if empty(l:files)
+            continue
+        endif
+        for l:f in l:files
+            if l:f =~ 'main'
+                return l:f
+            endif
+        endfor
+        return l:files[0]
+    endfor
+    return ''
+endfunction
+
 " RunIDE: Set up IDE for Python development
 " Description: Initializes the IDE layout for managing Python projects.
 "              Takes an optional path to open in the editor window;
@@ -237,21 +269,11 @@ function! RunIDE(...)
     if a:0 > 0 && !empty(a:1)
         silent execute ":e ".a:1
     else
-        let pys = split(glob('`find '.g:cwd.'/ | grep -v build | grep "\.\(py\|tex\)$"`'),'\n')
-
-        if empty(pys)
-            call s:log('WARN', 'RunIDE: no .py/.tex files found under ' . g:cwd)
-        endif
-
-        let has_main = 0
-        for py in pys
-            if py =~ "main"
-                silent execute ":e ".py
-                let has_main = 1
-            endif
-        endfor
-        if has_main == 0 && !empty(pys)
-            silent execute ":e ".pys[0]
+        let l:file = s:FindIDEFile(g:cwd)
+        if empty(l:file)
+            call s:log('WARN', 'RunIDE: no matching files found under ' . g:cwd)
+        else
+            silent execute ":e ".l:file
         endif
     endif
     call LeftTagbarToggle()
