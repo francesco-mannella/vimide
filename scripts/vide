@@ -119,7 +119,18 @@ if ! tmux list-panes -t "$NAME:code" \
     tmux send-keys -t "$NAME:code.0" "vim ." Enter
     sleep 0.2
     SESSION_NAME="${NAME#vide_}"
-    MATCH=$(find "$CWD" -type f -not -path '*/.git/*' -iname "*${SESSION_NAME}*" 2>/dev/null | head -n1)
+    MATCH=""
+    for EXT in py sh tex; do
+        MATCH=$(find "$CWD" -type f -not -path '*/.git/*' -iname "*${SESSION_NAME}*.${EXT}" 2>/dev/null | head -n1)
+        [[ -n "$MATCH" ]] && break
+    done
+    if [[ -z "$MATCH" ]]; then
+        OTHER_MATCHES=$(find "$CWD" -type f -not -path '*/.git/*' -iname "*${SESSION_NAME}*" \
+            -not -iname "*.py" -not -iname "*.sh" -not -iname "*.tex" 2>/dev/null)
+        if [[ -n "$OTHER_MATCHES" ]]; then
+            MATCH=$(grep -lE '^#!|\<(def|function|class|import|#include|package|public|private|void|return|module|namespace)\>' $OTHER_MATCHES 2>/dev/null | head -n1)
+        fi
+    fi
     if [[ -n "$MATCH" ]]; then
         tmux send-keys -t "$NAME:code.0" \
           ":call RunIDE('${MATCH}')" Enter
