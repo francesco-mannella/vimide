@@ -264,6 +264,7 @@ function! RunIDE(...)
     wincmd l
     call FormatIDE()
     call ResetCtags()
+    silent !reset
 endfunction
 
 " =================================================================================================

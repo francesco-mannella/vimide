@@ -137,9 +137,6 @@ if ! tmux list-panes -t "$NAME:code" \
       ":au BufRead *.py let b:slime_config={" \
       "'socket_name':'default', " \
       "'target_pane':'${NAME}:code.1'}" Enter
-    sleep 0.1
-    tmux send-keys -t "$NAME:code.0" \
-      ":silent call system('reset')" Enter
     sleep 0.01
     tmux send-keys -t "$NAME:code.1" "reset" Enter
 fi
