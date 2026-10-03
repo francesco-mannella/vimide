@@ -393,3 +393,6 @@ call vim_ai_provider#Register('claudecode', {
 \  'script_path': s:plugin_root . '/py/claude_code.py',
 \  'class_name': 'ClaudeCodeProvider',
 \})
+
+" vimtex: compile only the focused tex file, never its parent
+autocmd BufNewFile,BufReadPre *.tex let b:vimtex_main = expand('<afile>:p')
